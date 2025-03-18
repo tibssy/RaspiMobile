@@ -1,6 +1,6 @@
 ---
 name: User story template
-about: Custom template for project user stories
+about: Custom template for RaspiMobile user stories
 title: ''
 labels: ''
 assignees: ''
