@@ -1,0 +1,44 @@
+ :root {
+    --primary-background: #4CE569;
+    --secondary-background: #3F9950;
+    --tertiary-background: #2b3645;
+    --primary-text: #e8ebeb;
+    --secondary-text: #d4d4d4;
+    --accent: #ff8800;
+    --shadow: #00000080;
+    --shadow-light: #00000071;
+    --box-shadow-small: 0 2px 2px var(--shadow);
+    --box-shadow-normal: 0 2px 4px var(--shadow);
+    --box-shadow-large: 0 4px 8px var(--shadow-light);
+    --footer-height: 60px;
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: "Roboto Condensed", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+#id_password1_helptext {
+    display: none;
+}
+
+
+.btn.btn-primary {
+    background-color: var(--primary-background);
+    color: #303030;
+    border-color: var(--primary-background);
+    box-shadow: var(--box-shadow-small);
+
+    &:hover {
+        background-color: var(--secondary-background);
+        border: 1px solid var(--secondary-background);
+        color: var(--primary-text);
+    }
+}
