@@ -2,7 +2,7 @@
     --primary-background: #4CE569;
     --secondary-background: #3F9950;
     --tertiary-background: #2b3645;
-    --primary-text: #e8ebeb;
+    --primary-text: #303030;
     --secondary-text: #d4d4d4;
     --accent: #ff8800;
     --shadow: #00000080;
@@ -32,7 +32,7 @@ body {
 
 .btn.btn-primary {
     background-color: var(--primary-background);
-    color: #303030;
+    color: var(--primary-text);
     border-color: var(--primary-background);
     box-shadow: var(--box-shadow-small);
 
@@ -41,4 +41,42 @@ body {
         border: 1px solid var(--secondary-background);
         color: var(--primary-text);
     }
+
+    &:focus {
+        background-color: var(--primary-background);
+        border: 1px solid var(--primary-background);
+        color: var(--primary-text);
+    }
 }
+
+.form-control,
+.form-select {
+    line-height: 1.8;
+    border-radius: 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--primary-background);
+    transition-property: transform, background-color, border, box-shadow, border-radius;
+    transition-delay: 0s;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+
+    &:focus {
+        outline: none;
+        background-color: #fff;
+        border: 1px solid var(--primary-background);
+        border-radius: 6px;
+        box-shadow: var(--box-shadow-normal);
+        transform: scale(1.01);
+    }
+}
+
+
+
+/* .scale-on-hover {
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.02);
+        filter: brightness(110%);
+    }
+} */
