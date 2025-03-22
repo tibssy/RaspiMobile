@@ -1,5 +1,5 @@
  :root {
-    --primary-background: #4CE569;
+    --primary-background: #45c95d;
     --secondary-background: #3F9950;
     --tertiary-background: #2b3645;
     --primary-text: #303030;
@@ -24,6 +24,12 @@ body {
     font-style: normal;
     margin: 0;
 }
+
+a {
+    color: var(--primary-background);
+    font-weight: 600;
+}
+
 
 #id_password1_helptext {
     display: none;
@@ -70,6 +76,20 @@ body {
     }
 }
 
+
+.form-check-input {
+    border-color: var(--primary-background);
+
+    &:checked {
+        border-color: var(--secondary-background);
+        background-color: var(--primary-background);
+    }
+
+    &:focus {
+        border-color: var(--secondary-background);
+        box-shadow: none;
+    }
+}
 
 
 /* .scale-on-hover {
