@@ -132,17 +132,28 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-    ACCOUNT_EMAIL_SUBJECT_PREFIX = '[RaspiMobile] '
-    ACCOUNT_EMAIL_HTML_FORMAT = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[RaspiMobile] '
+ACCOUNT_EMAIL_HTML_FORMAT = True
+ACCOUNT_EMAIL_NOTIFICATIONS = True
+
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# else:
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#     EMAIL_HOST = 'smtp.gmail.com'
+#     EMAIL_PORT = 587
+#     EMAIL_USE_TLS = True
+#     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+#     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+#     ACCOUNT_EMAIL_SUBJECT_PREFIX = '[RaspiMobile] '
+#     ACCOUNT_EMAIL_HTML_FORMAT = True
+#     ACCOUNT_EMAIL_NOTIFICATIONS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

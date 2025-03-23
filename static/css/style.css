@@ -91,6 +91,10 @@ a {
     }
 }
 
+.primary-bg {
+    background-color: var(--primary-background);
+}
+
 
 /* .scale-on-hover {
     transition: 0.3s ease-in-out;
