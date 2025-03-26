@@ -28,16 +28,36 @@ body {
 }
 
 
+header {
+    margin: 0;
+    transition: margin-right 0.3s ease;
+}
 
 
 main {
     /* height: 100vh; */
     /* overflow: scroll; */
-    /* margin: 0 12px; */
+    margin: 0 10px;
     /* border-radius: 8px; */
     box-shadow: var(--box-shadow-large);
     scrollbar-color: var(--primary-background) transparent;
     border: 3px solid transparent;
+    transition: margin-right 0.3s ease;
+}
+
+
+#sidebar {
+    position: fixed;
+    right: 0;
+    width: 320px;
+    height: 100vh;
+    z-index: -1;
+}
+
+
+.sidebar-open {
+    margin-right: 340px;
+    transition: margin-right 0.3s ease;
 }
 
 a {
@@ -139,13 +159,3 @@ a > i {
 .primary-fg {
     color: var(--primary-background);
 }
-
-
-/* .scale-on-hover {
-    transition: 0.3s ease-in-out;
-
-    &:hover {
-        transform: scale(1.02);
-        filter: brightness(110%);
-    }
-} */
