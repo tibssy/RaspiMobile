@@ -11,6 +11,7 @@
     --box-shadow-normal: 0 2px 4px var(--shadow);
     --box-shadow-large: 0 4px 8px var(--shadow-light);
     --footer-height: 60px;
+    --sidebar-width: 300px;
 }
 
 
@@ -23,6 +24,7 @@ body {
     font-weight: 400;
     font-style: normal;
     margin: 0;
+    padding: 0 12px;
     background-color: var(--primary-background);
     height: 100vh;
 }
@@ -37,7 +39,7 @@ header {
 main {
     /* height: 100vh; */
     /* overflow: scroll; */
-    margin: 0 10px;
+    /* margin: 0 10px; */
     /* border-radius: 8px; */
     box-shadow: var(--box-shadow-large);
     scrollbar-color: var(--primary-background) transparent;
@@ -48,15 +50,20 @@ main {
 
 #sidebar {
     position: fixed;
+    top: 44px;
     right: 0;
-    width: 320px;
+    width: var(--sidebar-width);
     height: 100vh;
     z-index: -1;
 }
 
+.sidebar-width{
+    width: var(--sidebar-width);
+}
+
 
 .sidebar-open {
-    margin-right: 340px;
+    margin-right: var(--sidebar-width);
     transition: margin-right 0.3s ease;
 }
 
@@ -67,6 +74,26 @@ a {
 
 a > i {
     color: #303030;
+}
+
+.navbar-toggler {
+    box-shadow: none;
+    border: none;
+    font-size: 1.8rem;
+
+    &:focus {
+        box-shadow: none;
+        border: none;
+    }
+}
+
+.navbar-toggler-icon-rotate {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon-rotate {
+    transform: rotate(180deg);
 }
 
 
@@ -158,4 +185,8 @@ a > i {
 
 .primary-fg {
     color: var(--primary-background);
+}
+
+.shadow-normal {
+    box-shadow: var(--box-shadow-normal);
 }

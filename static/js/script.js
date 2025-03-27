@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('cart toggled')
         if (window.innerWidth >= 768) {
             main.classList.toggle('sidebar-open');
-            header.classList.toggle('sidebar-open');
+//            header.classList.toggle('sidebar-open');
         } else {
             console.log('small screen')
         }
