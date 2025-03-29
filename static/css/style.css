@@ -15,6 +15,7 @@
 }
 
 
+
 body {
     display: flex;
     flex-direction: column;
@@ -37,6 +38,8 @@ header {
 
 
 main {
+    position: relative;
+    right: 0;
     /* height: 100vh; */
     /* overflow: scroll; */
     /* margin: 0 10px; */
@@ -44,7 +47,16 @@ main {
     box-shadow: var(--box-shadow-large);
     scrollbar-color: var(--primary-background) transparent;
     border: 3px solid transparent;
-    transition: margin-right 0.3s ease;
+    transition: margin-right 0.3s ease, right 0.3s ease;
+}
+
+
+.move-left {
+    right: 100vw;
+}
+
+.align-left {
+    width: 100vw !important;
 }
 
 
@@ -55,6 +67,7 @@ main {
     width: var(--sidebar-width);
     height: 100vh;
     z-index: -1;
+    transition: width 0.3s ease;
 }
 
 .sidebar-width{
@@ -64,7 +77,6 @@ main {
 
 .sidebar-open {
     margin-right: var(--sidebar-width);
-    transition: margin-right 0.3s ease;
 }
 
 a {
@@ -189,4 +201,28 @@ a > i {
 
 .shadow-normal {
     box-shadow: var(--box-shadow-normal);
+}
+
+/* Elevate Style: Hover effect */
+.elevate {
+    padding: 0 6px;
+    transition: 0.2s ease-in;
+    border: none;
+
+    &:hover,
+    &.active {
+        /* border: 1px solid var(--accent); */
+        box-shadow: var(--box-shadow-small);
+        transform: scale(1.1);
+        background-color: white;
+
+        & > i {
+            color: var(--primary-background);
+        }
+    }
+
+    & > i {
+        color: white;
+        transition: 0.2s ease-in;
+    }
 }
