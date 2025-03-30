@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('main');
     const cartButton = document.querySelector('#cartButton');
     const cartButtonMobile = document.querySelector('#cartButtonMobile');
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .btn[href]');
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href]');
     const animationDuration = 300;
 
 
