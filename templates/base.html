@@ -4,6 +4,7 @@
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
 {% url 'home' as home_url %}
+{% url 'products' as products_url %}
 
 
 <!DOCTYPE html>
@@ -97,7 +98,7 @@
                             <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page" href="{{ home_url }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == shop_url %}active{% endif %}" aria-current="page" href="{{ shop_url }}">Shop</a>
+                            <a class="nav-link {% if request.path == products_url %}active{% endif %}" aria-current="page" href="{{ products_url }}">Shop</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page" href="{{ about_url }}">About</a>
