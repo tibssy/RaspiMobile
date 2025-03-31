@@ -1,117 +1,79 @@
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('main');
     const sidebar = document.querySelector('#sidebar');
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href]');
-    const userButtons = document.querySelectorAll('.user-button');
-    const assistantButtons = document.querySelectorAll('.assistant-button');
-    const cartButtons = document.querySelectorAll('.cart-button');
-    const sidebarControls = document.querySelectorAll('.sidebar-control');
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href], main a[href]');
+    const sidebarControls = {
+        user: document.querySelectorAll('.user-button'),
+        assistant: document.querySelectorAll('.assistant-button'),
+        cart: document.querySelectorAll('.cart-button')
+    };
+    const sidebarControlButtons = document.querySelectorAll('.sidebar-control');
     const sidebarCarousel = bootstrap.Carousel.getOrCreateInstance(sidebar);
     const sidebarCarouselItems = document.querySelectorAll('#sidebar .carousel-item');
     const animationDuration = 300;
     let isSidebarOpen = false;
 
-
     function setCarouselItemActive(index) {
-        sidebarCarouselItems.forEach(item => {
-            item.classList.remove('active');
+        sidebarCarouselItems.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
         });
-        sidebarCarouselItems[index].classList.add('active');
     }
 
-    function setSidebarControlActive(control) {
+    function setSidebarControlActive(buttons) {
         resetSidebarControls();
-        control.forEach(item => {
-            item.classList.add('active');
-        });
+        buttons.forEach(button => button.classList.add('active'));
     }
 
     function resetSidebarControls() {
-        sidebarControls.forEach(button => {
-            button.classList.remove('active');
-        });
+        sidebarControlButtons.forEach(button => button.classList.remove('active'));
     }
 
-    function openSidebar() {
-        if (window.innerWidth >= 768) {
-            main.classList.add('sidebar-open');
+    function toggleSidebar(open) {
+        if (open) {
+            if (window.innerWidth >= 768) {
+                main.classList.add('sidebar-open');
+            } else {
+                main.classList.add('move-left');
+                sidebar.classList.add('align-left');
+            }
         } else {
-            main.classList.add('move-left');
-            sidebar.classList.add('align-left');
+            main.classList.remove('sidebar-open', 'move-left');
+            sidebar.classList.remove('align-left');
+            resetSidebarControls();
         }
-        isSidebarOpen = true;
+        isSidebarOpen = open;
     }
 
-    function closeSidebar() {
-        main.classList.remove('sidebar-open');
-        main.classList.remove('move-left');
-        sidebar.classList.remove('align-left');
-        resetSidebarControls();
-        isSidebarOpen = false;
-    }
+    function toggleSection(section, index) {
+        if (sidebarControls[section][0].classList.contains('active')) {
+            toggleSidebar(false);
+            return;
+        }
 
-    function openUser() {
         if (isSidebarOpen) {
-            sidebarCarousel.to(0);
+            sidebarCarousel.to(index);
         } else {
-            setCarouselItemActive(0);
-            openSidebar();
+            setCarouselItemActive(index);
+            toggleSidebar(true);
         }
 
-        setSidebarControlActive(userButtons);
+        setSidebarControlActive(sidebarControls[section]);
     }
 
-    function openAssistant() {
-        if (isSidebarOpen) {
-            sidebarCarousel.to(1);
-        } else {
-            setCarouselItemActive(1);
-            openSidebar();
-        }
+    sidebarControls.user.forEach(button => button.addEventListener('click', () => toggleSection('user', 0)));
+    sidebarControls.assistant.forEach(button => button.addEventListener('click', () => toggleSection('assistant', 1)));
+    sidebarControls.cart.forEach(button => button.addEventListener('click', () => toggleSection('cart', 2)));
 
-        setSidebarControlActive(assistantButtons);
-    }
-
-    function openCart() {
-        if (isSidebarOpen) {
-            sidebarCarousel.to(2);
-        } else {
-            setCarouselItemActive(2);
-            openSidebar();
-        }
-
-        setSidebarControlActive(cartButtons);
-    }
-
-//    Carousel Control Buttons
-    userButtons.forEach(button => {
-        button.addEventListener('click', openUser);
-    });
-
-    assistantButtons.forEach(button => {
-        button.addEventListener('click', openAssistant);
-    });
-
-    cartButtons.forEach(button => {
-        button.addEventListener('click', openCart);
-    });
-
-//    Close Sidebar on Redirect
     navLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
+        link.addEventListener('click', event => {
             const destinationUrl = event.currentTarget.href;
-
             if (isSidebarOpen && destinationUrl && destinationUrl !== '#') {
                 event.preventDefault();
-                closeSidebar();
-
-                setTimeout(() => {
-                    window.location.href = destinationUrl;
-                }, animationDuration);
+                toggleSidebar(false);
+                setTimeout(() => (window.location.href = destinationUrl), animationDuration);
             }
         });
     });
 
-//    Close Sidebar on Resize
-    window.addEventListener('resize', closeSidebar);
+    window.addEventListener('resize', () => toggleSidebar(false));
 });

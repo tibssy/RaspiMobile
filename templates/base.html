@@ -74,7 +74,7 @@
                             <i class="fa-solid fa-user"></i>
                         </a>
                     {% else %}
-                        <a class="icon-button rounded {% if request.path == login_url %}active{% endif %}"
+                        <a class="icon-button rounded"
                            aria-current="page"
                            href="{% url 'account_login' %}">
                             <i class="fa-solid fa-right-to-bracket"></i>
@@ -108,11 +108,11 @@
                     </form>
                     <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
                         {% if user.is_authenticated %}
-                            <a class="icon-button rounded user-button sidebar-control">
+                            <a class="icon-button rounded user-button sidebar-control" data-carousel-index="0" data-control-group="user">
                                 <i class="fa-solid fa-user"></i>
                             </a>
                         {% else %}
-                            <a class="icon-button rounded {% if request.path == login_url %}active{% endif %}"
+                            <a class="icon-button rounded"
                                aria-current="page"
                                href="{% url 'account_login' %}">
                                 <i class="fa-solid fa-right-to-bracket"></i>
