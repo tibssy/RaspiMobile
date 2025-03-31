@@ -67,6 +67,10 @@ main {
     height: 100vh;
     z-index: -1;
     transition: width 0.3s ease;
+
+    & .carousel-item {
+        transition: transform 0.3s ease !important;
+    }
 }
 
 .sidebar-width{
