@@ -82,6 +82,19 @@ a > i {
     color: #303030;
 }
 
+.nav-item {
+    flex-direction: unset;
+    border-radius: 5px;
+    background-color: white;
+
+    & .nav-link.active {
+        border-radius: 5px;
+        color: var(--secondary-background);
+        font-weight: 600;
+        box-shadow: var(--box-shadow-normal);
+    }
+}
+
 .navbar-toggler {
     box-shadow: none;
     border: none;
@@ -224,6 +237,18 @@ a > i {
 
 
 @media screen and (min-width: 768px) {
+    .nav-item {
+        border-radius: unset;
+        background-color: unset;
+    
+        & .nav-link.active {
+            border-radius: unset;
+            color: unset;
+            font-weight: 600;
+            box-shadow: unset;
+        }
+    }
+
     main {
         width: unset;
     }
