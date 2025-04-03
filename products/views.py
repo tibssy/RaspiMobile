@@ -1,4 +1,8 @@
+from django.views.generic import ListView
 from django.shortcuts import render
+from .models import Product
 
-def product_list(request):
-    return render(request, 'products/product_list.html')
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'

@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('main');
+    const pageContainer = document.querySelector('#pageContainer');
     const sidebar = document.querySelector('#sidebar');
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href], main a[href]');
+    const sidebarContent = document.querySelector('#sidebar .carousel-inner');
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href], #pageContainer a[href]');
     const sidebarControls = {
         user: document.querySelectorAll('.user-button'),
         assistant: document.querySelectorAll('.assistant-button'),
@@ -31,14 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleSidebar(open) {
         if (open) {
             if (window.innerWidth >= 768) {
-                main.classList.add('sidebar-open');
+                sidebar.classList.add('sidebar-open');
             } else {
-                main.classList.add('move-left');
-                sidebar.classList.add('align-left');
+                main.classList.add('slide-left');
             }
         } else {
-            main.classList.remove('sidebar-open', 'move-left');
-            sidebar.classList.remove('align-left');
+            sidebar.classList.remove('sidebar-open');
+            main.classList.remove('slide-left');
             resetSidebarControls();
         }
         isSidebarOpen = open;

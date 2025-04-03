@@ -3,6 +3,12 @@
 {% block content %}
     <div class="container mt-5">
         <h1>Products</h1>
-        <p>List of all available products.</p>
+        <ul>
+            {% for product in products %}
+                <li>{{ product.name }} - {{ product.price }}$</li>
+            {% empty %}
+                <li>No products available.</li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}
