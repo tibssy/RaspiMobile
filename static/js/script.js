@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const main = document.querySelector('main');
+    const slideContainer = document.querySelector('#slideContainer');
     const pageContainer = document.querySelector('#pageContainer');
     const sidebar = document.querySelector('#sidebar');
     const sidebarContent = document.querySelector('#sidebar .carousel-inner');
@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 768) {
                 sidebar.classList.add('sidebar-open');
             } else {
-                main.classList.add('slide-left');
+                slideContainer.classList.add('slide-left');
             }
         } else {
             sidebar.classList.remove('sidebar-open');
-            main.classList.remove('slide-left');
+            slideContainer.classList.remove('slide-left');
             resetSidebarControls();
         }
         isSidebarOpen = open;
