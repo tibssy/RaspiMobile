@@ -141,22 +141,50 @@
 
             <!-- Sidebar -->
             <div id="sidebar" class="carousel slide mx-2 mx-md-0" data-bs-touch="false">
-                <div class="carousel-inner">
-                    <div class="carousel-item px-3">
-                        <h2 class="my-3">User Profile</h2>
-                        <p>shipping details</p>
-                        <p>payment details</p>
-                        <p>order history</p>
+                <div class="carousel-inner h-100 pb-2">
+                    <div class="carousel-item h-100 px-3 pe-md-0">
+                        <div class="d-flex flex-column h-100">
+                            <div class="d-flex justify-content-between mt-2 pb-2 pe-1 border-bottom">
+                                <h2 class="mb-0">User Profile</h2>
+                                <a class="icon-button rounded"
+                                   aria-current="page"
+                                   href="{% url 'account_logout' %}">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                </a>
+                            </div>
+                            <p>shipping details</p>
+                            <p>payment details</p>
+                            <p>order history</p>
+                        </div>
                     </div>
-                    <div class="carousel-item px-3">
-                        <h2 class="my-3">Shop Assistant</h2>
-                        <p>chat</p>
+                    <div class="carousel-item h-100 px-3 pe-md-0">
+                        <div class="d-flex flex-column h-100">
+                            <h2 class="mt-2 pb-2 border-bottom">Shop Assistant</h2>
+                            <div id="chatContainer" class="d-flex flex-column align-items-end h-100 pe-3 overflow-y-scroll">
+                                <div class="mt-auto">
+                                    <p>message1</p>
+                                    <p>message2</p>
+                                    <p>message3</p>
+                                    <p>message4</p>
+                                    <p>message5</p>
+                                    <p>message6</p>
+                                    <p>message7</p>
+                                    <p>message8</p>
+                                    <p>message9</p>
+                                </div>
+                            </div>
+                            <form class="d-flex mt-2" role="none">
+                                <input class="form-control rounded" type="search" placeholder="Chat with Assistant" aria-label="Chat">
+                            </form>
+                        </div>
                     </div>
-                    <div class="carousel-item px-3">
-                        <h2 class="my-3">Shopping Cart</h2>
-                        <p>item 1</p>
-                        <p>item 2</p>
-                        <p>item 3</p>
+                    <div class="carousel-item h-100 px-3 pe-md-0">
+                        <div class="d-flex flex-column h-100">
+                            <h2 class="mt-2 pb-2 border-bottom">Shopping Cart</h2>
+                            <p>item 1</p>
+                            <p>item 2</p>
+                            <p>item 3</p>
+                        </div>
                     </div>
                 </div>
             </div>

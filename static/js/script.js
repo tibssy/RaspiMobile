@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarControlButtons = document.querySelectorAll('.sidebar-control');
     const sidebarCarousel = bootstrap.Carousel.getOrCreateInstance(sidebar);
     const sidebarCarouselItems = document.querySelectorAll('#sidebar .carousel-item');
+    const chatContainer = document.querySelector('#chatContainer');
     const animationDuration = 300;
     let isSidebarOpen = false;
 
@@ -62,7 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     sidebarControls.user.forEach(button => button.addEventListener('click', () => toggleSection('user', 0)));
-    sidebarControls.assistant.forEach(button => button.addEventListener('click', () => toggleSection('assistant', 1)));
+    sidebarControls.assistant.forEach(button => button.addEventListener('click', () => {
+        toggleSection('assistant', 1);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }));
     sidebarControls.cart.forEach(button => button.addEventListener('click', () => toggleSection('cart', 2)));
 
     navLinks.forEach(link => {
