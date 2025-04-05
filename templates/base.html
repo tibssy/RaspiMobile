@@ -63,72 +63,7 @@
 <body>
     <!-- Header -->
     <header class="px-2 px-lg-3">
-        <nav class="navbar navbar-expand-md primary-bg">
-            <div class="container mw-100 px-0">
-                <a class="navbar-brand" href="{{ home_url }}">
-                    <img src="{% static 'images/logo.webp' %}" alt="Site Logo" height="30" class="d-inline-block align-top">
-                    <span id="logo-text" class="ms-2">RaspiMobile</span>
-                </a>
-                <div class="d-flex d-md-none gap-2 ms-auto">
-                    {% if user.is_authenticated %}
-                        <a class="icon-button rounded user-button sidebar-control">
-                            <i class="fa-solid fa-user"></i>
-                        </a>
-                    {% else %}
-                        <a class="icon-button rounded"
-                           aria-current="page"
-                           href="{% url 'account_login' %}">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                        </a>
-                    {% endif %}
-                    <a class="icon-button rounded assistant-button sidebar-control">
-                        <i class="fa-solid fa-robot"></i>
-                    </a>
-                    <a class="icon-button rounded cart-button sidebar-control">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-                </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa-solid fa-caret-down navbar-toggler-icon-rotate"></i>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav flex-row gap-3 gap-md-0 fs-5 text-center mt-2 mt-md-0 mb-0">
-                        <li class="nav-item flex-fill lh-1">
-                            <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page" href="{{ home_url }}">Home</a>
-                        </li>
-                        <li class="nav-item flex-fill lh-1">
-                            <a class="nav-link {% if request.path == products_url %}active{% endif %}" aria-current="page" href="{{ products_url }}">Shop</a>
-                        </li>
-                        <li class="nav-item flex-fill lh-1">
-                            <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page" href="{{ about_url }}">About</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0" role="search">
-                        <input class="form-control rounded lh-base" type="search" placeholder="Search" aria-label="Search">
-                    </form>
-                    <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
-                        {% if user.is_authenticated %}
-                            <a class="icon-button rounded user-button sidebar-control" data-carousel-index="0" data-control-group="user">
-                                <i class="fa-solid fa-user"></i>
-                            </a>
-                        {% else %}
-                            <a class="icon-button rounded"
-                               aria-current="page"
-                               href="{% url 'account_login' %}">
-                                <i class="fa-solid fa-right-to-bracket"></i>
-                            </a>
-                        {% endif %}
-                        <a class="icon-button rounded assistant-button sidebar-control">
-                            <i class="fa-solid fa-robot"></i>
-                        </a>
-                        <a class="icon-button rounded cart-button sidebar-control">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        {% include 'components/navbar.html' %}
     </header>
 
     <!-- Main -->
@@ -140,54 +75,8 @@
             </div>
 
             <!-- Sidebar -->
-            <div id="sidebar" class="carousel slide mx-2 mx-md-0" data-bs-touch="false">
-                <div class="carousel-inner h-100 pb-2">
-                    <div class="carousel-item h-100 px-3 pe-md-0">
-                        <div class="d-flex flex-column h-100">
-                            <div class="d-flex justify-content-between mt-2 pb-2 pe-1 border-bottom">
-                                <h2 class="mb-0">User Profile</h2>
-                                <a class="icon-button rounded"
-                                   aria-current="page"
-                                   href="{% url 'account_logout' %}">
-                                    <i class="fa-solid fa-right-from-bracket"></i>
-                                </a>
-                            </div>
-                            <p>shipping details</p>
-                            <p>payment details</p>
-                            <p>order history</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item h-100 px-3 pe-md-0">
-                        <div class="d-flex flex-column h-100">
-                            <h2 class="mt-2 pb-2 border-bottom">Shop Assistant</h2>
-                            <div id="chatContainer" class="d-flex flex-column align-items-end h-100 pe-3 overflow-y-scroll">
-                                <div class="mt-auto">
-                                    <p>message1</p>
-                                    <p>message2</p>
-                                    <p>message3</p>
-                                    <p>message4</p>
-                                    <p>message5</p>
-                                    <p>message6</p>
-                                    <p>message7</p>
-                                    <p>message8</p>
-                                    <p>message9</p>
-                                </div>
-                            </div>
-                            <form class="d-flex mt-2" role="none">
-                                <input class="form-control rounded" type="search" placeholder="Chat with Assistant" aria-label="Chat">
-                            </form>
-                        </div>
-                    </div>
-                    <div class="carousel-item h-100 px-3 pe-md-0">
-                        <div class="d-flex flex-column h-100">
-                            <h2 class="mt-2 pb-2 border-bottom">Shopping Cart</h2>
-                            <p>item 1</p>
-                            <p>item 2</p>
-                            <p>item 3</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'components/sidebar.html' %}
+
         </div>
     </main>
 

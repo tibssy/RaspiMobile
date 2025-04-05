@@ -1,0 +1,68 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-md primary-bg">
+    <div class="container mw-100 px-0">
+        <a class="navbar-brand" href="{{ home_url }}">
+            <img src="{% static 'images/logo.webp' %}" alt="Site Logo" height="30" class="d-inline-block align-top">
+            <span id="logo-text" class="ms-2">RaspiMobile</span>
+        </a>
+        <div class="d-flex d-md-none gap-2 ms-auto">
+            {% if user.is_authenticated %}
+                <a class="icon-button rounded user-button sidebar-control">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            {% else %}
+                <a class="icon-button rounded"
+                   aria-current="page"
+                   href="{% url 'account_login' %}">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </a>
+            {% endif %}
+            <a class="icon-button rounded assistant-button sidebar-control">
+                <i class="fa-solid fa-robot"></i>
+            </a>
+            <a class="icon-button rounded cart-button sidebar-control">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-caret-down navbar-toggler-icon-rotate"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav flex-row gap-3 gap-md-0 fs-5 text-center mt-2 mt-md-0 mb-0">
+                <li class="nav-item flex-fill lh-1">
+                    <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page" href="{{ home_url }}">Home</a>
+                </li>
+                <li class="nav-item flex-fill lh-1">
+                    <a class="nav-link {% if request.path == products_url %}active{% endif %}" aria-current="page" href="{{ products_url }}">Shop</a>
+                </li>
+                <li class="nav-item flex-fill lh-1">
+                    <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page" href="{{ about_url }}">About</a>
+                </li>
+            </ul>
+            <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0" role="search">
+                <input class="form-control rounded lh-base" type="search" placeholder="Search" aria-label="Search">
+            </form>
+            <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
+                {% if user.is_authenticated %}
+                    <a class="icon-button rounded user-button sidebar-control" data-carousel-index="0" data-control-group="user">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                {% else %}
+                    <a class="icon-button rounded"
+                       aria-current="page"
+                       href="{% url 'account_login' %}">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </a>
+                {% endif %}
+                <a class="icon-button rounded assistant-button sidebar-control">
+                    <i class="fa-solid fa-robot"></i>
+                </a>
+                <a class="icon-button rounded cart-button sidebar-control">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

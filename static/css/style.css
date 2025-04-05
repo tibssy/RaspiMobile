@@ -1,3 +1,9 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --primary-background: #45c95d;
     --secondary-background: #3F9950;
@@ -52,6 +58,10 @@ body {
     & .carousel-item {
         transition: transform 0.3s ease !important;
     }
+}
+
+#chatContainer {
+    scrollbar-color: white transparent;
 }
 
 .sidebar-open {
@@ -227,6 +237,17 @@ a > i {
     }
 }
 
+.elevate-on-hover {
+    transition: 0.3s ease;
+    border: none;
+
+    &:hover {
+        filter: saturate(125%) drop-shadow(var(--box-shadow-normal));
+        transform: scale(1.01);
+       
+    }
+}
+
 
 @media screen and (min-width: 768px) {
     .nav-item {
@@ -241,9 +262,12 @@ a > i {
         }
     }
 
-    #slideContainer,
+    #slideContainer {
+        width: 100vw;
+    }
+
     #pageContainer {
-        width: unset;
+        width: min-content;
     }
 
     #sidebar {
