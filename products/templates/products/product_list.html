@@ -7,9 +7,9 @@
 {% block content %}
     <div class="container d-flex flex-column flex-fill my-4">
         <h1 class="text-center border-bottom mb-4 pb-2">{% trans "Products" %}</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center g-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center">
             {% for product in products %}
-                <div class="col">
+                <div class="col my-3">
                     <div class="card h-100 elevate-on-hover">
                         <a href="#">
                             {% if "placeholder" in product.image.url %}
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="pagination justify-content-center my-2">
+    <div class="pagination justify-content-center mb-2">
         <span class="step-links">
             <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="arrow-button {% if not page_obj.has_previous %}disabled{% endif %}">«</a>
 

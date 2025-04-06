@@ -8,4 +8,4 @@ class ProductListView(ListView):
     queryset = Product.objects.all().order_by("-created_on")
     template_name = 'products/product_list.html'
     context_object_name = 'products'
-    paginate_by = 3
+    paginate_by = 4
