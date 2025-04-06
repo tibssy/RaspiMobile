@@ -5,9 +5,9 @@
 {% block extra_title %}- {% trans "Shop" %}{% endblock %}
 
 {% block content %}
-    <div class="container my-5">
-        <h1>{% trans "Products" %}</h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xxl-4 g-4">
+    <div class="container d-flex flex-column flex-fill my-4">
+        <h1 class="text-center border-bottom mb-4 pb-2">{% trans "Products" %}</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center g-5">
             {% for product in products %}
                 <div class="col">
                     <div class="card h-100 elevate-on-hover">
@@ -36,5 +36,42 @@
                 </div>
             {% endfor %}
         </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination justify-content-center my-2">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="arrow-button">«</a>
+            {% endif %}
+
+            {% for page_number in page_obj.paginator.page_range %}
+                {% if page_number == page_obj.number %}
+                    <span class="current-page-button">{{ page_number }}</span>
+                {% elif page_number <= 5 %}
+                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                        {{ page_number }}
+                    </a>
+                {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
+                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                        {{ page_number }}
+                    </a>
+                {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
+                    {% if not page_obj.paginator.num_pages <= 5 and page_number == page_obj.number|add:3 %}
+                        <span>...</span>
+                    {% endif %}
+                {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
+                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                        {{ page_number }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="arrow-button">
+                    »
+                </a>
+            {% endif %}
+        </span>
     </div>
 {% endblock %}

@@ -42,6 +42,8 @@ body {
 
 
 #pageContainer {
+    display: flex;
+    flex-direction: column;
     box-shadow: var(--box-shadow-large);
     scrollbar-color: var(--primary-background) transparent;
     border: 3px solid transparent;
@@ -253,6 +255,43 @@ a > i {
     & img:hover {
         filter: contrast(120%) saturate(160%);
     }
+}
+
+.pagination .step-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px;
+
+    & a, span {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0;
+        text-decoration: none;
+        color: var(--primary-background);
+        border-radius: 4px;
+        transition: 0.3s ease;
+        min-width: 30px;
+        text-align: center;
+        font-weight: 900;
+    }
+}
+
+.pagination .step-links .arrow-button {
+    font-weight: bold;
+}
+
+.pagination .step-links a:hover {
+    border-width: 3px;
+    border-color: var(--secondary-background);
+    box-shadow: var(--box-shadow-normal);
+}
+
+.pagination .step-links .current-page-button {
+    background-color: var(--secondary-background);
+    color: white;
+    cursor: default;
+    box-shadow: var(--box-shadow-normal);
 }
 
 
