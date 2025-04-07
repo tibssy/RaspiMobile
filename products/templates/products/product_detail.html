@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_title %}- {{ product.name }}{% endblock %} {# Product name in title #}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-6">
+                {% if "placeholder" in product.image.url %}
+                    <img src="{% static 'images/default_product.webp' %}" class="img-fluid rounded" alt="{% trans 'Placeholder Image' %}">
+                {% else %}
+                    <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h1>{{ product.name }}</h1>
+                <p class="lead">${{ product.price }}</p>
+                <p>{{ product.description }}</p>
+                <p><strong>{% trans "SKU:" %}</strong> {{ product.sku }}</p>
+                <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
+
+                <a href="#" class="btn btn-success">{% trans "Add to Cart" %}</a>
+                <a href="{% url 'product_list' %}" class="btn btn-secondary">{% trans "Back to Products" %}</a>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <h2>{% trans "Related Products" %}</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+            {% for product in related_products %}
+                <div class="col mb-3">
+                    {% include './components/product_card.html' %}
+                </div>
+            {% empty %}
+                <div class="col">
+                    <p>{% trans "No related products available." %}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <hr class="my-4">
+        <h2>{% trans "Reviews" %}</h2>
+
+        <!-- TODO: include product review html here-->
+
+
+    </div>
+{% endblock %}

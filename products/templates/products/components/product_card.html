@@ -1,0 +1,22 @@
+{% load static %}
+{% load i18n %}
+
+<div class="card h-100 elevate-on-hover">
+    <a href="{% url 'product_detail' pk=product.pk %}">
+        {% if "placeholder" in product.image.url %}
+            <img src="{% static 'images/default_product.webp' %}" class="card-img-top" alt="{% trans 'Placeholder Image' %}">
+        {% else %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">${{ product.price }}</p>
+        </div>
+    </a>
+    <div class="card-footer bg-white">
+        <small class="text-muted">
+            <a href="#" class="btn btn-primary">{% trans "Add to Cart" %}</a>
+            <a href="#" class="btn btn-secondary">{% trans "View Details" %}</a>
+        </small>
+    </div>
+</div>
