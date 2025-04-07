@@ -300,6 +300,21 @@ a > i {
     cursor: default;
 }
 
+.featured-products-container {
+    display: flex;
+    gap: 16px;
+
+    & .card {
+        flex-shrink: 0;
+        max-width: 160px;
+    }
+
+    & .card-footer {
+        display: none;
+    }
+}
+
+
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;
@@ -331,5 +346,16 @@ a > i {
             width: var(--sidebar-width);
             transition: width 0.3s ease;
         }
+    }
+
+    .featured-products-container .card {
+        max-width: 200px;
+    }
+}
+
+
+@media screen and (min-width: 992px) {
+    .featured-products-container .card {
+        max-width: 250px;
     }
 }
