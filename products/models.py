@@ -34,3 +34,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SpecificationType(models.Model):
+    name = models.CharField(max_length=100)
+    categories = models.ManyToManyField(Category, related_name='specification_types')
+
+    def __str__(self):
+        return self.name
+
+
+class ProductSpecification(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='specifications')
+    spec_type = models.ForeignKey(SpecificationType, on_delete=models.CASCADE)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.spec_type.name}: {self.value}'

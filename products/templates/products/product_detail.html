@@ -21,7 +21,7 @@
                 <p><strong>{% trans "SKU:" %}</strong> {{ product.sku }}</p>
                 <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
 
-                <a href="#" class="btn btn-success">{% trans "Add to Cart" %}</a>
+                <a href="#" class="btn btn-primary">{% trans "Add to Cart" %}</a>
                 <a href="{% url 'product_list' %}" class="btn btn-secondary">{% trans "Back to Products" %}</a>
             </div>
         </div>
@@ -29,7 +29,7 @@
         <hr class="my-4">
 
         <h2>{% trans "Related Products" %}</h2>
-        <div class="overflow-x-auto pb-2">
+        <div class="overflow-x-auto pt-2 pb-4">
             <div class="featured-products-container">
                 {% for product in related_products %}
                     {% include './components/product_card.html' %}

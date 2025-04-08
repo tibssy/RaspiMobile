@@ -149,7 +149,7 @@ a > i {
 
 .btn.btn-secondary {
     box-shadow: var(--box-shadow-small);
-    background-color: #b4bbc2;
+    background-color: #d5d5d5;
     border-color: #b4bbc2;
     color: var(--primary-text);
     font-weight: 600;
