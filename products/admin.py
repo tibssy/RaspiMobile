@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product
+from .models import Category, Product, SpecificationType, ProductSpecification
 from django.utils.html import format_html
 
 
@@ -17,5 +17,18 @@ class ProductAdmin(admin.ModelAdmin):
 
     def image_tag(self, obj):
         return format_html('<img src="{}" width="60" />', obj.image.url)
-
     image_tag.short_description = 'Image'
+
+
+@admin.register(SpecificationType)
+class SpecificationTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    filter_horizontal = ('categories',)
+
+
+@admin.register(ProductSpecification)
+class ProductSpecificationAdmin(admin.ModelAdmin):
+    list_display = ('product', 'spec_type', 'value')
+    search_fields = ('product__name', 'spec_type__name', 'value')
+    list_filter = ('spec_type',)
