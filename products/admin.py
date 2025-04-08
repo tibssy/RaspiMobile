@@ -10,10 +10,20 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+class ProductSpecificationInline(admin.TabularInline):
+    model = ProductSpecification
+    extra = 1
+    autocomplete_fields = ['spec_type']
+    fields = ['spec_type', 'value']
+    verbose_name = 'Specification'
+    verbose_name_plural = 'Specifications'
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'created_on', 'updated_on', 'image_tag')
     search_fields = ('name',)
+    inlines = [ProductSpecificationInline]
 
     def image_tag(self, obj):
         return format_html('<img src="{}" width="60" />', obj.image.url)
