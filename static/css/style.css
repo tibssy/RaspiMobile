@@ -184,7 +184,7 @@ a > i {
         border: 1px solid var(--primary-background);
         border-radius: 6px;
         box-shadow: var(--box-shadow-normal);
-        transform: scale(1.01);
+        /* transform: scale(1.01); */
     }
 }
 
@@ -224,7 +224,7 @@ a > i {
     &:hover,
     &.active {
         box-shadow: var(--box-shadow-small);
-        transform: scale(1.1);
+        /* transform: scale(1.1); */
         background-color: white;
 
         & > i {
@@ -245,7 +245,7 @@ a > i {
 
     &:hover {
         filter: drop-shadow(var(--box-shadow-normal));
-        transform: scale(1.01);
+        /* transform: scale(1.01); */
     }
 
     & img {

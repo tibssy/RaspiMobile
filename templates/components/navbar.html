@@ -41,8 +41,11 @@
                     <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page" href="{{ about_url }}">About</a>
                 </li>
             </ul>
-            <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0" role="search">
-                <input class="form-control rounded lh-base" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0 position-relative" action="{% url 'product_list' %}" method="get" role="search">
+                <input class="form-control rounded lh-base pe-5" type="search" placeholder="Search" name="q" value="{{ search_term }}" aria-label="Search">
+                <button class="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 fs-5" type="submit">
+                    <i class="fa-solid fa-magnifying-glass primary-fg"></i>
+                </button>
             </form>
             <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
                 {% if user.is_authenticated %}
