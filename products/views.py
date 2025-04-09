@@ -8,7 +8,7 @@ class ProductListView(ListView):
     # model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
-    paginate_by = 3
+    paginate_by = 8
 
     def get_queryset(self):
         queryset = Product.objects.all().order_by("-created_on")
@@ -19,7 +19,9 @@ class ProductListView(ListView):
                 Q(name__icontains=search_query) |
                 Q(description__icontains=search_query) |
                 Q(sku__icontains=search_query) |
-                Q(categories__name__icontains=search_query)
+                Q(categories__name__icontains=search_query) |
+                Q(specifications__value__icontains=search_query) |
+                Q(specifications__spec_type__name__icontains=search_query)
             ).distinct()
 
         return queryset
