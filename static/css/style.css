@@ -315,6 +315,44 @@ a > i {
 }
 
 
+#dropdownMenuButton {
+    border: none;
+    transition: 0.3s ease;
+
+    &:hover {
+        background-color: var(--primary-background);
+        box-shadow: var(--box-shadow-small);
+        color: white;
+    }
+
+    &:focus {
+        background-color: var(--secondary-background);
+        box-shadow: var(--box-shadow-small);
+        color: white;
+    }
+}
+
+
+.dropdown-item {
+    color: var(--primary-text);
+    transition: 0.3s ease;
+
+    & i {
+        transition: 0.3s ease;
+    }
+
+    &:hover {
+        border-radius: 6px;
+        background-color: var(--secondary-background);
+        color: white;
+
+        & i {
+            color: white;
+        }
+    }
+}
+
+
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;

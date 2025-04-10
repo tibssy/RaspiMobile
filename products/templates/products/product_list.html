@@ -7,6 +7,42 @@
 {% block content %}
     <div class="container d-flex flex-column flex-fill my-4">
         <h1 class="text-center border-bottom mb-4 pb-2">{% trans "Products" %}</h1>
+
+        <div class="d-flex justify-content-between">
+            {% if search_term %}
+                <p class="text-center fs-4">{% blocktrans %}Showing results for "{{ search_term }}"{% endblocktrans %}</p>
+            {% else %}
+                <p class="text-center fs-4">{% blocktrans %}All products{% endblocktrans %}</p>
+            {% endif %}
+
+
+            <!-- TODO: Add filter-->
+
+
+            <div class="dropdown ms-auto me-0">
+                <button class="btn dropdown-toggle " type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                </button>
+                <ul class="dropdown-menu p-1" aria-labelledby="dropdownMenuButton">
+                    <li>
+                        <a class="dropdown-item" href="?sort=newest{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-regular fa-calendar-plus me-2"></i>Newest Arrivals
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?sort=price_asc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-solid fa-arrow-down-1-9 me-1"></i>Price: Low to High
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?sort=price_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-solid fa-arrow-up-9-1 me-1"></i>Price: High to Low
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center">
             {% for product in products %}
                 <div class="col my-3">
@@ -23,7 +59,7 @@
     <!-- Pagination -->
     <div class="pagination justify-content-center mb-2">
         <span class="step-links">
-            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
+            <a href="?page=1{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
                 <i class="fa-solid fa-angles-left primary-fg"></i>
             </a>
 
@@ -31,11 +67,11 @@
                 {% if page_number == page_obj.number %}
                     <span class="current-page-button">{{ page_number }}</span>
                 {% elif page_number <= 5 %}
-                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
                         {{ page_number }}
                     </a>
                 {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
-                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
                         {{ page_number }}
                     </a>
                 {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
@@ -43,13 +79,13 @@
                         <span>...</span>
                     {% endif %}
                 {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
-                    <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-button">
+                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
                         {{ page_number }}
                     </a>
                 {% endif %}
             {% endfor %}
 
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
                 <i class="fa-solid fa-angles-right primary-fg"></i>
             </a>
         </span>

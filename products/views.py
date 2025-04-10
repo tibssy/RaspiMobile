@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Category
 from django.db.models import Q
 
 
@@ -11,8 +11,9 @@ class ProductListView(ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by("-created_on")
+        queryset = Product.objects.all()
         search_query = self.request.GET.get('q')
+        sort_by = self.request.GET.get('sort')
 
         if search_query:
             queryset = queryset.filter(
@@ -24,11 +25,21 @@ class ProductListView(ListView):
                 Q(specifications__spec_type__name__icontains=search_query)
             ).distinct()
 
+        if sort_by == 'newest':
+            queryset = queryset.order_by('-created_on')
+        elif sort_by == 'price_asc':
+            queryset = queryset.order_by('price')
+        elif sort_by == 'price_desc':
+            queryset = queryset.order_by('-price')
+        else:
+            queryset = queryset.order_by('-created_on')
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_term'] = self.request.GET.get('q', '')
+        context['current_sort'] = self.request.GET.get('sort', '')
         return context
 
 
