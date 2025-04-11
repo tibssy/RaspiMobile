@@ -7,7 +7,7 @@
         <div class="flex-grow-1 overflow-auto pe-1">
             <ul class="list-unstyled">
                 {% for item in current_cart_items %}
-                    <li class="mb-2 pb-2 border-bottom">
+                    <li class="bg-white rounded-3 shadow-normal mb-2 px-3 py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>{{ item.product.name }}</strong><br>
@@ -24,9 +24,9 @@
         <div class="mt-auto pt-2 border-top">
             <p class="d-flex justify-content-between">
                 <span>Subtotal ({{ current_cart_item_count }} items):</span>
-                <span class="fw-bold">£{{ current_cart_total|floatformat:2 }}</span>
+                <span class="fw-bold">€{{ current_cart_total|floatformat:2 }}</span>
             </p>
-            <a href="{# url 'view_cart' #}" class="btn btn-primary w-100">View Cart & Checkout</a>
+            <a href="{# url 'view_cart' #}" class="btn btn-primary w-100 bg-white">View Cart & Checkout</a>
         </div>
     {% else %}
         <p class="text-muted mt-3 text-center flex-grow-1 d-flex align-items-center justify-content-center">Your cart is empty.</p>

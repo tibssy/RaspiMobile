@@ -13,10 +13,14 @@
             <p class="card-text">${{ product.price }}</p>
         </div>
     </a>
-    <div class="card-footer bg-white">
-        <small class="text-muted">
-            <a href="#" class="btn btn-primary">{% trans "Add to Cart" %}</a>
-            <a href="#" class="btn btn-secondary">{% trans "View Details" %}</a>
-        </small>
+    <div class="card-footer bg-white border-top-0 px-2 pt-0">
+        <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-primary w-100 btn-sm">
+                <i class="fa-solid fa-cart-plus me-1"></i>
+                {% trans "Add to Cart" %}
+            </button>
+        </form>
     </div>
 </div>
