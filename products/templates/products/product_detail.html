@@ -56,7 +56,7 @@
         <div class="overflow-x-auto pt-2 pb-4 px-2">
             <div class="featured-products-container">
                 {% for product in related_products %}
-                    {% include './components/product_card.html' %}
+                    {% include 'products/partials/product_card.html' %}
                 {% empty %}
                     <div class="col">
                         <p>{% trans "No related products available." %}</p>
