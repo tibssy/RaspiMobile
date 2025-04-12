@@ -1,0 +1,1 @@
+GUEST_CART_SESSION_ID = 'guest_cart'

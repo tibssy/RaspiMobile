@@ -1,11 +1,11 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404, render
 from django.views import View
 from django.contrib import messages
 from .models import Cart, CartItem
 from products.models import Product
-
-
-GUEST_CART_SESSION_ID = 'guest_cart'
+from .context_processors import cart_context
+from .constants import GUEST_CART_SESSION_ID
 
 
 class AddToCartView(View):
@@ -26,8 +26,14 @@ class AddToCartView(View):
         else:
             self._add_to_session_cart(request, product, quantity)
 
-        redirect_url = request.META.get('HTTP_REFERER', 'product_list')
-        return redirect(redirect_url)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            context = cart_context(request)
+            cart_sidebar_html = render(request, 'cart/partials/cart_sidebar.html', context).content.decode('utf-8')
+            return HttpResponse(cart_sidebar_html)
+        else:
+            # fallback if javascript doesn't load
+            redirect_url = request.META.get('HTTP_REFERER', 'product_list')
+            return redirect(redirect_url)
 
     def _add_to_db_cart(self, request, product, quantity):
         cart, _ = Cart.objects.get_or_create(user=request.user)

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.querySelector('#chatContainer');
     const animationDuration = 300;
     let isSidebarOpen = false;
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
 
     function setCarouselItemActive(index) {
         sidebarCarouselItems.forEach((item, i) => {
@@ -79,6 +80,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    addToCartForms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const productId = this.dataset.productId;
+            const formData = new FormData(this);
+            sendAddToCartRequest(productId, formData);
+        });
+    });
+
+    function sendAddToCartRequest(productId, formData) {
+        fetch(`/cart/add/${productId}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(cartSidebarHtml => {
+                const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
+                cartCarouselItem.innerHTML = cartSidebarHtml;
+            })
+            .catch(error => {
+                console.error('There was a problem adding to the cart:', error);
+            });
+    }
 
     window.addEventListener('resize', () => toggleSidebar(false));
 });

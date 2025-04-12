@@ -20,15 +20,18 @@
                 <p>{{ product.description }}</p>
                 <p><strong>{% trans "SKU:" %}</strong> {{ product.sku }}</p>
                 <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
-
-                <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="flex-grow-1 mb-sm-0">
+                <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1 add-to-cart-form" data-product-id="{{ product.pk }}">
                     {% csrf_token %}
                     <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn-primary w-100 add-to-cart-button">
+                        <i class="fa-solid fa-cart-plus me-1"></i>
                         {% trans "Add to Cart" %}
                     </button>
                 </form>
-                <a href="#" class="btn btn-primary w-100 mt-2 bg-success">{% trans "Buy Now" %}</a>
+                <a href="#" class="btn btn-primary w-100 mt-2 bg-success">
+                    <i class="fa-solid fa-cash-register me-1"></i>
+                    {% trans "Buy Now" %}
+                </a>
             </div>
         </div>
 

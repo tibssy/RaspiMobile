@@ -1,7 +1,7 @@
 from .models import Cart, CartItem
 from products.models import Product
 from decimal import Decimal
-from .views import GUEST_CART_SESSION_ID
+from .constants import GUEST_CART_SESSION_ID
 
 
 def cart_context(request):
@@ -48,7 +48,6 @@ def cart_context(request):
                     temp_cart_items.append(temp_item)
 
             cart_items = temp_cart_items
-            print(cart_items)
 
     return {
         'current_cart': cart,
