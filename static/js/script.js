@@ -136,6 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!csrfToken) console.error('CSRF token meta tag not found or empty.');
                 }
             }
+
+            const productLink = event.target.closest('a[href*="/product/"]');
+            if (productLink) {
+                event.preventDefault();
+                const productUrl = productLink.href;
+
+                if (isSidebarOpen) {
+                    toggleSidebar(false);
+                    setTimeout(() => {
+                        window.location.href = productUrl;
+                    }, animationDuration);
+                } else {
+                    window.location.href = productUrl;
+                }
+            }
         });
     } else {
          console.error("Sidebar content container not found for event delegation.");

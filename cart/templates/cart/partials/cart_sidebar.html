@@ -7,27 +7,25 @@
         <div class="flex-grow-1 overflow-auto pe-1">
             <ul class="list-unstyled">
                 {% for item in current_cart_items %}
-                    <li class="bg-white rounded-3 shadow-normal overflow-hidden mb-2">
-                        <div class="d-flex">
+                    <li class="bg-white rounded-3 shadow-normal overflow-hidden mb-2 position-relative">
+                        <a href="{% url 'product_detail' pk=item.product.id %}" class="text-decoration-none text-dark d-flex">
                             {% with product=item.product %}
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid cart-image">
                                 <div class="d-flex flex-column justify-content-between w-100 ms-2 my-2 me-3">
-                                    <div class="d-flex justify-content-between">
-                                        <strong>{{ product.name }}</strong>
-                                        <a href="{% url 'remove_from_cart' product.id %}"
-                                           class="text-danger remove-from-cart-button"
-                                           data-product-id="{{ product.id }}"
-                                           title="Remove item">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </div>
+                                    <strong>{{ product.name }}</strong>
                                     <div class="d-flex justify-content-between fs-5">
                                         <small class="text-muted">Qty: <strong>{{ item.quantity }}</strong></small>
                                         <span class="fw-bold">€{{ item.total_price|floatformat:2 }}</span>
                                     </div>
                                 </div>
                             {% endwith %}
-                        </div>
+                        </a>
+                        <a href="{% url 'remove_from_cart' item.product.id %}"
+                           class="text-danger remove-from-cart-button position-absolute top-0 end-0 p-2"
+                           data-product-id="{{ item.product.id }}"
+                           title="Remove item">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
