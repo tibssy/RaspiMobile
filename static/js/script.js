@@ -13,9 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarCarousel = bootstrap.Carousel.getOrCreateInstance(sidebar);
     const sidebarCarouselItems = document.querySelectorAll('#sidebar .carousel-item');
     const chatContainer = document.querySelector('#chatContainer');
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
+    const removeFromCartForms = document.querySelectorAll('.remove-from-cart-form');
     const animationDuration = 300;
     let isSidebarOpen = false;
-    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
 
     function setCarouselItemActive(index) {
         sidebarCarouselItems.forEach((item, i) => {
@@ -103,15 +104,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     return response.text();
                 } else {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Network response was not ok adding item.');
                 }
             })
             .then(cartSidebarHtml => {
                 const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
-                cartCarouselItem.innerHTML = cartSidebarHtml;
+                if (cartCarouselItem) {
+                    cartCarouselItem.innerHTML = cartSidebarHtml;
+//                     if (!isSidebarOpen) { toggleSection('cart', 2); }
+                }
             })
             .catch(error => {
                 console.error('There was a problem adding to the cart:', error);
+            });
+    }
+
+    if (sidebarContent) {
+        sidebarContent.addEventListener('click', function(event) {
+            const removeButton = event.target.closest('.remove-from-cart-button');
+            if (removeButton) {
+                event.preventDefault();
+                const productId = removeButton.dataset.productId;
+                const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+                const csrfToken = csrfTokenMeta ? csrfTokenMeta.content : null;
+
+                if (productId && csrfToken) {
+                    sendRemoveFromCartRequest(productId, csrfToken);
+                } else {
+                    console.error('Could not find product ID or CSRF token for removal.');
+                    if (!productId) console.error('Product ID missing from button data attribute.');
+                    if (!csrfToken) console.error('CSRF token meta tag not found or empty.');
+                }
+            }
+        });
+    } else {
+         console.error("Sidebar content container not found for event delegation.");
+    }
+
+    function sendRemoveFromCartRequest(productId, csrfToken) {
+        fetch(`/cart/remove/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok removing item.');
+                }
+            })
+            .then(cartSidebarHtml => {
+                const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
+                 if (cartCarouselItem) {
+                    cartCarouselItem.innerHTML = cartSidebarHtml;
+                 }
+            })
+            .catch(error => {
+                console.error('There was a problem removing the item from the cart:', error);
             });
     }
 

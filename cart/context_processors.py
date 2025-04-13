@@ -43,7 +43,7 @@ def cart_context(request):
                         'product': product,
                         'quantity': quantity,
                         'total_price': item_total,
-                        'id': None
+                        'id': product_id
                     }
                     temp_cart_items.append(temp_item)
 

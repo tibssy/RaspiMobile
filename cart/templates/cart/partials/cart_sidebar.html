@@ -9,19 +9,24 @@
                 {% for item in current_cart_items %}
                     <li class="bg-white rounded-3 shadow-normal overflow-hidden mb-2">
                         <div class="d-flex">
-                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover;">
-                            <div class="d-flex flex-column justify-content-between w-100 m-2">
-                                <div class="d-flex justify-content-between">
-                                    <strong>{{ item.product.name }}</strong>
-                                    <a href="{# url 'remove_from_cart' item.id #}" class="text-danger">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
+                            {% with product=item.product %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid cart-image">
+                                <div class="d-flex flex-column justify-content-between w-100 ms-2 my-2 me-3">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ product.name }}</strong>
+                                        <a href="{% url 'remove_from_cart' product.id %}"
+                                           class="text-danger remove-from-cart-button"
+                                           data-product-id="{{ product.id }}"
+                                           title="Remove item">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                    <div class="d-flex justify-content-between fs-5">
+                                        <small class="text-muted">Qty: <strong>{{ item.quantity }}</strong></small>
+                                        <span class="fw-bold">€{{ item.total_price|floatformat:2 }}</span>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    <small class="text-muted">Qty: <strong>{{ item.quantity }}</strong></small>
-                                    <span class="fw-bold">€{{ item.total_price|floatformat:2 }}</span>
-                                </div>
-                            </div>
+                            {% endwith %}
                         </div>
                     </li>
                 {% endfor %}

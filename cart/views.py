@@ -62,3 +62,46 @@ class AddToCartView(View):
             messages.success(request, f'Added {quantity} x {product.name} to your cart.')
 
         request.session.modified = True
+
+
+class RemoveFromCartView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = self.kwargs.get('product_id')
+        product = get_object_or_404(Product, id=product_id)
+
+        if request.user.is_authenticated:
+            self._remove_from_db_cart(request, product_id, product.name)
+        else:
+            self._remove_from_session_cart(request, product_id, product.name)
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            context = cart_context(request)
+            cart_sidebar_html = render(request, 'cart/partials/cart_sidebar.html', context).content.decode('utf-8')
+            return HttpResponse(cart_sidebar_html)
+        else:
+            # Fallback for non-AJAX call
+            messages.success(request, f'Removed {product.name} from your cart.')
+            redirect_url = request.META.get('HTTP_REFERER', 'product_list')
+            return redirect(redirect_url)
+
+    def _remove_from_db_cart(self, request, product_id, product_name):
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
+            cart_item.delete()
+            messages.success(request, f'Removed {product_name} from your cart.')
+        except Cart.DoesNotExist:
+            messages.error(request, "Cart not found.")
+        except CartItem.DoesNotExist:
+            messages.warning(request, f'{product_name} was not found in your cart.')
+
+    def _remove_from_session_cart(self, request, product_id, product_name):
+        guest_cart = request.session.get(GUEST_CART_SESSION_ID, {})
+        product_id_str = str(product_id)
+
+        if product_id_str in guest_cart:
+            del guest_cart[product_id_str]
+            request.session.modified = True
+            messages.success(request, f'Removed {product_name} from your cart.')
+        else:
+            messages.warning(request, f'{product_name} was not found in your cart.')
