@@ -359,6 +359,11 @@ a > i {
 }
 
 
+
+
+
+
+
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;
@@ -392,8 +397,12 @@ a > i {
         }
     }
 
-    .featured-products-container .card {
-        max-width: 200px;
+    .featured-products-container {
+        max-width: 400px;
+    
+        & .card {
+            max-width: 160px;
+        }
     }
 }
 

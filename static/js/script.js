@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
                 if (cartCarouselItem) {
                     cartCarouselItem.innerHTML = cartSidebarHtml;
-//                     if (!isSidebarOpen) { toggleSection('cart', 2); }
+                     if (!isSidebarOpen && window.innerWidth >= 768) { toggleSection('cart', 2); }
                 }
             })
             .catch(error => {
