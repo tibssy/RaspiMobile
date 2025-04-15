@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_title %}- {% trans "Checkout" %}{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-4">Checkout</h1>
+    </div>
+{% endblock %}
