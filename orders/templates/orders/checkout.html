@@ -9,6 +9,97 @@
 
 {% block content %}
     <div class="container mt-4 mb-5">
-        <h1 class="mb-4">Checkout</h1>
+        <h1 class="mb-4">{% trans "Checkout" %}</h1>
+        <form method="post" id="checkout-form">
+            {% csrf_token %}
+            {{ order_item_formset.management_form }}
+
+            <div class="row g-5">
+                <div class="col-xl-6 order-xl-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="primary-fg">{% trans "Your cart" %}</span>
+                        <span class="badge primary-bg rounded-pill">{{ current_cart_item_count }}</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        {% for form in order_item_formset %}
+                            {% for item in current_cart_items %}
+                                {% if form.initial.product_id == item.product.id %}
+                                    <li class="list-group-item lh-sm">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 col-md-3 px-1">
+                                                {% if item.product.image and item.product.image.url %}
+                                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded cart-image">
+                                                {% else %}
+                                                    <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" class="img-fluid rounded cart-image">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-4 col-md-4">
+                                                <h6 class="my-0">{{ item.product.name }}</h6>
+                                                <small class="text-muted">${{ item.product.price }} each</small>
+                                            </div>
+                                            <div class="col-3 col-md-3">
+                                                {{ form.product_id }}
+                                                {{ form.quantity|as_crispy_field }}
+                                                {% if form.quantity.errors %}
+                                                    {% for error in form.quantity.errors %}
+                                                        <div class="invalid-feedback d-block">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-2 col-md-2 text-end">
+                                                {% comment %} Display item total dynamically maybe with JS later {% endcomment %}
+                                                <span class="text-muted item-subtotal" data-price="{{ item.product.price }}">
+                                                    ${% widthratio form.initial.quantity 1 item.product.price %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% cycle '' break %}
+                               {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% if order_item_formset.non_form_errors %}
+                            <li class="list-group-item list-group-item-danger">
+                            {% for error in order_item_formset.non_form_errors %}
+                                {{ error }}
+                            {% endfor %}
+                            </li>
+                        {% endif %}
+
+                         <li class="list-group-item d-flex justify-content-between">
+                            <span>Subtotal (EURO)</span>
+                            <strong id="cart-subtotal">€{{ current_cart_total|floatformat:2 }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Delivery</span>
+                            <strong id="delivery-cost">€0.00</strong>
+                        </li>
+                         <li class="list-group-item d-flex justify-content-between bg-light">
+                            <span class="text-success">Total (USD)</span>
+                            <strong class="text-success" id="grand-total">€{{ current_cart_total|floatformat:2 }}</strong>
+                        </li>
+                    </ul>
+
+                    {% crispy delivery_form %}
+
+                </div>
+
+                <div class="col-xl-6">
+                    {% crispy shipping_form %}
+
+                     <hr class="my-4">
+
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Place Order</button>
+                </div>
+            </div>
+        </form>
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ delivery_costs_data|json_script:"delivery-costs-data" }}
+    <script src="{% static 'js/checkout.js' %}"></script>
 {% endblock %}

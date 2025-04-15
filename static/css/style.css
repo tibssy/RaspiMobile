@@ -13,6 +13,7 @@
     --accent: #ff8800;
     --shadow: #00000080;
     --shadow-light: #00000071;
+    --danger-color: #bd0c0c;
     --box-shadow-small: 0 2px 2px var(--shadow);
     --box-shadow-normal: 0 2px 4px var(--shadow);
     --box-shadow-large: 0 4px 8px var(--shadow-light);
@@ -184,7 +185,19 @@ a > i {
         border: 1px solid var(--primary-background);
         border-radius: 6px;
         box-shadow: var(--box-shadow-normal);
-        /* transform: scale(1.01); */
+    }
+
+    &.is-invalid {
+        border: 1px solid transparent;
+        border-bottom: 1px solid var(--danger-color);
+
+        &:focus {
+            outline: none;
+            background-color: #fff;
+            border: 1px solid var(--danger-color);
+            border-radius: 6px;
+            box-shadow: var(--box-shadow-normal);
+        }
     }
 }
 
