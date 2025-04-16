@@ -379,6 +379,7 @@ a > i {
     position: absolute;
     width: inherit;
     z-index: 100;
+    padding: 8px 26px;
     right: 0;
     filter: drop-shadow(var(--box-shadow-small));
     transition: 0.3s ease;

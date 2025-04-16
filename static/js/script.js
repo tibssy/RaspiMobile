@@ -17,10 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const addToCartForms = document.querySelectorAll('.add-to-cart-form');
     const checkoutButton = document.querySelector('#checkout-button');
     const animationDuration = 300;
+    const messageDelay = 3000;
     let isSidebarOpen = false;
 
 
-    function autoCloseAlerts(containerSelector = '#messages', delay = 3000) {
+    function autoCloseAlerts(containerSelector = '#messages', delay = messageDelay) {
         const messageContainer = document.querySelector(containerSelector);
         if (!messageContainer) {
             console.warn("Message container not found for auto-closing:", containerSelector);
@@ -55,13 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Cart carousel item not found for updating.");
         }
 
-        if (messagesContainer && data.messages_html !== undefined) {
-            messagesContainer.innerHTML = data.messages_html;
-            const alertElements = messagesContainer.querySelectorAll('.alert');
-            alertElements.forEach(alert => bootstrap.Alert.getOrCreateInstance(alert));
-            autoCloseAlerts('#messages', 3000);
-        } else if (data.messages_html !== undefined) {
-            console.error("Messages container #messages not found.");
+        if (messagesContainer && data.messages_html && data.messages_html.trim() !== '') {
+            messagesContainer.insertAdjacentHTML('beforeend', data.messages_html);
+            setTimeout(() => {
+                const alertElements = messagesContainer.querySelectorAll('.alert');
+                if (alertElements.length > 0) {
+                    alertElements.forEach(alert => bootstrap.Alert.getOrCreateInstance(alert));
+                    autoCloseAlerts('#messages', messageDelay);
+                }
+            }, 0);
         }
     }
 
@@ -169,9 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('There was a problem adding to the cart:', error);
             if (messagesContainer) {
-                 messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to add item to cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-                 bootstrap.Alert.getOrCreateInstance(messagesContainer.querySelector('.alert'));
-                 autoCloseAlerts('#messages', 3000);
+                const errorHtml = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to add item to cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                messagesContainer.insertAdjacentHTML('beforeend', errorHtml);
+                setTimeout(() => {
+                    const errorAlert = messagesContainer.lastElementChild;
+                    if (errorAlert && errorAlert.classList.contains('alert')) {
+                        bootstrap.Alert.getOrCreateInstance(errorAlert);
+                        autoCloseAlerts('#messages', messageDelay);
+                    }
+                }, 0);
             }
         });
     }
@@ -238,9 +247,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('There was a problem removing the item from the cart:', error);
             if (messagesContainer) {
-                messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to remove item from cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-                bootstrap.Alert.getOrCreateInstance(messagesContainer.querySelector('.alert'));
-                autoCloseAlerts('#messages', 3000);
+                const errorHtml = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to remove item from cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                messagesContainer.insertAdjacentHTML('beforeend', errorHtml);
+                setTimeout(() => {
+                    const errorAlert = messagesContainer.lastElementChild;
+                    if (errorAlert && errorAlert.classList.contains('alert')) {
+                        bootstrap.Alert.getOrCreateInstance(errorAlert);
+                        autoCloseAlerts('#messages', messageDelay);
+                    }
+                }, 0);
             }
         });
     }
