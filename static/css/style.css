@@ -75,6 +75,10 @@ body {
     transform: translateX(-100vw);
 }
 
+.sidebar-push {
+    margin-right: var(--sidebar-width) !important;
+}
+
 .sidebar-width{
     width: var(--sidebar-width);
 }
@@ -371,7 +375,13 @@ a > i {
     object-fit: cover;
 }
 
-
+#messages {
+    position: absolute;
+    width: inherit;
+    z-index: 100;
+    right: 0;
+    transition: 0.3s ease;
+}
 
 
 
@@ -408,6 +418,10 @@ a > i {
             width: var(--sidebar-width);
             transition: width 0.3s ease;
         }
+    }
+
+    #messages {
+        width: unset;
     }
 
     .featured-products-container {

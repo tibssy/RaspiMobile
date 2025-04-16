@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageContainer = document.querySelector('#pageContainer');
     const sidebar = document.querySelector('#sidebar');
     const sidebarContent = document.querySelector('#sidebar .carousel-inner');
+    const messages = document.querySelector('#messages');
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href], #pageContainer a[href]');
     const sidebarControls = {
         user: document.querySelectorAll('.user-button'),
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.querySelector('#chatContainer');
     const addToCartForms = document.querySelectorAll('.add-to-cart-form');
     const removeFromCartForms = document.querySelectorAll('.remove-from-cart-form');
+    const checkoutButton = document.querySelector('#checkout-button');
     const animationDuration = 300;
     let isSidebarOpen = false;
 
@@ -37,12 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (open) {
             if (window.innerWidth >= 768) {
                 sidebar.classList.add('sidebar-open');
+                if (messages) messages.classList.add('sidebar-push');
             } else {
                 slideContainer.classList.add('slide-left');
+                if (messages) messages.classList.add('slide-left');
             }
         } else {
             sidebar.classList.remove('sidebar-open');
             slideContainer.classList.remove('slide-left');
+            if (messages) {
+                messages.classList.remove('sidebar-push');
+                messages.classList.remove('slide-left')
+            }
             resetSidebarControls();
         }
         isSidebarOpen = open;
@@ -111,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
                 if (cartCarouselItem) {
                     cartCarouselItem.innerHTML = cartSidebarHtml;
-                     if (!isSidebarOpen && window.innerWidth >= 768) { toggleSection('cart', 2); }
+                    if (!isSidebarOpen && window.innerWidth >= 768) toggleSection('cart', 2);
                 }
             })
             .catch(error => {
@@ -175,11 +183,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
                  if (cartCarouselItem) {
                     cartCarouselItem.innerHTML = cartSidebarHtml;
+                 } else {
+                    console.error("Cart carousel item not found for updating after remove.");
                  }
             })
             .catch(error => {
                 console.error('There was a problem removing the item from the cart:', error);
             });
+    }
+
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function(event) {
+            console.log('checkout called.')
+            event.preventDefault();
+            const checkoutUrl = this.href;
+
+            if (isSidebarOpen) {
+                toggleSidebar(false);
+                setTimeout(() => {
+                    window.location.href = checkoutUrl;
+                }, animationDuration);
+            } else {
+                window.location.href = checkoutUrl;
+            }
+        });
     }
 
     window.addEventListener('resize', () => toggleSidebar(false));

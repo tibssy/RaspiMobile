@@ -36,7 +36,7 @@
                 <span>Subtotal ({{ current_cart_item_count }} items):</span>
                 <span class="fw-bold">€{{ current_cart_total|floatformat:2 }}</span>
             </p>
-            <a href="{% url 'checkout' %}" class="btn btn-primary w-100 bg-white">View Cart & Checkout</a>
+            <a href="{% url 'checkout' %}" id="checkout-button" class="btn btn-primary w-100 bg-white">View Cart & Checkout</a>
         </div>
     {% else %}
         <p class="text-muted mt-3 text-center flex-grow-1 d-flex align-items-center justify-content-center">Your cart is empty.</p>
