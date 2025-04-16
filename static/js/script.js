@@ -20,6 +20,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSidebarOpen = false;
 
 
+    function autoCloseAlerts(containerSelector = '#messages', delay = 3000) {
+        const messageContainer = document.querySelector(containerSelector);
+        if (!messageContainer) {
+            console.warn("Message container not found for auto-closing:", containerSelector);
+            return;
+        }
+
+        const alerts = messageContainer.querySelectorAll('.alert');
+
+        alerts.forEach(alert => {
+            if (!alert.dataset.autoCloseTimeoutId) {
+                const timeoutId = setTimeout(() => {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    if (bsAlert) {
+                        bsAlert.close();
+                    } else {
+                        alert.remove();
+                    }
+                    if (alert.dataset.autoCloseTimeoutId) {
+                       delete alert.dataset.autoCloseTimeoutId;
+                    }
+                }, delay);
+                alert.dataset.autoCloseTimeoutId = timeoutId;
+            }
+        });
+    }
+
     function updateUIFromAjax(data) {
         const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
         if (cartCarouselItem && data.cart_sidebar_html !== undefined) {
@@ -30,13 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (messagesContainer && data.messages_html !== undefined) {
             messagesContainer.innerHTML = data.messages_html;
-             const alertElements = messagesContainer.querySelectorAll('.alert');
-             alertElements.forEach(alert => new bootstrap.Alert(alert));
+            const alertElements = messagesContainer.querySelectorAll('.alert');
+            alertElements.forEach(alert => bootstrap.Alert.getOrCreateInstance(alert));
+            autoCloseAlerts('#messages', 3000);
         } else if (data.messages_html !== undefined) {
             console.error("Messages container #messages not found.");
         }
     }
-
 
     function setCarouselItemActive(index) {
         sidebarCarouselItems.forEach((item, i) => {
@@ -130,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 return response.json();
             } else {
-                 return response.text().then(text => { throw new Error(text || 'Network response was not ok adding item.') });
+                return response.text().then(text => { throw new Error(text || 'Network response was not ok adding item.') });
             }
         })
         .then(data => {
@@ -143,7 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('There was a problem adding to the cart:', error);
             if (messagesContainer) {
                  messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to add item to cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-                 new bootstrap.Alert(messagesContainer.querySelector('.alert'));
+                 bootstrap.Alert.getOrCreateInstance(messagesContainer.querySelector('.alert'));
+                 autoCloseAlerts('#messages', 3000);
             }
         });
     }
@@ -211,7 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('There was a problem removing the item from the cart:', error);
             if (messagesContainer) {
                 messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to remove item from cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-                new bootstrap.Alert(messagesContainer.querySelector('.alert'));
+                bootstrap.Alert.getOrCreateInstance(messagesContainer.querySelector('.alert'));
+                autoCloseAlerts('#messages', 3000);
             }
         });
     }
@@ -234,4 +263,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('resize', () => toggleSidebar(false));
+    autoCloseAlerts('#messages', 3000);
 });
