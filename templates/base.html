@@ -70,17 +70,16 @@
 
     <!-- Main -->
     <main class="d-flex flex-fill vw-100 overflow-hidden">
-        {% if messages %}
-            <div id="messages" class="alert-wrapper z-4 px-4 mt-2">
-                {% for message in messages %}
-                    <div class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'info' %}info{% elif message.tags == 'warning' %}warning{% elif message.tags == 'error' %}danger{% else %}primary{% endif %} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+
+        <!-- Messages -->
+        <div id="messages" class="alert-wrapper z-4 px-4 mt-2">
+            {% if messages %}
+                 {% include 'partials/messages.html' %}
+            {% endif %}
+        </div>
+
         <div id="slideContainer" class="d-flex flex-fill pb-2 px-md-2 px-lg-3">
+
             <!-- Page -->
             <div id="pageContainer" class="flex-fill rounded-3 overflow-scroll bg-white mx-2 mx-md-0 mb-2">
                 {% block content %}{% endblock %}

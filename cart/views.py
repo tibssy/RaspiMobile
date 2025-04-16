@@ -1,5 +1,6 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404, render
+from django.shortcuts import redirect, get_object_or_404
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 from django.views import View
 from django.contrib import messages
 from .models import Cart, CartItem
@@ -12,11 +13,14 @@ class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         product_id = self.kwargs.get('product_id')
         product = get_object_or_404(Product, id=product_id)
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
         try:
             quantity = int(request.POST.get('quantity', 1))
             if quantity <= 0:
                 messages.error(request, "Quantity must be a positive number.")
+                if not is_ajax:
+                    return redirect(request.META.get('HTTP_REFERER', 'product_list'))
                 quantity = 1
         except (ValueError, TypeError):
             quantity = 1
@@ -26,10 +30,15 @@ class AddToCartView(View):
         else:
             self._add_to_session_cart(request, product, quantity)
 
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if is_ajax:
             context = cart_context(request)
-            cart_sidebar_html = render(request, 'cart/partials/cart_sidebar.html', context).content.decode('utf-8')
-            return HttpResponse(cart_sidebar_html)
+            cart_sidebar_html = render_to_string('cart/partials/cart_sidebar.html', context, request=request)
+            messages_html = render_to_string('partials/messages.html', {}, request=request)
+
+            return JsonResponse({
+                'cart_sidebar_html': cart_sidebar_html,
+                'messages_html': messages_html,
+            })
         else:
             # fallback if javascript doesn't load
             redirect_url = request.META.get('HTTP_REFERER', 'product_list')
@@ -68,19 +77,24 @@ class RemoveFromCartView(View):
     def post(self, request, *args, **kwargs):
         product_id = self.kwargs.get('product_id')
         product = get_object_or_404(Product, id=product_id)
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
         if request.user.is_authenticated:
             self._remove_from_db_cart(request, product_id, product.name)
         else:
             self._remove_from_session_cart(request, product_id, product.name)
 
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if is_ajax:
             context = cart_context(request)
-            cart_sidebar_html = render(request, 'cart/partials/cart_sidebar.html', context).content.decode('utf-8')
-            return HttpResponse(cart_sidebar_html)
+            cart_sidebar_html = render_to_string('cart/partials/cart_sidebar.html', context, request=request)
+            messages_html = render_to_string('partials/messages.html', {}, request=request)
+
+            return JsonResponse({
+                'cart_sidebar_html': cart_sidebar_html,
+                'messages_html': messages_html,
+            })
         else:
             # Fallback for non-AJAX call
-            messages.success(request, f'Removed {product.name} from your cart.')
             redirect_url = request.META.get('HTTP_REFERER', 'product_list')
             return redirect(redirect_url)
 

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageContainer = document.querySelector('#pageContainer');
     const sidebar = document.querySelector('#sidebar');
     const sidebarContent = document.querySelector('#sidebar .carousel-inner');
-    const messages = document.querySelector('#messages');
+    const messagesContainer = document.querySelector('#messages');
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link, a.navbar-brand, header .icon-button[href], #pageContainer a[href]');
     const sidebarControls = {
         user: document.querySelectorAll('.user-button'),
@@ -15,10 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarCarouselItems = document.querySelectorAll('#sidebar .carousel-item');
     const chatContainer = document.querySelector('#chatContainer');
     const addToCartForms = document.querySelectorAll('.add-to-cart-form');
-    const removeFromCartForms = document.querySelectorAll('.remove-from-cart-form');
     const checkoutButton = document.querySelector('#checkout-button');
     const animationDuration = 300;
     let isSidebarOpen = false;
+
+
+    function updateUIFromAjax(data) {
+        const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
+        if (cartCarouselItem && data.cart_sidebar_html !== undefined) {
+            cartCarouselItem.innerHTML = data.cart_sidebar_html;
+        } else if (data.cart_sidebar_html !== undefined) {
+            console.error("Cart carousel item not found for updating.");
+        }
+
+        if (messagesContainer && data.messages_html !== undefined) {
+            messagesContainer.innerHTML = data.messages_html;
+             const alertElements = messagesContainer.querySelectorAll('.alert');
+             alertElements.forEach(alert => new bootstrap.Alert(alert));
+        } else if (data.messages_html !== undefined) {
+            console.error("Messages container #messages not found.");
+        }
+    }
+
 
     function setCarouselItemActive(index) {
         sidebarCarouselItems.forEach((item, i) => {
@@ -39,17 +57,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (open) {
             if (window.innerWidth >= 768) {
                 sidebar.classList.add('sidebar-open');
-                if (messages) messages.classList.add('sidebar-push');
+                if (messagesContainer) messagesContainer.classList.add('sidebar-push');
             } else {
                 slideContainer.classList.add('slide-left');
-                if (messages) messages.classList.add('slide-left');
+                if (messagesContainer) messagesContainer.classList.add('slide-left');
             }
         } else {
             sidebar.classList.remove('sidebar-open');
             slideContainer.classList.remove('slide-left');
-            if (messages) {
-                messages.classList.remove('sidebar-push');
-                messages.classList.remove('slide-left')
+            if (messagesContainer) {
+                messagesContainer.classList.remove('sidebar-push');
+                messagesContainer.classList.remove('slide-left')
             }
             resetSidebarControls();
         }
@@ -108,23 +126,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-CSRFToken': formData.get('csrfmiddlewaretoken')
             }
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Network response was not ok adding item.');
-                }
-            })
-            .then(cartSidebarHtml => {
-                const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
-                if (cartCarouselItem) {
-                    cartCarouselItem.innerHTML = cartSidebarHtml;
-                    if (!isSidebarOpen && window.innerWidth >= 768) toggleSection('cart', 2);
-                }
-            })
-            .catch(error => {
-                console.error('There was a problem adding to the cart:', error);
-            });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                 return response.text().then(text => { throw new Error(text || 'Network response was not ok adding item.') });
+            }
+        })
+        .then(data => {
+            updateUIFromAjax(data);
+            if (!isSidebarOpen && window.innerWidth >= 768 && data.messages_html && data.messages_html.includes('alert-success')) {
+                 toggleSection('cart', 2);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem adding to the cart:', error);
+            if (messagesContainer) {
+                 messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to add item to cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                 new bootstrap.Alert(messagesContainer.querySelector('.alert'));
+            }
+        });
     }
 
     if (sidebarContent) {
@@ -142,6 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Could not find product ID or CSRF token for removal.');
                     if (!productId) console.error('Product ID missing from button data attribute.');
                     if (!csrfToken) console.error('CSRF token meta tag not found or empty.');
+                    if (messagesContainer) {
+                        messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Error removing item: Missing required data.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                        new bootstrap.Alert(messagesContainer.querySelector('.alert'));
+                    }
                 }
             }
 
@@ -172,24 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-CSRFToken': csrfToken
             },
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Network response was not ok removing item.');
-                }
-            })
-            .then(cartSidebarHtml => {
-                const cartCarouselItem = document.querySelector('#sidebar .carousel-item:nth-child(3)');
-                 if (cartCarouselItem) {
-                    cartCarouselItem.innerHTML = cartSidebarHtml;
-                 } else {
-                    console.error("Cart carousel item not found for updating after remove.");
-                 }
-            })
-            .catch(error => {
-                console.error('There was a problem removing the item from the cart:', error);
-            });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return response.text().then(text => { throw new Error(text || 'Network response was not ok removing item.') });
+            }
+        })
+        .then(data => {
+            updateUIFromAjax(data);
+        })
+        .catch(error => {
+            console.error('There was a problem removing the item from the cart:', error);
+            if (messagesContainer) {
+                messagesContainer.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">Failed to remove item from cart. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+                new bootstrap.Alert(messagesContainer.querySelector('.alert'));
+            }
+        });
     }
 
     if (checkoutButton) {
