@@ -60,4 +60,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calculateAndUpdateTotals();
+
+    form.addEventListener("submit", function (event) {
+        const invalidFields = form.querySelectorAll(":invalid");
+
+        if (invalidFields.length > 0) {
+            event.preventDefault();
+            invalidFields.forEach(field => {
+                field.classList.add("is-invalid");
+            });
+
+            invalidFields[0].scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    });
+
+    form.querySelectorAll("input, select, textarea").forEach(field => {
+        field.addEventListener("input", () => {
+            if (field.checkValidity()) {
+                field.classList.remove("is-invalid");
+            }
+        });
+        field.addEventListener("change", () => {
+            if (field.checkValidity()) {
+                field.classList.remove("is-invalid");
+            }
+        });
+    });
 });
