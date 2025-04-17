@@ -6,7 +6,6 @@
 
 {% block extra_title %}- {% trans "Checkout" %}{% endblock %}
 
-
 {% block content %}
     <div class="container mt-4 mb-5">
         <h1 class="mb-4">{% trans "Checkout" %}</h1>
@@ -18,46 +17,54 @@
                 <div class="col-xl-6 order-xl-last">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="primary-fg">{% trans "Your cart" %}</span>
-                        <span class="badge primary-bg rounded-pill">{{ current_cart_item_count }}</span>
+                        <span class="badge primary-bg rounded-pill">{{ current_cart_item_count|default:0 }}</span>
                     </h4>
                     <ul class="list-group mb-3">
                         {% for form in order_item_formset %}
-                            {% for item in current_cart_items %}
-                                {% if form.initial.product_id == item.product.id %}
-                                    <li class="list-group-item lh-sm">
-                                        <div class="row align-items-center">
-                                            <div class="col-3 col-md-3 px-1">
-                                                {% if item.product.image and item.product.image.url %}
-                                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded cart-image">
-                                                {% else %}
-                                                    <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" class="img-fluid rounded cart-image">
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-4 col-md-4">
-                                                <h6 class="my-0">{{ item.product.name }}</h6>
-                                                <small class="text-muted">€{{ item.product.price }} each</small>
-                                            </div>
-                                            <div class="col-3 col-md-3">
-                                                {{ form.product_id }}
-                                                {{ form.quantity|as_crispy_field }}
-                                                {% if form.quantity.errors %}
-                                                    {% for error in form.quantity.errors %}
-                                                        <div class="invalid-feedback d-block">
-                                                            {{ error }}
-                                                        </div>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-2 col-md-2 text-end">
-                                                <span class="text-muted item-subtotal" data-price="{{ item.product.price }}">
-                                                    €{% widthratio form.initial.quantity 1 item.product.price %}
-                                                </span>
-                                            </div>
+                            {% if form.product %}
+                                <li class="list-group-item lh-sm">
+                                    <div class="row align-items-center">
+                                        <div class="col-3 col-md-3 px-1">
+                                            {% if form.product.image and form.product.image.url %}
+                                                <img src="{{ form.product.image.url }}" alt="{{ form.product.name }}" class="img-fluid rounded cart-image">
+                                            {% else %}
+                                                <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" class="img-fluid rounded cart-image">
+                                            {% endif %}
                                         </div>
-                                    </li>
-                                    {% cycle '' break %}
-                               {% endif %}
-                            {% endfor %}
+                                        <div class="col-4 col-md-4">
+                                            <h6 class="my-0">{{ form.product.name }}</h6>
+                                            <small class="text-muted">€{{ form.product.price|floatformat:2 }} each</small>
+                                        </div>
+                                        <div class="col-3 col-md-3">
+                                            {{ form.product_id }}
+                                            {{ form.quantity|as_crispy_field }}
+                                            {% if form.quantity.errors %}
+                                                {% for error in form.quantity.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if form.non_field_errors %}
+                                                 <div class="invalid-feedback d-block">
+                                                     {% for error in form.non_field_errors %}
+                                                         {{ error }}
+                                                     {% endfor %}
+                                                 </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-2 col-md-2 text-end">
+                                            <span class="text-muted item-subtotal" data-price="{{ form.product.price }}">
+                                                €{% widthratio form.quantity.value|default:0 1 form.product.price %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="list-group-item list-group-item-warning">
+                                    Item data unavailable.
+                                </li>
+                            {% endif %}
                         {% endfor %}
 
                         {% if order_item_formset.non_form_errors %}
