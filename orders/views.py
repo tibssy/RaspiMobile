@@ -206,7 +206,6 @@ class PaymentView(View):
             'order': order,
             'subtotal': subtotal,
         }
-
         return render(request, self.template_name, context)
 
     def post(self, request, order_number, *args, **kwargs):
@@ -235,7 +234,7 @@ class PaymentView(View):
                          request.session.modified = True
 
                     messages.success(request, f"Payment successful! Your order #{order.order_number} is being processed.")
-                    return redirect(reverse('product_list'))
+                    return redirect(reverse('order_confirmation', kwargs={'order_number': order.order_number}))
             except Exception as e:
                  messages.error(request, "There was an issue finalizing your order after payment. Please contact support.")
                  return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
@@ -244,3 +243,25 @@ class PaymentView(View):
              order.save(update_fields=['status'])
              messages.error(request, "Payment failed. Please try again or contact support.")
              return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
+
+
+class OrderConfirmationView(View):
+   template_name = 'orders/order_confirmation.html'
+   def get(self, request, order_number, *args, **kwargs):
+       order = get_object_or_404(Order, order_number=order_number)
+       subtotal = Decimal('0.00')
+
+       if order.user is not None and order.user != request.user:
+           messages.error(request, "Permission Denied.")
+           return redirect(reverse('product_list'))
+
+       if order.order_total is not None and order.delivery_method and order.delivery_method.price is not None:
+            subtotal = Decimal(order.order_total) - Decimal(order.delivery_method.price)
+       else:
+            subtotal = sum(item.lineitem_total for item in order.items.all())
+
+       context = {
+           'order': order,
+           'subtotal': subtotal
+       }
+       return render(request, self.template_name, context)
