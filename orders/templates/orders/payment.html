@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_title %}- {% trans "Payment" %}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-4">{% trans "Complete Your Payment" %}</h1>
+        <div class="row g-4">
+            <div class="col-md-6 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="primary-fg">{% trans "Order Summary" %}</span>
+                    <span class="badge primary-bg rounded-pill">{{ order.items.count }} {% trans "item(s)" %}</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    {% for item in order.items.all %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ item.product.name }} (x{{ item.quantity }})</h6>
+                                <small class="text-muted">@ €{{ item.price|floatformat:2 }} each</small>
+                            </div>
+                            <span class="text-muted">€{{ item.lineitem_total|floatformat:2 }}</span>
+                        </li>
+                    {% endfor %}
+
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <strong>€{{ subtotal|floatformat:2 }}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Delivery ({{ order.delivery_method.name }})</span>
+                        <strong>€{{ order.delivery_method.price|floatformat:2 }}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <span class="text-success"><strong>Total (EURO)</strong></span>
+                        <strong class="text-success">€{{ order.order_total|floatformat:2 }}</strong>
+                    </li>
+                </ul>
+
+                <div class="card p-2">
+                    <h5 class="mb-1">{% trans "Shipping To:" %}</h5>
+                    <address class="mb-0">
+                        <strong>{{ order.shipping_address.full_name }}</strong><br>
+                        {{ order.shipping_address.address1 }}<br>
+                        {% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}<br>{% endif %}
+                        {{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }},{% endif %} {{ order.shipping_address.zipcode }}<br>
+                        {{ order.shipping_address.country }}<br>
+                        {% if order.shipping_address.email %}<i class="fas fa-envelope me-1"></i>{{ order.shipping_address.email }}<br>{% endif %}
+                        {% if order.shipping_address.phone_number %}<i class="fas fa-phone me-1"></i>{{ order.shipping_address.phone_number }}{% endif %}
+                    </address>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h4>{% trans "Payment Method" %}</h4>
+                <hr class="my-4">
+
+                <form method="post" action="{% url 'payment_page' order_number=order.order_number %}">
+                    {% csrf_token %}
+
+                    <p>{% blocktrans %}Please select your payment method below and click 'Pay Now'.{% endblocktrans %}</p>
+
+                    <div class="my-3">
+                        <div class="form-check">
+                            <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                            <label class="form-check-label" for="credit">Credit card</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
+                            <label class="form-check-label" for="paypal">PayPal</label>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> {% blocktrans %}Payment gateway integration (e.g., Stripe, PayPal) would appear here.{% endblocktrans %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-success btn-lg" type="submit">
+                        <i class="fas fa-lock"></i> {% trans "Pay Now" %} (€{{ order.order_total|floatformat:2 }})
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{% url 'checkout' %}" class="text-muted small"><i class="fas fa-arrow-left"></i> {% trans "Return to checkout details" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

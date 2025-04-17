@@ -75,8 +75,8 @@ class CreateOrderView(View):
                 users_cart = Cart.objects.filter(user=request.user).latest('updated_on')
             except Cart.DoesNotExist:
                 pass
-            except AttributeError:
-                messages.error(request, "There is an issue with the cart configuration (missing 'updated_on'). Please contact support.")
+            except AttributeError as e:
+                messages.error(request, "Cart configuration error.")
 
         if shipping_form.is_valid() and delivery_form.is_valid() and order_item_formset.is_valid():
             try:
@@ -91,7 +91,6 @@ class CreateOrderView(View):
                     }
                     if request.user.is_authenticated:
                         order_data['user'] = request.user
-
                         if users_cart:
                             order_data['cart'] = users_cart
 
@@ -131,24 +130,13 @@ class CreateOrderView(View):
 
                     order.order_total = final_order_subtotal + delivery_method.price
                     order.save(update_fields=['order_total'])
-
-                    if request.user.is_authenticated:
-                        if users_cart:
-                            CartItem.objects.filter(cart=users_cart).delete()
-                        else:
-                            pass
-                    else:
-                        if GUEST_CART_SESSION_ID in request.session:
-                            del request.session[GUEST_CART_SESSION_ID]
-                            request.session.modified = True
-
-                    messages.success(request, f"Thank you! Your order #{order.order_number} has been placed successfully.")
-                    return redirect(reverse('product_list'))
+                    messages.info(request, "Please proceed with payment.")
+                    return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
 
             except ValueError as e:
                  pass
             except Exception as e:
-                messages.error(request, "An unexpected error occurred while processing your order. Please try again.")
+                messages.error(request, "An unexpected error occurred while preparing your order. Please try again.")
 
         else:
             messages.error(request, "Please correct the errors highlighted below.")
@@ -192,3 +180,67 @@ class CreateOrderView(View):
             'delivery_costs_data': delivery_costs_dict,
         }
         return render(request, self.template_name, context)
+
+
+class PaymentView(View):
+    template_name = 'orders/payment.html'
+
+    def get(self, request, order_number, *args, **kwargs):
+        order = get_object_or_404(Order, order_number=order_number)
+        subtotal = Decimal('0.00')
+
+        if order.user is not None and order.user != request.user:
+            messages.error(request, "You do not have permission to view this order.")
+            return redirect(reverse('product_list'))
+
+        if order.status != OrderStatus.PENDING:
+            messages.warning(request, f"This order ({order_number}) cannot be paid for. Status: {order.get_status_display()}")
+            return redirect(reverse('product_list'))
+
+        if order.order_total is not None and order.delivery_method and order.delivery_method.price is not None:
+             subtotal = Decimal(order.order_total) - Decimal(order.delivery_method.price)
+        else:
+             subtotal = sum(item.lineitem_total for item in order.items.all())
+
+        context = {
+            'order': order,
+            'subtotal': subtotal,
+        }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, order_number, *args, **kwargs):
+        order = get_object_or_404(Order, order_number=order_number)
+
+        if order.user is not None and order.user != request.user:
+            messages.error(request, "Permission denied.")
+            return redirect(reverse('product_list'))
+
+        if order.status != OrderStatus.PENDING:
+             messages.error(request, "Order cannot be paid.")
+             return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
+
+        payment_successful = True
+
+        if payment_successful:
+            try:
+                with transaction.atomic():
+                    order.status = OrderStatus.PROCESSING
+                    order.save(update_fields=['status'])
+
+                    if order.cart:
+                        CartItem.objects.filter(cart=order.cart).delete()
+                    elif not order.user and GUEST_CART_SESSION_ID in request.session:
+                         del request.session[GUEST_CART_SESSION_ID]
+                         request.session.modified = True
+
+                    messages.success(request, f"Payment successful! Your order #{order.order_number} is being processed.")
+                    return redirect(reverse('product_list'))
+            except Exception as e:
+                 messages.error(request, "There was an issue finalizing your order after payment. Please contact support.")
+                 return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
+        else:
+             order.status = OrderStatus.FAILED
+             order.save(update_fields=['status'])
+             messages.error(request, "Payment failed. Please try again or contact support.")
+             return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
