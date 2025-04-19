@@ -2,13 +2,11 @@ from django.views import View
 from django.conf import settings
 from django.db import transaction
 from django.utils.decorators import method_decorator
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from cart.models import Cart, CartItem
-from .models import Order, OrderItem, ShippingAddress, DeliveryMethod, OrderStatus
+from .models import Order, OrderStatus
 import stripe
-import json
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY

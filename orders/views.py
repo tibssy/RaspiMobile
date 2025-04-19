@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views import View
 from django.contrib import messages
+from dataclasses import dataclass
 from django.db import transaction
 from django.conf import settings
 from cart.models import Cart, CartItem
@@ -11,6 +12,18 @@ from .models import Order, OrderItem, ShippingAddress, DeliveryMethod, OrderStat
 from .forms import ShippingAddressForm, DeliveryMethodForm, OrderItemFormSet
 from decimal import Decimal
 import stripe
+
+
+@dataclass
+class StatusDisplayData:
+    page_title: str
+    heading: str
+    message_template: str
+    message_level: int
+    icon_class: str
+    status_message_css_class: str
+    show_order_details: bool
+    show_retry_button: bool = False
 
 
 class CreateOrderView(View):
@@ -246,6 +259,57 @@ class PaymentView(View):
 class OrderConfirmationView(View):
     template_name = 'orders/order_confirmation.html'
 
+    STATUS_CONFIG = {
+        'succeeded': StatusDisplayData(
+            page_title="Order Confirmed",
+            heading="Order Confirmed!",
+            icon_class="fa-check-circle text-success",
+            message_template="Thank you! Your payment was successful. Your order #{order_number} is now being processed.",
+            message_level=messages.SUCCESS,
+            status_message_css_class="text-success",
+            show_order_details=True
+        ),
+        'processing': StatusDisplayData(
+            page_title="Payment Processing",
+            heading="Payment Processing",
+            icon_class="fa-spinner fa-spin text-info",
+            message_template="Your payment for order #{order_number} is processing. We will update the order status shortly.",
+            message_level=messages.INFO,
+            status_message_css_class="text-info",
+            show_order_details=True
+        ),
+        'requires_payment_method': StatusDisplayData(
+            page_title="Payment Failed",
+            heading="Payment Required",
+            icon_class="fa-exclamation-triangle text-warning",
+            message_template="Payment for order #{order_number} failed because a payment method is required. Please try again.",
+            message_level=messages.WARNING,
+            status_message_css_class="text-warning",
+            show_order_details=False,
+            show_retry_button=True
+        ),
+    }
+    DEFAULT_FAILURE_CONFIG = StatusDisplayData(
+        page_title="Payment Issue",
+        heading="Payment Issue",
+        icon_class="fa-times-circle text-danger",
+        message_template="Unfortunately, the payment for order #{order_number} could not be completed. Status: {status}. Please check your details or contact us if the problem persists.",
+        message_level=messages.ERROR,
+        status_message_css_class="text-danger",
+        show_order_details=False,
+        show_retry_button=True
+    )
+    VIEW_ORDER_CONFIG = StatusDisplayData(
+        page_title="Order Details",
+        heading="Order Summary",
+        icon_class="fa-file-alt",
+        message_template="",
+        message_level=messages.INFO,
+        status_message_css_class="text-muted",
+        show_order_details=True,
+        show_retry_button=False
+    )
+
     def get(self, request, order_number, *args, **kwargs):
         order = get_object_or_404(Order, order_number=order_number)
         subtotal = Decimal('0.00')
@@ -256,24 +320,59 @@ class OrderConfirmationView(View):
 
         if order.order_total is not None and order.delivery_method and order.delivery_method.price is not None:
             subtotal = Decimal(order.order_total) - Decimal(order.delivery_method.price)
-        else:
-            subtotal = sum(item.lineitem_total for item in order.items.all())
 
         payment_intent_secret = request.GET.get('payment_intent_client_secret')
         redirect_status = request.GET.get('redirect_status')
-        payment_just_completed = bool(payment_intent_secret and redirect_status == 'succeeded')
+        payment_just_processed = bool(payment_intent_secret and redirect_status)
 
-        if payment_just_completed:
-            if order.cart:
-                CartItem.objects.filter(cart=order.cart).delete()
-            elif GUEST_CART_SESSION_ID in request.session:
-                del request.session[GUEST_CART_SESSION_ID]
-                request.session.modified = True
+        status_data = None
+        on_page_message_text = None
 
-            messages.success(request, f"Thank you! Your order #{order.order_number} is confirmed and being processed.")
+        if payment_just_processed:
+            status_data = self.STATUS_CONFIG.get(redirect_status, self.DEFAULT_FAILURE_CONFIG)
+
+            if status_data.message_template:
+                on_page_message_text = status_data.message_template.format(
+                    order_number=order.order_number,
+                    status=redirect_status
+                )
+                messages.add_message(request, status_data.message_level, on_page_message_text)
+
+            if redirect_status == 'succeeded':
+                if order.cart:
+                    CartItem.objects.filter(cart=order.cart).delete()
+                elif not order.user and GUEST_CART_SESSION_ID in request.session:
+                    del request.session[GUEST_CART_SESSION_ID]
+                    request.session.modified = True
+        else:
+            if order.status in [OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.DELIVERED]:
+                status_data = self.VIEW_ORDER_CONFIG
+                status_data.show_order_details = True
+            elif order.status == OrderStatus.FAILED or order.status == OrderStatus.CANCELLED:
+                status_data = self.DEFAULT_FAILURE_CONFIG
+                status_data.message_template = ''
+                status_data.show_order_details = False
+            else:
+                status_data = self.VIEW_ORDER_CONFIG
+                status_data.show_order_details = True
+
+        if not status_data:
+            status_data = self.VIEW_ORDER_CONFIG
+
+        if not status_data.show_order_details:
+            subtotal = Decimal('0.00')
 
         context = {
             'order': order,
-            'subtotal': subtotal
+            'subtotal': subtotal,
+            'page_title': status_data.page_title,
+            'heading': status_data.heading,
+            'icon_class': status_data.icon_class,
+            'show_retry_button': status_data.show_retry_button,
+            'payment_just_processed': payment_just_processed,
+            'on_page_message_text': on_page_message_text,
+            'status_message_css_class': status_data.status_message_css_class,
+            'show_order_details': status_data.show_order_details,
         }
+
         return render(request, self.template_name, context)

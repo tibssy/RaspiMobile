@@ -1,20 +1,34 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% load i18n %}
+{% load static %}
 
-{% block extra_title %}- {% trans "Order Confirmed" %}{% endblock %}
+{% block extra_title %}- {{ page_title|default:"Order Details" }}{% endblock %}
 
 {% block content %}
     <div class="container mt-4 mb-5">
         <div class="row">
             <div class="col-md-8 offset-md-2 text-center">
-                <h1 class="mb-3 text-success"><i class="fas fa-check-circle"></i> {% trans "Order Confirmed!" %}</h1>
-                <p class="lead">{% blocktrans %}Thank you for your purchase. Your order has been placed successfully.{% endblocktrans %}</p>
+                <h1 class="mb-2">
+                    <i class="fas {{ icon_class|default:'fa-file-alt' }} me-2"></i> {{ heading|default:"Order Summary" }}
+                </h1>
+
+                {% if on_page_message_text %}
+                    <p class="lead {{ status_message_css_class|default:'text-muted' }} mb-3">
+                        {{ on_page_message_text }}
+                    </p>
+                {% endif %}
+
                 <hr>
-                <h4 class="mb-3">{% trans "Order Summary" %}</h4>
+                <h4 class="mb-3">{% trans "Order Details" %}</h4>
                 <p><strong>{% trans "Order Number:" %}</strong> {{ order.order_number }}</p>
+                <p><strong>{% trans "Order Status:" %}</strong> {{ order.get_status_display }}</p>
                 <p><strong>{% trans "Order Date:" %}</strong> {{ order.date_ordered|date:"d M Y, H:i" }}</p>
-                <p><strong>{% trans "Order Total:" %}</strong> €{{ order.order_total|floatformat:2|intcomma }}</p>
+
+                {% if show_order_details %}
+                    <p><strong>{% trans "Order Total:" %}</strong> €{{ order.order_total|floatformat:2|intcomma }}</p>
+                {% endif %}
+
                 <h5 class="mt-4">{% trans "Shipping To:" %}</h5>
                 <address>
                     <strong>{{ order.shipping_address.full_name }}</strong><br>
@@ -26,44 +40,60 @@
                     {% if order.shipping_address.phone_number %}<abbr title="Phone">P:</abbr> {{ order.shipping_address.phone_number }}{% endif %}
                 </address>
 
-                <h5>{% trans "Delivery Method:" %}</h5>
-                <p>{{ order.delivery_method.name }} - €{{ order.delivery_method.price|floatformat:2 }}</p>
+                {% if show_order_details %}
+                    <h5>{% trans "Delivery Method:" %}</h5>
+                    {% if order.delivery_method %}
+                        <p>{{ order.delivery_method.name }} - €{{ order.delivery_method.price|floatformat:2 }}</p>
+                    {% else %}
+                        <p>{% trans "N/A" %}</p>
+                    {% endif %}
 
-                <h5 class="mt-4">{% trans "Items Ordered:" %}</h5>
-                <ul class="list-group mb-3">
-                    {% for item in order.items.all %}
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">{{ item.product.name }} (x{{ item.quantity }})</h6>
-                            <small class="text-muted">@ €{{ item.price|floatformat:2 }} each</small>
-                        </div>
-                        <span class="text-muted">€{{ item.lineitem_total|floatformat:2 }}</span>
-                    </li>
-                    {% endfor %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Subtotal</span>
-                        <strong>€{{ subtotal|floatformat:2 }}</strong>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Delivery</span>
-                        <strong>€{{ order.delivery_method.price|floatformat:2 }}</strong>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                        <span class="text-success"><strong>Total</strong></span>
-                        <strong class="text-success">€{{ order.order_total|floatformat:2 }}</strong>
-                    </li>
-                </ul>
+                    <h5 class="mt-4">{% trans "Items Ordered:" %}</h5>
+                    <ul class="list-group mb-3 text-start">
+                        {% for item in order.items.all %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ item.product.name }} (x{{ item.quantity }})</h6>
+                                <small class="text-muted">@ €{{ item.price|floatformat:2 }} each</small>
+                            </div>
+                            <span class="text-muted">€{{ item.lineitem_total|floatformat:2 }}</span>
+                        </li>
+                        {% empty %}
+                         <li class="list-group-item">{% trans "No items associated with this order." %}</li>
+                        {% endfor %}
+
+                        {% if order.items.all %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Subtotal</span>
+                                <strong>€{{ subtotal|floatformat:2 }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Delivery</span>
+                                <strong>€{% if order.delivery_method %}{{ order.delivery_method.price|floatformat:2 }}{% else %}0.00{% endif %}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <span class="text-success"><strong>Total</strong></span>
+                                <strong class="text-success">€{{ order.order_total|floatformat:2 }}</strong>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted mt-4">Order item details are not available for this status.</p>
+                {% endif %}
 
                 <hr>
-                <p>{% trans "You will receive an email confirmation shortly." %}</p>
+
+                {% if show_retry_button %}
+                    <a href="{% url 'payment_page' order_number=order.order_number %}" class="btn btn-warning me-2">
+                        <i class="fas fa-redo"></i> {% trans "Retry Payment" %}
+                    </a>
+                {% endif %}
+
                 <a href="{% url 'product_list' %}" class="btn btn-primary">{% trans "Continue Shopping" %}</a>
                 {% if request.user.is_authenticated %}
-                <a href="#" class="btn btn-secondary">{% trans "View Order History" %}</a>
+                    <a href="#" class="btn btn-secondary ms-2">{% trans "View Order History" %}</a>
                 {% endif %}
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block extra_js %}
 {% endblock %}
