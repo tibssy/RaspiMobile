@@ -54,35 +54,27 @@
             </div>
 
             <div class="col-md-6">
-                <h4>{% trans "Payment Method" %}</h4>
+                <h4>{% trans "Payment Details" %}</h4>
                 <hr class="my-4">
 
-                <form method="post" action="{% url 'payment_page' order_number=order.order_number %}">
-                    {% csrf_token %}
+                {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+                {{ client_secret|json_script:"id_client_secret" }}
+                <span id="order-number" data-order-number="{{ order.order_number }}" class="d-none"></span>
 
-                    <p>{% blocktrans %}Please select your payment method below and click 'Pay Now'.{% endblocktrans %}</p>
 
-                    <div class="my-3">
-                        <div class="form-check">
-                            <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                            <label class="form-check-label" for="credit">Credit card</label>
-                        </div>
-                        <div class="form-check">
-                            <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                            <label class="form-check-label" for="paypal">PayPal</label>
-                        </div>
+                <form id="payment-form">
+                    <div id="payment-element" class="mb-3">
+                        <!-- Stripe.js injects the Payment Element here -->
                     </div>
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> {% blocktrans %}Payment gateway integration (e.g., Stripe, PayPal) would appear here.{% endblocktrans %}
-                    </div>
-
-                    <hr class="my-4">
-
-                    <button class="w-100 btn btn-success btn-lg" type="submit">
-                        <i class="fas fa-lock"></i> {% trans "Pay Now" %} (€{{ order.order_total|floatformat:2 }})
+                    <button id="submit-button" class="w-100 btn btn-success btn-lg">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="spinner"></span>
+                        <span id="button-text">
+                            <i class="fas fa-lock"></i> {% trans "Pay Now" %} (€{{ order.order_total|floatformat:2 }})
+                        </span>
                     </button>
                 </form>
+
                 <div class="text-center mt-3">
                     <a href="{% url 'checkout' %}" class="text-muted small"><i class="fas fa-arrow-left"></i> {% trans "Return to checkout details" %}</a>
                 </div>
@@ -92,4 +84,6 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{% static 'js/payment.js' %}"></script>
 {% endblock %}
