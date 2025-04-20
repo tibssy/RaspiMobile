@@ -5,12 +5,12 @@
 }
 
 :root {
-    --primary-background: #45c95d;
+    --primary-background: #198754;
     --secondary-background: #3F9950;
     --tertiary-background: #2b3645;
     --primary-text: #303030;
     --secondary-text: #d4d4d4;
-    --accent: #ff8800;
+    --accent: #04c96e;
     --shadow: #00000080;
     --shadow-light: #00000071;
     --danger-color: #bd0c0c;
@@ -177,7 +177,7 @@ a > i {
     line-height: 1.8;
     border-radius: 0;
     border: 1px solid transparent;
-    border-bottom: 1px solid var(--primary-background);
+    border-bottom: 1px solid var(--accent);
     transition-property: transform, background-color, border, box-shadow, border-radius;
     transition-delay: 0s;
     transition-duration: 0.3s;
@@ -186,7 +186,7 @@ a > i {
     &:focus {
         outline: none;
         background-color: #fff;
-        border: 1px solid var(--primary-background);
+        border: 1px solid var(--accent);
         border-radius: 6px;
         box-shadow: var(--box-shadow-normal);
     }
@@ -207,11 +207,11 @@ a > i {
 
 
 .form-check-input {
-    border-color: var(--primary-background);
+    border-color: var(--accent);
 
     &:checked {
         border-color: var(--secondary-background);
-        background-color: var(--primary-background);
+        background-color: var(--accent);
     }
 
     &:focus {
@@ -384,6 +384,8 @@ a > i {
     filter: drop-shadow(var(--box-shadow-small));
     transition: 0.3s ease;
 }
+
+
 
 
 

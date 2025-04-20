@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarCarouselItems = document.querySelectorAll('#sidebar .carousel-item');
     const chatContainer = document.querySelector('#chatContainer');
     const addToCartForms = document.querySelectorAll('.add-to-cart-form');
-//    const checkoutButton = document.querySelector('#checkout-button');
     const animationDuration = 300;
     const messageDelay = 3000;
     let isSidebarOpen = false;
@@ -130,10 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.forEach(link => {
         link.addEventListener('click', event => {
             const destinationUrl = event.currentTarget.href;
-            if (isSidebarOpen && destinationUrl && destinationUrl !== '#') {
-                event.preventDefault();
-                toggleSidebar(false);
-                setTimeout(() => (window.location.href = destinationUrl), animationDuration);
+            if (isSidebarOpen && destinationUrl && !destinationUrl.endsWith('#') && !destinationUrl.includes(window.location.pathname + '#')) {
+                const isInsideSidebar = sidebar.contains(event.target);
+                const isHeaderLink = event.currentTarget.closest('header');
+                const isOrderHistoryLink = event.target.closest('.order-history-link');
+
+                if (!isOrderHistoryLink && (isInsideSidebar || isHeaderLink || event.currentTarget.closest('#pageContainer'))) {
+                    event.preventDefault();
+                    toggleSidebar(false);
+                    setTimeout(() => (window.location.href = destinationUrl), animationDuration);
+                }
             }
         });
     });
@@ -224,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const removeButton = event.target.closest('.remove-from-cart-button');
             const productLink = event.target.closest('a[href*="/product/"]');
             const checkoutButtonTarget = event.target.closest('#checkout-button');
+            const orderListItemLink = event.target.closest('.order-history-item-link');
 
             if (removeButton) {
                 event.preventDefault();
@@ -243,32 +249,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (alertElement) bootstrap.Alert.getOrCreateInstance(alertElement);
                     }
                 }
+            } else if (checkoutButtonTarget || productLink || orderListItemLink) {
+                 event.preventDefault();
+                 const targetUrl = (checkoutButtonTarget || productLink || orderListItemLink).href;
+                 console.log('Sidebar interactive element clicked:', targetUrl);
 
-            } else if (productLink) {
-                event.preventDefault();
-                const productUrl = productLink.href;
-                if (isSidebarOpen) {
-                    toggleSidebar(false);
-                    setTimeout(() => {
-                        window.location.href = productUrl;
-                    }, animationDuration);
-                } else {
-                    window.location.href = productUrl;
-                }
-
-            } else if (checkoutButtonTarget) {
-                console.log('Delegated checkout click detected.');
-                event.preventDefault();
-                const checkoutUrl = checkoutButtonTarget.href;
-
-                if (isSidebarOpen) {
-                    toggleSidebar(false);
-                    setTimeout(() => {
-                        window.location.href = checkoutUrl;
-                    }, animationDuration);
-                } else {
-                    window.location.href = checkoutUrl;
-                }
+                 if (targetUrl && targetUrl !== '#') {
+                    if (isSidebarOpen) {
+                        toggleSidebar(false);
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, animationDuration);
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                 } else {
+                     console.warn('Clicked sidebar link/button has no valid href:', event.target);
+                 }
             }
         });
     } else {
@@ -276,5 +273,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('resize', () => toggleSidebar(false));
-    autoCloseAlerts('#messages', 3000);
+    autoCloseAlerts('#messages', messageDelay);
 });
