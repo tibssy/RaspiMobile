@@ -9,7 +9,7 @@
     <div class="container mt-4 mb-5">
         <h1 class="mb-4">{% trans "Complete Your Payment" %}</h1>
         <div class="row g-4">
-            <div class="col-md-6 order-md-last">
+            <div class="col-lg-6 order-lg-last">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="primary-fg">{% trans "Order Summary" %}</span>
                     <span class="badge primary-bg rounded-pill">{{ order.items.count }} {% trans "item(s)" %}</span>
@@ -53,8 +53,8 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <h4>{% trans "Payment Details" %}</h4>
+            <div class="col-lg-6">
+                <h4 class="primary-fg">{% trans "Payment Details" %}</h4>
                 <hr class="my-4">
 
                 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
