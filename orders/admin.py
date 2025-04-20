@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem, ShippingAddress, DeliveryMethod
+from .models import Order, OrderItem, DeliveryMethod
 
 
 class OrderItemInline(admin.TabularInline):
@@ -25,12 +25,6 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('date_ordered', 'date_updated')
         }),
     )
-
-
-@admin.register(ShippingAddress)
-class ShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'address1', 'city', 'country']
-    search_fields = ['full_name', 'email', 'address1', 'city', 'zipcode']
 
 
 @admin.register(DeliveryMethod)

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'orders',
+    'profiles',
 ]
 
 # Crispy Form

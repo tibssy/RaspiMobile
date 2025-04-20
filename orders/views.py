@@ -8,8 +8,9 @@ from cart.models import Cart, CartItem
 from cart.context_processors import cart_context
 from cart.constants import GUEST_CART_SESSION_ID
 from products.models import Product
-from .models import Order, OrderItem, ShippingAddress, DeliveryMethod, OrderStatus
-from .forms import ShippingAddressForm, DeliveryMethodForm, OrderItemFormSet
+from .models import Order, OrderItem, DeliveryMethod, OrderStatus
+from .forms import DeliveryMethodForm, OrderItemFormSet
+from profiles.forms import ShippingAddressForm
 from decimal import Decimal
 import stripe
 
