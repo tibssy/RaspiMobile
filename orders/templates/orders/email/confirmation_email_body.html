@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.5; }
+        table { width: 80%; border-collapse: collapse; margin-bottom: 1em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .total-row { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <p>Hi {{ order.shipping_address.full_name }},</p>
+    <p>Thank you for your order! Your order #{{ order.order_number }} has been confirmed and is being processed.</p>
+    <p><strong>Order Date:</strong> {{ order.date_ordered|date:"d M Y, H:i" }}</p>
+
+    <h2>Shipping To:</h2>
+    <address>
+        <strong>{{ order.shipping_address.full_name }}</strong><br>
+        {{ order.shipping_address.address1 }}<br>
+        {% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}<br>{% endif %}
+        {{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }}, {% endif %}{{ order.shipping_address.zipcode }}<br>
+        {{ order.shipping_address.country }}
+    </address>
+
+    <h2>Delivery Method:</h2>
+    <p>{{ order.delivery_method.name }} - €{{ order.delivery_method.price|floatformat:2 }}</p>
+
+    <h2>Order Summary</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>€{{ item.price|floatformat:2 }}</td>
+                <td>€{{ item.lineitem_total|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right;">Subtotal:</td>
+                <td>€{{ subtotal|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;">Delivery:</td>
+                <td>€{{ order.delivery_method.price|floatformat:2 }}</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Grand Total:</td>
+                <td>€{{ order.order_total|floatformat:2 }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <p>Thanks again for your purchase!</p>
+    <p><strong>[RaspiMobile]</strong></p>
+</body>
+</html>

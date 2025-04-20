@@ -1,0 +1,29 @@
+Hi {{ order.shipping_address.full_name }},
+
+Thank you for your order!
+
+Order Number: {{ order.order_number }}
+Order Date: {{ order.date_ordered|date:"d M Y, H:i" }}
+
+Shipping To:
+{{ order.shipping_address.full_name }}
+{{ order.shipping_address.address1 }}
+{% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}{% endif %}
+{{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }}, {% endif %}{{ order.shipping_address.zipcode }}
+{{ order.shipping_address.country }}
+
+Delivery Method: {{ order.delivery_method.name }} - €{{ order.delivery_method.price|floatformat:2 }}
+
+Order Summary:
+--------------------------------------
+{% for item in order.items.all %}
+{{ item.product.name }} (x{{ item.quantity }}) @ €{{ item.price|floatformat:2 }} each = €{{ item.lineitem_total|floatformat:2 }}
+{% endfor %}
+--------------------------------------
+Subtotal: €{{ subtotal|floatformat:2 }}
+Delivery: €{{ order.delivery_method.price|floatformat:2 }}
+Total: €{{ order.order_total|floatformat:2 }}
+
+Thanks again for your purchase!
+
+[RaspiMobile]
