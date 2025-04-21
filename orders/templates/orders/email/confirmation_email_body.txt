@@ -1,4 +1,4 @@
-Hi {{ order.shipping_address.full_name }},
+Hi {{ order.shipping_full_name }},
 
 Thank you for your order!
 
@@ -6,11 +6,11 @@ Order Number: {{ order.order_number }}
 Order Date: {{ order.date_ordered|date:"d M Y, H:i" }}
 
 Shipping To:
-{{ order.shipping_address.full_name }}
-{{ order.shipping_address.address1 }}
-{% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}{% endif %}
-{{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }}, {% endif %}{{ order.shipping_address.zipcode }}
-{{ order.shipping_address.country }}
+{{ order.shipping_full_name }}
+{{ order.shipping_address1 }}
+{% if order.shipping_address2 %}{{ order.shipping_address2 }}{% endif %}
+{{ order.shipping_city }}, {% if order.shipping_state %}{{ order.shipping_state }},{% endif %} {{ order.shipping_zipcode }}
+{{ order.shipping_country }}
 
 Delivery Method: {{ order.delivery_method.name }} - €{{ order.delivery_method.price|floatformat:2 }}
 
