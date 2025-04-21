@@ -7,27 +7,42 @@
 {% block content %}
     <div class="container my-4">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 mb-3 mb-lg-0">
                 {% if "placeholder" in product.image.url %}
-                    <img src="{% static 'images/default_product.webp' %}" class="img-fluid rounded" alt="{% trans 'Placeholder Image' %}">
+                    <img src="{% static 'images/default_product.webp' %}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{% trans 'Placeholder Image' %}">
                 {% else %}
-                    <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{{ product.name }}">
                 {% endif %}
             </div>
             <div class="col-lg-6">
                 <h1>{{ product.name }}</h1>
-                <p class="lead">${{ product.price }}</p>
+                <p class="lead fw-bold text-success fs-3">€{{ product.price }}</p>
                 <p>{{ product.description }}</p>
-                <p><strong>{% trans "SKU:" %}</strong> {{ product.sku }}</p>
-                <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
-                <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1 add-to-cart-form" data-product-id="{{ product.pk }}">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn btn-primary w-100 add-to-cart-button">
-                        <i class="fa-solid fa-cart-plus me-1"></i>
-                        {% trans "Add to Cart" %}
-                    </button>
-                </form>
+                <p><strong>{% trans "SKU:" %}</strong> {{ product.sku|default:"N/A" }}</p>
+
+                {% if product.stock_quantity > 0 %}
+                    <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
+                    {% if product.stock_quantity < 10 %}
+                         <p class="badge rounded-pill bg-warning text-dark fw-bold fs-6 mb-2">
+                            {% blocktrans count counter=product.stock_quantity %}
+                                Hurry, only {{ counter }} left!
+                            {% plural %}
+                                Hurry, only {{ counter }} left!
+                            {% endblocktrans %}
+                        </p>
+                    {% endif %}
+                    <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1 add-to-cart-form" data-product-id="{{ product.pk }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-primary text-white fw-bold w-100 add-to-cart-button">
+                            <i class="fa-solid fa-cart-plus me-1"></i>
+                            {% trans "Add to Cart" %}
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-danger fs-5 fw-bold">{% trans "Currently Out of Stock" %}</p>
+                {% endif %}
+
             </div>
         </div>
 
@@ -53,15 +68,13 @@
             </div>
         </div>
 
-
-
         <hr class="my-4">
 
         <h2>{% trans "Related Products" %}</h2>
         <div class="overflow-x-auto pt-2 pb-4 px-2">
             <div class="featured-products-container">
-                {% for product in related_products %}
-                    {% include 'products/partials/product_card.html' %}
+                {% for related_product in related_products %}
+                    {% include 'products/partials/product_card.html' with product=related_product %}
                 {% empty %}
                     <div class="col">
                         <p>{% trans "No related products available." %}</p>

@@ -388,10 +388,15 @@ a > i {
     transition: 0.3s ease;
 }
 
+.out-of-stock-img {
+    filter: grayscale(90%);
+    opacity: 0.7;
+}
 
-
-
-
+.card:hover .out-of-stock-img {
+    filter: grayscale(0%);
+    opacity: 1;
+}
 
 
 @media screen and (min-width: 768px) {

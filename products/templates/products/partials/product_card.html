@@ -2,25 +2,38 @@
 {% load i18n %}
 
 <div class="card h-100 elevate-on-hover">
-    <a href="{% url 'product_detail' pk=product.pk %}">
+    <a href="{% url 'product_detail' pk=product.pk %}" class="text-decoration-none">
         {% if "placeholder" in product.image.url %}
-            <img src="{% static 'images/default_product.webp' %}" class="card-img-top" alt="{% trans 'Placeholder Image' %}">
+            <img src="{% static 'images/default_product.webp' %}" class="card-img-top {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{% trans 'Placeholder Image' %}">
         {% else %}
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" class="card-img-top {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{{ product.name }}">
         {% endif %}
         <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">${{ product.price }}</p>
+            <h5 class="card-title text-dark">{{ product.name }}</h5>
+            <p class="card-text">€{{ product.price }}</p>
         </div>
     </a>
-    <div class="card-footer bg-white border-top-0 px-2 pt-0">
-        <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1 add-to-cart-form" data-product-id="{{ product.pk }}">
-            {% csrf_token %}
-            <input type="hidden" name="quantity" value="1">
-            <button type="submit" class="btn btn-primary w-100 btn-sm add-to-cart-button">
-                <i class="fa-solid fa-cart-plus me-1"></i>
-                {% trans "Add to Cart" %}
-            </button>
-        </form>
+    <div class="card-footer bg-white border-top-0 px-2 pt-0 pb-2">
+        {% if product.stock_quantity > 0 %}
+            {% if product.stock_quantity < 10 %}
+                <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-warning text-dark mb-5 me-2 fs-6">
+                    {% blocktrans count counter=product.stock_quantity %}
+                        Only {{ counter }} left in stock!
+                    {% plural %}
+                        Only {{ counter }} left in stock!
+                    {% endblocktrans %}
+                </span>
+            {% endif %}
+            <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-0 add-to-cart-form" data-product-id="{{ product.pk }}">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-primary btn-sm text-white fw-bold w-100 add-to-cart-button">
+                    <i class="fa-solid fa-cart-plus me-1"></i>
+                    {% trans "Add to Cart" %}
+                </button>
+            </form>
+        {% else %}
+            <p class="text-center text-danger fw-bold mb-0 mt-1">{% trans "Out of Stock" %}</p>
+        {% endif %}
     </div>
 </div>
