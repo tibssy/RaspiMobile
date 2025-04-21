@@ -12,17 +12,17 @@
     </style>
 </head>
 <body>
-    <p>Hi {{ order.shipping_address.full_name }},</p>
+    <p>Hi {{ order.shipping_full_name }},</p>
     <p>Thank you for your order! Your order #{{ order.order_number }} has been confirmed and is being processed.</p>
     <p><strong>Order Date:</strong> {{ order.date_ordered|date:"d M Y, H:i" }}</p>
 
     <h2>Shipping To:</h2>
     <address>
-        <strong>{{ order.shipping_address.full_name }}</strong><br>
-        {{ order.shipping_address.address1 }}<br>
-        {% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}<br>{% endif %}
-        {{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }}, {% endif %}{{ order.shipping_address.zipcode }}<br>
-        {{ order.shipping_address.country }}
+        <strong>{{ order.shipping_full_name }}</strong><br>
+        {{ order.shipping_address1 }}<br>
+        {% if order.shipping_address2 %}{{ order.shipping_address2 }}<br>{% endif %}
+        {{ order.shipping_city }}, {% if order.shipping_state %}{{ order.shipping_state }}, {% endif %}{{ order.shipping_zipcode }}<br>
+        {{ order.shipping_country }}
     </address>
 
     <h2>Delivery Method:</h2>
