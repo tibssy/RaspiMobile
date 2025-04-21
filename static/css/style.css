@@ -64,8 +64,9 @@ body {
 }
 
 #chatContainer {
-    scrollbar-color: white transparent;
+    scrollbar-color: transparent transparent;
 }
+
 
 .sidebar-open {
     width: var(--sidebar-width) !important;
