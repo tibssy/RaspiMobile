@@ -31,13 +31,13 @@
 
                 <h5 class="mt-4">{% trans "Shipping To:" %}</h5>
                 <address>
-                    <strong>{{ order.shipping_address.full_name }}</strong><br>
-                    {{ order.shipping_address.address1 }}<br>
-                    {% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}<br>{% endif %}
-                    {{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }},{% endif %} {{ order.shipping_address.zipcode }}<br>
-                    {{ order.shipping_address.country }}<br>
-                    {% if order.shipping_address.email %}<abbr title="Email">E:</abbr> {{ order.shipping_address.email }}<br>{% endif %}
-                    {% if order.shipping_address.phone_number %}<abbr title="Phone">P:</abbr> {{ order.shipping_address.phone_number }}{% endif %}
+                    <strong>{{ order.shipping_full_name }}</strong><br>
+                    {{ order.shipping_address1 }}<br>
+                    {% if order.shipping_address2 %}{{ order.shipping_address2 }}<br>{% endif %}
+                    {{ order.shipping_city }}, {% if order.shipping_state %}{{ order.shipping_state }},{% endif %} {{ order.shipping_zipcode }}<br>
+                    {{ order.shipping_country }}<br>
+                    {% if order.shipping_email %}<abbr title="Email">E:</abbr> {{ order.shipping_email }}<br>{% endif %}
+                    {% if order.shipping_phone_number %}<abbr title="Phone">P:</abbr> {{ order.shipping_phone_number }}{% endif %}
                 </address>
 
                 {% if show_order_details %}

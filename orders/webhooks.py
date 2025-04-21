@@ -68,12 +68,13 @@ class StripeWebhookView(View):
             return HttpResponse("Webhook Error: Missing order_number in metadata", status=400)
 
         try:
-            order = Order.objects.select_related(
-                'shipping_address', 'delivery_method', 'cart', 'user'
-            ).get(order_number=order_number)
+            order = Order.objects.select_related('delivery_method', 'cart', 'user').get(order_number=order_number)
         except Order.DoesNotExist:
             logger.warning(f"Webhook Succeeded: Order {order_number} not found (might be test).")
             return HttpResponse(status=200)
+        except Exception as e:
+            logger.error(f"Webhook Error (DB Query - Succeeded Event): Order {order_number} - {e}", exc_info=True)
+            return HttpResponse(status=500)
 
         order_processed_successfully = False
         if order.status == OrderStatus.PENDING:

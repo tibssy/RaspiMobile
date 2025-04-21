@@ -42,13 +42,13 @@
                 <div class="card p-2">
                     <h5 class="mb-1">{% trans "Shipping To:" %}</h5>
                     <address class="mb-0">
-                        <strong>{{ order.shipping_address.full_name }}</strong><br>
-                        {{ order.shipping_address.address1 }}<br>
-                        {% if order.shipping_address.address2 %}{{ order.shipping_address.address2 }}<br>{% endif %}
-                        {{ order.shipping_address.city }}, {% if order.shipping_address.state %}{{ order.shipping_address.state }},{% endif %} {{ order.shipping_address.zipcode }}<br>
-                        {{ order.shipping_address.country }}<br>
-                        {% if order.shipping_address.email %}<i class="fas fa-envelope me-1"></i>{{ order.shipping_address.email }}<br>{% endif %}
-                        {% if order.shipping_address.phone_number %}<i class="fas fa-phone me-1"></i>{{ order.shipping_address.phone_number }}{% endif %}
+                        <strong>{{ order.shipping_full_name }}</strong><br>
+                        {{ order.shipping_address1 }}<br>
+                        {% if order.shipping_address2 %}{{ order.shipping_address2 }}<br>{% endif %}
+                        {{ order.shipping_city }}, {% if order.shipping_state %}{{ order.shipping_state }},{% endif %} {{ order.shipping_zipcode }}<br>
+                        {{ order.shipping_country }}<br>
+                        {% if order.shipping_email %}<i class="fas fa-envelope me-1"></i>{{ order.shipping_email }}<br>{% endif %}
+                        {% if order.shipping_phone_number %}<i class="fas fa-phone me-1"></i>{{ order.shipping_phone_number }}{% endif %}
                     </address>
                 </div>
             </div>
@@ -60,7 +60,6 @@
                 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
                 {{ client_secret|json_script:"id_client_secret" }}
                 <span id="order-number" data-order-number="{{ order.order_number }}" class="d-none"></span>
-
 
                 <form id="payment-form">
                     <div id="payment-element" class="mb-3">

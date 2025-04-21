@@ -63,7 +63,8 @@ body {
     }
 }
 
-#chatContainer {
+#chatContainer,
+#cartSidebarContainer {
     scrollbar-color: transparent transparent;
 }
 

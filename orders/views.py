@@ -11,6 +11,7 @@ from products.models import Product
 from .models import Order, OrderItem, DeliveryMethod, OrderStatus
 from .forms import DeliveryMethodForm, OrderItemFormSet
 from profiles.forms import ShippingAddressForm
+from profiles.models import ShippingAddress as ProfileShippingAddress
 from decimal import Decimal
 import stripe
 
@@ -56,8 +57,19 @@ class CreateOrderView(View):
                 product_ids.append(product_id)
 
         products_in_cart = Product.objects.in_bulk(list(set(product_ids)))
+        initial_shipping_data = None
 
-        shipping_form = ShippingAddressForm(prefix='shipping')
+        if request.user.is_authenticated:
+            try:
+                latest_profile_address = ProfileShippingAddress.objects.filter(user=request.user).latest('id')
+                initial_shipping_data = {
+                    field.name: getattr(latest_profile_address, field.name)
+                    for field in latest_profile_address._meta.fields if field.name != 'id' and field.name != 'user'
+                }
+            except ProfileShippingAddress.DoesNotExist:
+                pass
+
+        shipping_form = ShippingAddressForm(prefix='shipping', initial=initial_shipping_data)
         delivery_form = DeliveryMethodForm(prefix='delivery')
         order_item_formset = OrderItemFormSet(initial=initial_formset_data, prefix='items')
 
@@ -87,28 +99,35 @@ class CreateOrderView(View):
         users_cart = None
         if request.user.is_authenticated:
             try:
-                users_cart = Cart.objects.filter(user=request.user).latest('updated_on')
+                users_cart = Cart.objects.get(user=request.user)
             except Cart.DoesNotExist:
-                pass
+                 pass
+            except Cart.MultipleObjectsReturned:
+                 users_cart = Cart.objects.filter(user=request.user).latest('updated_on')
 
         if shipping_form.is_valid() and delivery_form.is_valid() and order_item_formset.is_valid():
             try:
                 with transaction.atomic():
-                    shipping_address = shipping_form.save()
+                    address_data = shipping_form.cleaned_data
                     delivery_method = delivery_form.cleaned_data['delivery_method']
 
                     order_data = {
-                        'shipping_address': shipping_address,
+                        'shipping_full_name': address_data['full_name'],
+                        'shipping_email': address_data['email'],
+                        'shipping_phone_number': address_data.get('phone_number', ''),
+                        'shipping_address1': address_data['address1'],
+                        'shipping_address2': address_data.get('address2', ''),
+                        'shipping_city': address_data['city'],
+                        'shipping_state': address_data.get('state', ''),
+                        'shipping_zipcode': address_data['zipcode'],
+                        'shipping_country': address_data['country'],
                         'delivery_method': delivery_method,
                         'status': OrderStatus.PENDING,
+                        'user': request.user if request.user.is_authenticated else None,
+                        'cart': users_cart
                     }
-                    if request.user.is_authenticated:
-                        order_data['user'] = request.user
-                        if users_cart:
-                            order_data['cart'] = users_cart
 
                     order = Order.objects.create(**order_data)
-
                     final_order_subtotal = Decimal('0.00')
                     products_to_update = {}
 
@@ -118,17 +137,18 @@ class CreateOrderView(View):
                         quantity = cleaned_data.get('quantity')
 
                         if not product_id or not quantity:
+                            messages.error(request, "Invalid item data detected. Please review your cart and try again.")
                             raise ValueError("Invalid item data in formset.")
 
                         try:
                             product = Product.objects.select_for_update().get(id=product_id)
                         except Product.DoesNotExist:
-                            messages.error(request, f"Product with ID '{product_id}' not found. Your order could not be placed.")
+                            messages.error(request, f"Sorry, a product in your order (ID: {product_id}) is no longer available. Please remove it and try again.")
                             raise ValueError(f"Product not found: {product_id}")
 
                         if product.stock_quantity < quantity:
-                            form.add_error('quantity', f"Only {product.stock_quantity} left in stock for {product.name}.")
-                            messages.error(request, f"Not enough stock for {product.name}. Please adjust quantity.")
+                            form.add_error('quantity', f"Insufficient stock for {product.name}. Only {product.stock_quantity} available.")
+                            messages.error(request, f"Not enough stock for {product.name}. Please adjust the quantity.")
                             raise ValueError(f"Insufficient stock for {product.name}")
 
                         OrderItem.objects.create(
@@ -146,46 +166,44 @@ class CreateOrderView(View):
 
                     order.order_total = final_order_subtotal + delivery_method.price
                     order.save(update_fields=['order_total'])
-
-                    messages.info(request, "Your order details are saved. Please proceed with payment.")
+                    messages.info(request, "Order details saved successfully! Please proceed to payment.")
                     return redirect(reverse('payment_page', kwargs={'order_number': order.order_number}))
 
             except ValueError as e:
                 pass
             except Exception as e:
-                messages.error(request, "An unexpected error occurred while creating your order. Please try again or contact support.")
+                print(f"Unexpected error during order creation: {e}")
+                messages.error(request, "An unexpected error occurred while creating your order. Please try again or contact support if the problem persists.")
 
         else:
             messages.error(request, "Please correct the errors highlighted below.")
 
         cart_data = cart_context(request)
-        current_cart_total = cart_data.get('current_cart_total', Decimal('0.00'))
-        current_cart_item_count = cart_data.get('current_cart_item_count', 0)
         delivery_methods = DeliveryMethod.objects.filter(is_active=True)
         delivery_costs_dict = {str(method.id): method.price for method in delivery_methods}
 
-        product_ids = []
-        for form in order_item_formset.forms:
-            pid_str = form.data.get(f'{form.prefix}-product_id', form.initial.get('product_id'))
-            pid = None
-            if pid_str:
-                try:
-                    pid = int(pid_str)
-                    product_ids.append(pid)
-                except (ValueError, TypeError):
-                    pass # Ignore if ID is invalid
+        product_ids_from_post = []
+        if order_item_formset.is_bound:
+            for i in range(order_item_formset.total_form_count()):
+                 key = f'{order_item_formset.prefix}-{i}-product_id'
+                 pid_str = request.POST.get(key)
+                 if pid_str:
+                     try:
+                         product_ids_from_post.append(int(pid_str))
+                     except (ValueError, TypeError):
+                         pass
 
-        products = Product.objects.in_bulk(list(set(product_ids)))
+        products_for_formset = Product.objects.in_bulk(list(set(product_ids_from_post)))
 
         for form in order_item_formset.forms:
-            pid_str = form.data.get(f'{form.prefix}-product_id', form.initial.get('product_id'))
+            pid_str = form.data.get(f'{form.prefix}-product_id')
             pid = None
             if pid_str:
                 try: pid = int(pid_str)
                 except (ValueError, TypeError): pass
 
             if pid:
-                form.product = products.get(pid)
+                form.product = products_for_formset.get(pid)
             else:
                 form.product = None
 
@@ -193,8 +211,8 @@ class CreateOrderView(View):
             'shipping_form': shipping_form,
             'delivery_form': delivery_form,
             'order_item_formset': order_item_formset,
-            'current_cart_total': current_cart_total,
-            'current_cart_item_count': current_cart_item_count,
+            'current_cart_total': cart_data.get('current_cart_total', Decimal('0.00')),
+            'current_cart_item_count': cart_data.get('current_cart_item_count', 0),
             'delivery_costs_data': delivery_costs_dict,
         }
         return render(request, self.template_name, context)

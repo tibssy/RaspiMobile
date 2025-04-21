@@ -9,20 +9,33 @@ logger = logging.getLogger(__name__)
 
 
 def send_confirmation_email(order):
-    if not order or not order.shipping_address or not order.delivery_method:
-        logger.error(f"Attempted to send confirmation email for incomplete order: {order.order_number if order else 'N/A'}")
+    if not order or not order.shipping_email or not order.delivery_method:
+        logger.error(
+            f"send_confirmation_email: Missing required order data "
+            f"(Order: {bool(order)}, "
+            f"Email: {getattr(order, 'shipping_email', None)}, "
+            f"Delivery: {getattr(order, 'delivery_method', None)})"
+        )
         return False
 
-    recipient_email = order.shipping_address.email
+    recipient_email = order.shipping_email
+
     if not recipient_email:
-        logger.warning(f"No recipient email found for order: {order.order_number}. Cannot send confirmation.")
+        logger.warning(f"Recipient email field is empty for order: {order.order_number}. Cannot send confirmation.")
         return False
 
-    subtotal = order.order_total - order.delivery_method.price
+    subtotal = Decimal('0.00')
+    if order.order_total is not None and order.delivery_method.price is not None:
+        subtotal = order.order_total - order.delivery_method.price
+    else:
+         logger.warning(f"Could not calculate subtotal accurately for order {order.order_number}. Using items total.")
+         subtotal = sum(item.lineitem_total for item in order.items.all())
+
 
     context = {
         'order': order,
         'subtotal': subtotal,
+        'delivery_cost': order.delivery_method.price if order.delivery_method else Decimal('0.00'),
     }
 
     try:

@@ -1,6 +1,9 @@
 from django.db import models
+from django.conf import settings
+
 
 class ShippingAddress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shipping_addresses', null=True, blank=True)
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True)
@@ -12,4 +15,8 @@ class ShippingAddress(models.Model):
     country = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.full_name}, {self.address1}, {self.city}"
+        user_info = f" ({self.user.get_username()})" if self.user else " (Guest/Unlinked)"
+        return f"{self.full_name}, {self.address1}, {self.city}{user_info}"
+
+    class Meta:
+        verbose_name_plural = "User Profile Shipping Addresses"
