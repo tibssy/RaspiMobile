@@ -230,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const productLink = event.target.closest('a[href*="/product/"]');
             const checkoutButtonTarget = event.target.closest('#checkout-button');
             const orderListItemLink = event.target.closest('.order-history-item-link');
+            const manageAddressLink = event.target.closest('.profile-action-link');
 
             if (removeButton) {
                 event.preventDefault();
@@ -249,9 +250,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (alertElement) bootstrap.Alert.getOrCreateInstance(alertElement);
                     }
                 }
-            } else if (checkoutButtonTarget || productLink || orderListItemLink) {
+            } else if (checkoutButtonTarget || productLink || orderListItemLink || manageAddressLink) {
                  event.preventDefault();
-                 const targetUrl = (checkoutButtonTarget || productLink || orderListItemLink).href;
+                 const targetUrl = (checkoutButtonTarget || productLink || orderListItemLink || manageAddressLink).href;
                  console.log('Sidebar interactive element clicked:', targetUrl);
 
                  if (targetUrl && targetUrl !== '#') {

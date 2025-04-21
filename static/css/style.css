@@ -64,7 +64,8 @@ body {
 }
 
 #chatContainer,
-#cartSidebarContainer {
+#cartSidebarContainer,
+#profileSidebarContainer {
     scrollbar-color: transparent transparent;
 }
 

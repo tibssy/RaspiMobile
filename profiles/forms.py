@@ -93,7 +93,11 @@ class ShippingAddressForm(forms.ModelForm):
         )
 
     def clean_full_name(self):
-        return self.cleaned_data.get('full_name', '').strip()
+        full_name = self.cleaned_data.get('full_name', '').strip()
+        if full_name and len(full_name.split()) < 2:
+             raise forms.ValidationError("Please provide at least a first and last name.")
+
+        return full_name
 
     def clean_phone_number(self):
         return self.cleaned_data.get('phone_number', '').strip()

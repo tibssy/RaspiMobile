@@ -27,12 +27,12 @@
     </div>
 
     {% if user.is_authenticated %}
-        <div class="flex-grow-1 d-flex flex-column overflow-y-auto px-1 py-2 mt-1">
-            <div class="flex-grow-1 mb-3">
-                <h6 class="text-white text-uppercase fw-semibold mb-2">{% trans "Shipping Details" %}</h6>
+        <div id="profileSidebarContainer" class="flex-grow-1 d-flex flex-column overflow-y-auto px-1 py-2 mt-1">
+            <div class="flex-grow-1 mb-1 d-flex flex-column">
+                <h6 class="text-white text-uppercase fw-semibold mb-3">{% trans "Shipping Details" %}</h6>
                 {% with address=user.shipping_addresses.first %}
                     {% if address %}
-                        <address class="text-white mb-2 small lh-sm">
+                        <address class="text-white mb-2">
                             <strong>{{ address.full_name }}</strong><br>
                             {{ address.address1 }}<br>
                             {% if address.address2 %}{{ address.address2 }}<br>{% endif %}
@@ -42,12 +42,12 @@
                             {% if address.phone_number %}<i class="fas fa-phone fa-fw me-1 opacity-75"></i>{{ address.phone_number }}{% endif %}
                         </address>
                     {% else %}
-                        <p class="text-muted small">{% trans "You haven't saved a shipping address yet." %}</p>
+                        <p class="text-white">{% trans "You haven't saved a shipping address yet." %}</p>
                     {% endif %}
                 {% endwith %}
 
-                <a href="#" class="btn btn-sm btn-outline-light">
-                    {% trans "Manage Addresses" %}
+                <a href="{% url 'edit_create_address' %}" class="btn btn-sm bg-white w-100 profile-action-link mt-auto">
+                    {% trans "Manage Address" %}
                 </a>
             </div>
 
@@ -68,7 +68,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-muted small mb-0">{% trans "You haven't placed any orders yet." %}</p>
+                    <p class="text-white mb-0">{% trans "You haven't placed any orders yet." %}</p>
                 {% endif %}
             </div>
 
