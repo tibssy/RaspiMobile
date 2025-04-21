@@ -69,7 +69,7 @@ class ShippingAddressForm(forms.ModelForm):
 
     class Meta:
         model = ShippingAddress
-        exclude = []
+        exclude = ['user']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

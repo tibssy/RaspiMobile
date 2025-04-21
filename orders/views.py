@@ -111,6 +111,19 @@ class CreateOrderView(View):
                     address_data = shipping_form.cleaned_data
                     delivery_method = delivery_form.cleaned_data['delivery_method']
 
+                    if request.user.is_authenticated and request.POST.get('save_address_profile'):
+                        try:
+                            profile_address, created = ProfileShippingAddress.objects.update_or_create(
+                                user=request.user,
+                                defaults=address_data
+                            )
+                            if created:
+                                messages.info(request, "Shipping address saved to your profile.")
+                            else:
+                                messages.info(request, "Your profile shipping address has been updated.")
+                        except Exception as e:
+                            messages.warning(request, "There was an issue saving the address to your profile, but your order is proceeding.")
+
                     order_data = {
                         'shipping_full_name': address_data['full_name'],
                         'shipping_email': address_data['email'],
