@@ -7,7 +7,7 @@
 {% block extra_title %}- {% trans "Checkout" %}{% endblock %}
 
 {% block content %}
-    <div class="container mt-4 mb-5">
+    <div class="container mt-4 mb-5 px-4 px-sm-3">
         <h1 class="mb-4">{% trans "Checkout" %}</h1>
         <form method="post" id="checkout-form" novalidate>
             {% csrf_token %}
