@@ -76,7 +76,13 @@ class CreateOrderView(View):
         for form in order_item_formset.forms:
             product_id = form.initial.get('product_id')
             if product_id:
-                form.product = products_in_cart.get(product_id)
+                product = products_in_cart.get(product_id)
+                form.product = product
+                form.fields['quantity'].widget.attrs['max'] = product.stock_quantity
+            else:
+                form.product = None
+                form.fields['quantity'].widget.attrs['max'] = 0
+                form.fields['quantity'].widget.attrs['disabled'] = True
 
         delivery_methods = DeliveryMethod.objects.filter(is_active=True)
         delivery_costs_dict = {str(method.id): method.price for method in delivery_methods}

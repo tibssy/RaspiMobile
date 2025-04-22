@@ -1,9 +1,9 @@
 from django import forms
 from .models import DeliveryMethod
-from profiles.models import ShippingAddress
 from django.forms import formset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset
+from products.models import Product
 
 
 class DeliveryMethodForm(forms.Form):
@@ -33,6 +33,25 @@ class OrderItemQuantityForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm quantity-input', 'min': '1'})
     )
     product_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        quantity = cleaned_data.get('quantity')
+        product_id = cleaned_data.get('product_id')
+        product = None
+
+        if product_id:
+            try:
+                product = Product.objects.get(pk=product_id)
+            except Product.DoesNotExist:
+                self.add_error('product_id', 'Invalid product selected.')
+                return cleaned_data
+
+        if quantity is not None and product is not None:
+            if quantity > product.stock_quantity:
+                self.add_error('quantity', f'Only {product.stock_quantity} available.')
+
+        return cleaned_data
 
 
 OrderItemFormSet = formset_factory(OrderItemQuantityForm, extra=0)

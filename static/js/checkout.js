@@ -51,8 +51,59 @@ document.addEventListener('DOMContentLoaded', function() {
         grandTotalEl.textContent = '€' + grandTotal.toFixed(2);
     }
 
+    function validateStock(quantityInput) {
+        const rawValue = quantityInput.value.trim();
+        const quantity = Number(rawValue);
+        const maxStock = parseInt(quantityInput.getAttribute('max'), 10);
+        const minStock = parseInt(quantityInput.getAttribute('min'), 10) || 1;
+        const errorContainer = quantityInput.closest('.col-3').querySelector('.client-stock-error');
+        let isValid = true;
+        let errorMessage = '';
+
+        if (!errorContainer) {
+            console.warn("Could not find client-stock-error container for input:", quantityInput);
+            return true;
+        }
+
+        if (quantityInput.validity && quantityInput.validity.badInput) {
+            errorMessage = 'Please enter a valid number.';
+            isValid = false;
+        } else if (!Number.isInteger(quantity)) {
+            if (rawValue !== '') {
+                errorMessage = 'Please enter a whole number.';
+                isValid = false;
+            }
+        } else if (quantity < minStock) {
+            errorMessage = `Quantity must be at least ${minStock}.`;
+            isValid = false;
+        } else if (isValid) {
+            if (isNaN(maxStock)) {
+                console.warn("Max stock attribute is missing or invalid for input:", quantityInput);
+            } else if (quantity > maxStock) {
+                errorMessage = `Max available: ${maxStock}`;
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            quantityInput.classList.add('is-invalid');
+            errorContainer.textContent = errorMessage;
+            errorContainer.style.display = 'block';
+        } else {
+            quantityInput.classList.remove('is-invalid');
+            errorContainer.textContent = '';
+            errorContainer.style.display = 'none';
+        }
+
+        return isValid;
+    }
+
     quantityInputs.forEach(input => {
-        input.addEventListener('input', calculateAndUpdateTotals);
+        input.addEventListener('input', function() {
+            validateStock(this);
+            calculateAndUpdateTotals();
+        });
+        validateStock(input);
     });
 
     deliveryRadios.forEach(radio => {
@@ -62,26 +113,51 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateAndUpdateTotals();
 
     form.addEventListener("submit", function (event) {
-        const invalidFields = form.querySelectorAll(":invalid");
+        let formIsValid = true;
 
-        if (invalidFields.length > 0) {
+        quantityInputs.forEach(input => {
+            if (!validateStock(input)) {
+                formIsValid = false;
+            }
+        });
+
+        const html5InvalidFields = form.querySelectorAll(":invalid");
+        if (html5InvalidFields.length > 0) {
+             formIsValid = false;
+        }
+
+        if (!formIsValid) {
             event.preventDefault();
-            invalidFields.forEach(field => {
-                field.classList.add("is-invalid");
+
+            html5InvalidFields.forEach(field => {
+                if (!field.classList.contains('is-invalid')) {
+                    field.classList.add("is-invalid");
+                }
             });
 
-            invalidFields[0].scrollIntoView({ behavior: "smooth", block: "center" });
+            const firstInvalid = form.querySelector(".is-invalid, :invalid");
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Optionally focus it
+                 firstInvalid.focus();
+            }
+             console.log("Checkout form validation failed (client-side).");
         }
     });
 
     form.querySelectorAll("input, select, textarea").forEach(field => {
         field.addEventListener("input", () => {
-            if (field.checkValidity()) {
+            if (field.classList.contains('quantity-input')) {
+                validateStock(field);
+            } else if (field.checkValidity()) {
                 field.classList.remove("is-invalid");
             }
         });
+
         field.addEventListener("change", () => {
-            if (field.checkValidity()) {
+            if (field.classList.contains('quantity-input')) {
+                validateStock(field);
+            } else if (field.checkValidity()) {
                 field.classList.remove("is-invalid");
             }
         });
