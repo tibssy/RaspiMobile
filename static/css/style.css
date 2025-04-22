@@ -100,10 +100,13 @@ a > i {
     border-radius: 5px;
     background-color: white;
 
+    .nav-link {
+        font-weight: 700;
+    }
+
     & .nav-link.active {
         border-radius: 5px;
-        color: var(--secondary-background);
-        font-weight: 600;
+        color: var(--primary-background);
         box-shadow: var(--box-shadow-normal);
     }
 }
@@ -399,18 +402,46 @@ a > i {
 }
 
 
+.dashboard-sidebar .nav-link {
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.dashboard-sidebar .nav-pills .nav-link.active,
+.dashboard-sidebar .nav-pills .show>.nav-link {
+    background-color: var(--primary-background);
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.dashboard-sidebar .nav-pills .nav-link.active i,
+.dashboard-sidebar .nav-pills .show>.nav-link i {
+    color: white;
+}
+
+
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;
         background-color: unset;
+
+        & .nav-link  {
+            color: white;
+        }
     
         & .nav-link.active {
             border-radius: unset;
-            color: unset;
-            font-weight: 600;
+            color: white;
+            /* font-weight: 900; */
             box-shadow: unset;
+            transform: scale(1.08) translate(0, 1px);
         }
     }
+
+
+ 
+
 
     #slideContainer {
         width: 100vw;

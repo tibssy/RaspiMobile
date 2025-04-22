@@ -40,6 +40,11 @@
                 <li class="nav-item flex-fill lh-1">
                     <a class="nav-link {% if request.path == about_url %}active{% endif %}" aria-current="page" href="{{ about_url }}">About</a>
                 </li>
+                {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item flex-fill lh-1">
+                        <a class="nav-link {% if request.path == dashboard_url %}active{% endif %}" aria-current="page" href="{{ dashboard_url }}">Dashboard</a>
+                    </li>
+                {% endif %}
             </ul>
             <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0 position-relative" action="{% url 'product_list' %}" method="get" role="search">
                 <input class="form-control rounded lh-base pe-5" type="search" placeholder="Search" name="q" value="{{ search_term }}" aria-label="Search">
