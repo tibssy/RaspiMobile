@@ -16,7 +16,7 @@
     <div class="card-footer bg-white border-top-0 px-2 pt-0 pb-2">
         {% if product.stock_quantity > 0 %}
             {% if product.stock_quantity < 10 %}
-                <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-warning text-dark mb-5 me-2 fs-6">
+                <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-warning text-dark mb-5 me-2 fs-7">
                     {% blocktrans count counter=product.stock_quantity %}
                         Only {{ counter }} left in stock!
                     {% plural %}

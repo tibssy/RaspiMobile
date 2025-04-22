@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-md primary-bg">
     <div class="container mw-100 px-0">
-        <a class="navbar-brand" href="{{ home_url }}">
+        <a class="navbar-brand me-2" href="{{ home_url }}">
             <img src="{% static 'images/logo.webp' %}" alt="Site Logo" height="30" class="d-inline-block align-top">
             <span id="logo-text" class="text-white fw-bold ms-2">RaspiMobile</span>
         </a>
@@ -18,7 +18,8 @@
                     <i class="fa-solid fa-right-to-bracket"></i>
                 </a>
             {% endif %}
-            <a class="icon-button rounded assistant-button sidebar-control">
+            <a class="icon-button rounded assistant-button sidebar-control d-none">
+                <!-- placeholder for chatbot -->
                 <i class="fa-solid fa-robot"></i>
             </a>
             <a class="icon-button rounded cart-button sidebar-control">
@@ -31,7 +32,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav flex-row gap-3 gap-md-0 fs-5 text-center mt-2 mt-md-0 mb-0">
-                <li class="nav-item flex-fill lh-1">
+                <li class="nav-item flex-fill lh-1 d-md-none">
                     <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page" href="{{ home_url }}">Home</a>
                 </li>
                 <li class="nav-item flex-fill lh-1">
@@ -46,7 +47,7 @@
                     </li>
                 {% endif %}
             </ul>
-            <form class="d-flex flex-fill ps-md-5 mt-3 mb-2 my-md-0 position-relative" action="{% url 'product_list' %}" method="get" role="search">
+            <form class="d-flex flex-fill ps-md-2 ps-lg-4 ps-xl-5 mt-3 mb-2 my-md-0 position-relative" action="{% url 'product_list' %}" method="get" role="search">
                 <input class="form-control rounded lh-base pe-5" type="search" placeholder="Search" name="q" value="{{ search_term }}" aria-label="Search">
                 <button class="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 fs-5" type="submit">
                     <i class="fa-solid fa-magnifying-glass primary-fg"></i>
@@ -64,7 +65,8 @@
                         <i class="fa-solid fa-right-to-bracket"></i>
                     </a>
                 {% endif %}
-                <a class="icon-button rounded assistant-button sidebar-control">
+                <a class="icon-button rounded assistant-button sidebar-control d-none">
+                    <!-- placeholder for chatbot -->
                     <i class="fa-solid fa-robot"></i>
                 </a>
                 <a class="icon-button rounded cart-button sidebar-control">
