@@ -15,16 +15,16 @@
                                     <strong>{{ product.name }}</strong>
                                     <div class="d-flex justify-content-between fs-5">
                                         <small class="text-muted">Qty: <strong>{{ item.quantity }}</strong></small>
-                                        <span class="fw-bold">€{{ item.total_price|floatformat:2 }}</span>
+                                        <span class="fw-bold text-success">€{{ item.total_price|floatformat:2 }}</span>
                                     </div>
                                 </div>
                             {% endwith %}
                         </a>
                         <a href="{% url 'remove_from_cart' item.product.id %}"
-                           class="text-danger remove-from-cart-button position-absolute top-0 end-0 p-2"
+                           class="remove-from-cart-button position-absolute top-0 end-0 p-2"
                            data-product-id="{{ item.product.id }}"
                            title="Remove item">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash text-danger"></i>
                         </a>
                     </li>
                 {% endfor %}

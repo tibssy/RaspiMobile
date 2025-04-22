@@ -165,12 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 return response.json();
             } else {
-                return response.text().then(text => { throw new Error(text || 'Network response was not ok adding item.') });
+                return response.text().then(text => {
+                    throw new Error(text || `Network error ${response.status} adding item.`);
+                });
             }
         })
         .then(data => {
             updateUIFromAjax(data);
-            if (!isSidebarOpen && window.innerWidth >= 768 && data.messages_html && data.messages_html.includes('alert-success')) {
+            if (data.status === 'success' && data.cart_sidebar_html !== undefined && !isSidebarOpen && window.innerWidth >= 768 && data.messages_html && data.messages_html.includes('alert-success')) {
                  toggleSection('cart', 2);
             }
         })
