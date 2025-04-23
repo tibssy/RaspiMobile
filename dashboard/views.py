@@ -8,9 +8,9 @@ def is_staff_user(user):
     return user.is_authenticated and user.is_staff
 
 
-@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('login')), name='dispatch')
-class DashboardHomeView(TemplateView):
-    template_name = 'dashboard/dashboard_home.html'
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardOverviewView(TemplateView):
+    template_name = 'dashboard/overview.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

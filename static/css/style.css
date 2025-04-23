@@ -7,7 +7,7 @@
 :root {
     --primary-background: #198754;
     --secondary-background: #3F9950;
-    --tertiary-background: #2b3645;
+    --tertiary-background: #c5e1d4;
     --primary-text: #303030;
     --secondary-text: #d4d4d4;
     --accent: #04c96e;
@@ -410,22 +410,19 @@ a > i {
 }
 
 
-.dashboard-sidebar .nav-link {
-    font-size: 0.95rem;
-    transition: background-color 0.2s ease-in-out;
-}
+#dashboardButtonGroup a {
+    background-color: var(--tertiary-background);
+    border: none;
+    color: black;
 
-.dashboard-sidebar .nav-pills .nav-link.active,
-.dashboard-sidebar .nav-pills .show>.nav-link {
-    background-color: var(--primary-background);
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-}
+    &.active {
+        background-color: var(--primary-background) !important;
+        color: white;
 
-.dashboard-sidebar .nav-pills .nav-link.active i,
-.dashboard-sidebar .nav-pills .show>.nav-link i {
-    color: white;
+        & i {
+            color: white;
+        }
+    }
 }
 
 
