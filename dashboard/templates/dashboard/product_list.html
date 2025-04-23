@@ -78,7 +78,10 @@
                         <small class="text-muted mt-1">Added: {{ product.created_on|date:"d M Y" }}</small>
                     </div>
                     <div class="mt-2 mt-md-0 flex-shrink-0">
-                        <a href="#" class="btn btn-primary btn-sm text-white"><i class="fas fa-edit text-white me-2"></i>Edit</a>
+                        <a href="{% url 'dashboard_product_edit' product.pk %}" class="btn btn-primary btn-sm text-white">
+                            <i class="fas fa-edit text-white me-2"></i>
+                            Edit
+                        </a>
                     </div>
                 </div>
             {% endfor %}
