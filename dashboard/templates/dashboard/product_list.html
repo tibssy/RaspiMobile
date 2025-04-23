@@ -1,0 +1,130 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block extra_title %} - Product Management{% endblock %}
+
+{% block dashboard_content %}
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-3">
+        <h3 class="mb-0 me-md-auto">
+            Product List
+            {% if products and is_paginated %}
+                <small class="text-muted fs-6">({{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ paginator.count }})</small>
+            {% elif products %}
+                 <small class="text-muted fs-6">({{ products|length }})</small>
+            {% endif %}
+        </h3>
+
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-sort me-1"></i> Sort By
+                {% if current_sort == 'name' %}(Name {% if current_dir == 'asc' %}A-Z{% else %}Z-A{% endif %})
+                {% elif current_sort == 'stock_quantity' %}(Stock {% if current_dir == 'asc' %}Low-High{% else %}High-Low{% endif %})
+                {% elif current_sort == 'price' %}(Price {% if current_dir == 'asc' %}Low-High{% else %}High-Low{% endif %})
+                {% elif current_sort == 'created_on' %}(Date {% if current_dir == 'asc' %}Old-New{% else %}New-Old{% endif %})
+            {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end px-1" aria-labelledby="sortDropdown">
+                <!-- Name Sorting -->
+                <li><h6 class="dropdown-header">Name</h6></li>
+                <li><a class="dropdown-item {% if current_sort == 'name' and current_dir == 'asc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=name&dir=asc"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Name (A-Z)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'name' and current_dir == 'desc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=name&dir=desc"><i class="fas fa-sort-alpha-up fa-fw me-2"></i>Name (Z-A)</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Stock Sorting -->
+                <li><h6 class="dropdown-header">Stock Quantity</h6></li>
+                <li><a class="dropdown-item {% if current_sort == 'stock_quantity' and current_dir == 'asc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=stock_quantity&dir=asc"><i class="fas fa-sort-numeric-down fa-fw me-2"></i>Stock (Low to High)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'stock_quantity' and current_dir == 'desc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=stock_quantity&dir=desc"><i class="fas fa-sort-numeric-up fa-fw me-2"></i>Stock (High to Low)</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Price Sorting -->
+                <li><h6 class="dropdown-header">Price</h6></li>
+                <li><a class="dropdown-item {% if current_sort == 'price' and current_dir == 'asc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=price&dir=asc"><i class="fas fa-sort-amount-down fa-fw me-2"></i>Price (Low to High)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'price' and current_dir == 'desc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=price&dir=desc"><i class="fas fa-sort-amount-up fa-fw me-2"></i>Price (High to Low)</a></li>
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Date Added Sorting -->
+                <li><h6 class="dropdown-header">Date Added</h6></li>
+                <li><a class="dropdown-item {% if current_sort == 'created_on' and current_dir == 'asc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=created_on&dir=asc"><i class="fas fa-calendar-day fa-fw me-2"></i>Date (Oldest First)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'created_on' and current_dir == 'desc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=created_on&dir=desc"><i class="fas fa-calendar-week fa-fw me-2"></i>Date (Newest First)</a></li>
+            </ul>
+        </div>
+
+        <a href="#" class="btn btn-primary btn-sm text-white flex-shrink-0 ms-md-3">
+            <i class="fas fa-plus text-white me-2"></i>Add New
+        </a>
+    </div>
+
+    {% if products %}
+        <div class="list-group shadow-sm mb-4">
+            {% for product in products %}
+                <div class="list-group-item list-group-item-action d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 py-3">
+                    <div class="d-flex align-items-center flex-grow-1 me-md-3">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail me-3" width="60" height="60" style="object-fit: contain;">
+                        {% else %}
+                            <div class="img-thumbnail me-3 d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px;">
+                                <i class="fas fa-image text-muted fs-4"></i>
+                            </div>
+                        {% endif %}
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">{{ product.name }}</h5>
+                            <small class="text-muted d-block">SKU: {{ product.sku|default:"N/A" }}</small>
+                            <small class="text-muted d-block">Price: €{{ product.price }}</small>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-start align-items-md-end text-nowrap me-md-3 pt-2 pt-md-0">
+                        <span class="mb-1">Stock: {{ product.stock_quantity }}</span>
+                        {% if product.is_active %}<span class="badge bg-success rounded-pill">Active</span>{% else %}<span class="badge bg-secondary rounded-pill">Inactive</span>{% endif %}
+                        <small class="text-muted mt-1">Added: {{ product.created_on|date:"d M Y" }}</small>
+                    </div>
+                    <div class="mt-2 mt-md-0 flex-shrink-0">
+                        <a href="#" class="btn btn-primary btn-sm text-white"><i class="fas fa-edit text-white me-2"></i>Edit</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination justify-content-center mb-2">
+            <span class="step-links">
+                <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-left primary-fg"></i>
+                </a>
+
+                {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span class="current-page-button">{{ page_number }}</span>
+                    {% elif page_number <= 5 %}
+                        <a href="?page={{ page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
+                        <a href="?page={{ page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
+                        {% if not page_obj.paginator.num_pages <= 5 and page_number == page_obj.number|add:3 %}
+                            <span class="px-2">...</span>
+                        {% endif %}
+                    {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
+                        <a href="?page={{ page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-right primary-fg"></i>
+                </a>
+            </span>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-info mt-3" role="alert">
+            No products found matching your criteria.
+            <a href="#" class="alert-link">Add the first product?</a>
+        </div>
+    {% endif %}
+
+{% endblock dashboard_content %}

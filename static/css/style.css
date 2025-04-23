@@ -314,12 +314,13 @@ a > i {
 
 .pagination .step-links a:hover {
     border-width: 3px;
-    border-color: var(--secondary-background);
+    background-color: var(--tertiary-background);
+    border-color: var(--tertiary-background);
     box-shadow: var(--box-shadow-normal);
 }
 
 .pagination .step-links .current-page-button {
-    background-color: var(--secondary-background);
+    background-color: var(--primary-background);
     color: white;
     cursor: default;
     box-shadow: var(--box-shadow-normal);
@@ -330,6 +331,7 @@ a > i {
     pointer-events: none;
     cursor: default;
 }
+
 
 .featured-products-container {
     display: flex;
@@ -367,6 +369,7 @@ a > i {
 .dropdown-item {
     color: var(--primary-text);
     transition: 0.3s ease;
+    margin-bottom: 3px;
 
     & i {
         transition: 0.3s ease;
@@ -380,6 +383,11 @@ a > i {
         & i {
             color: white;
         }
+    }
+
+    &.active {
+        background-color: var(--primary-background);
+        border-radius: 4px;
     }
 }
 
