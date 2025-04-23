@@ -1,0 +1,25 @@
+{% load static %}
+
+{% if form.instance.image and form.instance.image.public_id != 'placeholder' %}
+    <div class="current-image-preview text-center mb-2 mb-md-0 flex-shrink-0">
+        <a href="{{ form.instance.image.url }}" target="_blank" title="View current image">
+            <img src="{{ form.instance.image.url }}"
+                 alt="Current {{ form.instance.name }} image"
+                 width="150"
+                 height="150"
+                 style="object-fit: contain; max-width: 100%; height: auto;"
+                 class="img-thumbnail mb-1">
+        </a>
+        <small class="text-muted d-block">Current Image</small>
+    </div>
+{% else %}
+    <div class="current-image-preview text-center mb-2 mb-md-0 flex-shrink-0">
+        <img src="{% static 'images/default_product.webp' %}"
+             alt="Default product image"
+             width="150"
+             height="150"
+             style="object-fit: contain; max-width: 100%; height: auto;"
+             class="img-thumbnail mb-1">
+        <small class="text-muted d-block">Default Image</small>
+    </div>
+{% endif %}

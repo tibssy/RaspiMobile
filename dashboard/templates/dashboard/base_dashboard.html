@@ -5,7 +5,7 @@
 
 
 {% block content %}
-<div class="container-fluid pt-3 px-4">
+<div class="container px-4 pt-3 pb-4">
     <nav class="border-bottom pb-3 mb-4">
         <div class="d-flex flex-column justify-content-between flex-lg-row align-items-lg-center">
 
@@ -17,7 +17,7 @@
                 </a>
             </div>
 
-            <div id="dashboardButtonGroup" class="btn-group mt-2 mt-lg-0 mx-lg-auto gap-1" role="group" aria-label="Dashboard Navigation">
+            <div id="dashboardButtonGroup" class="btn-group mt-2 mt-lg-0 mx-lg-auto gap-2" role="group" aria-label="Dashboard Navigation">
                 <a href="{% url 'dashboard_overview' %}" class="btn btn-primary {% if active_nav == 'overview' %}active{% endif %}" title="Overview">
                     <i class="fas fa-tachometer-alt fa-fw me-lg-2 d-lg-none" aria-hidden="true"></i>
                     <span class="d-none d-lg-inline">Overview</span>

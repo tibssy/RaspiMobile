@@ -433,6 +433,15 @@ a > i {
     }
 }
 
+.input-group-text {
+    background-color: transparent;
+    border: none;
+}
+
+.form-control.d-flex.h-auto {
+    border: none;
+}
+
 
 @media screen and (min-width: 768px) {
     .nav-item {
