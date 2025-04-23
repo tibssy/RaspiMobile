@@ -5,13 +5,12 @@ from django.db.models import Q
 
 
 class ProductListView(ListView):
-    # model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
     paginate_by = 8
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(is_active=True)
         search_query = self.request.GET.get('q')
         sort_by = self.request.GET.get('sort')
 
@@ -50,12 +49,12 @@ class ProductDetailView(DetailView):
 
 
     def get_object(self):
-        return get_object_or_404(Product, pk=self.kwargs['pk'])
+        return get_object_or_404(Product, pk=self.kwargs['pk'], is_active=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        related_products = Product.objects.filter(categories__in=product.categories.all()).exclude(pk=product.pk).distinct()
+        related_products = Product.objects.filter(categories__in=product.categories.all(), is_active=True).exclude(pk=product.pk).distinct()
         context['related_products'] = related_products[:4]
 
         return context
