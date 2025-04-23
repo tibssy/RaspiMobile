@@ -5,7 +5,17 @@
 {% block extra_title %} - Edit: {{ product.name }}{% endblock %}
 
 {% block dashboard_content %}
-    <form method="POST" action="{% url 'dashboard_product_edit' product.pk %}" class="needs-validation" novalidate enctype="multipart/form-data">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Edit: <span class="fw-normal">{{ product.name }}</span></h3>
+        <a href="{% url 'dashboard_product_list' %}" class="btn btn-sm btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Product List
+        </a>
+    </div>
+    <hr>
+
+    {% include 'partials/messages.html' %}
+
+    <form method="POST" action="{% url 'dashboard_product_edit' product.pk %}" class="needs-validation" novalidate enctype="multipart/form-data" id="product-edit-form">
         {% csrf_token %}
         {% crispy form %}
 
@@ -106,15 +116,45 @@
              </div>
         </template>
 
-        <div class="mt-4 d-flex justify-content-end gap-2">
-             <a href="{% url 'dashboard_product_list' %}" class="btn btn-secondary">Cancel</a>
-             <button type="submit" class="btn btn-primary text-white">
-                 <i class="fas fa-save text-white me-2"></i>
-                 Save Changes
-             </button>
+        <div class="mt-5 d-flex justify-content-between gap-2">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                <i class="fas fa-trash-alt me-2"></i>Delete Product
+            </button>
+
+            <div>
+                <a href="{% url 'dashboard_product_list' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary text-white" form="product-edit-form">
+                    <i class="fas fa-save text-white me-2"></i>
+                    Save Changes
+                </button>
+            </div>
         </div>
     </form>
 
+    <div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteProductModalLabel">Confirm Product Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to permanently delete the product:</p>
+                    <p><strong>{{ product.name }}</strong>?</p>
+                    <p class="text-danger fw-bold">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="POST" action="{% url 'dashboard_product_delete' product.pk %}" class="d-inline">
+                         {% csrf_token %}
+                         <button type="submit" class="btn btn-danger">
+                             <i class="fas fa-trash-alt me-2"></i>Confirm Delete
+                         </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock dashboard_content %}
 
 {% block extra_js %}

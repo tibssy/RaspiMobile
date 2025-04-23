@@ -13,7 +13,7 @@
     --accent: #04c96e;
     --shadow: #00000080;
     --shadow-light: #00000071;
-    --danger-color: #bd0c0c;
+    --danger-color: #c42424;
     --box-shadow-small: 0 2px 2px var(--shadow);
     --box-shadow-normal: 0 2px 4px var(--shadow);
     --box-shadow-large: 0 4px 8px var(--shadow-light);
@@ -56,7 +56,7 @@ body {
     box-shadow: var(--box-shadow-large);
     scrollbar-color: var(--primary-background) transparent;
     border: 3px solid transparent;
-    z-index: 99;
+    /* z-index: 99; */
     width: 100vw;
 }
 
@@ -185,6 +185,27 @@ a > i {
         color: var(--primary-text);
     }
 }
+
+.btn.btn-danger {
+    box-shadow: var(--box-shadow-small);
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
+    font-weight: 600;
+    transition: filter 0.3s ease-in-out;
+
+    &:hover {
+        filter: brightness(120%);
+    }
+
+    &:focus {
+        filter: brightness(80%);
+        background-color: var(--danger-color);
+        border-color: var(--danger-color);
+        color: white;
+    }
+}
+
 
 .form-control,
 .form-select {
@@ -441,6 +462,14 @@ a > i {
 .form-control.d-flex.h-auto {
     border: none;
 }
+
+
+
+
+/* .modal-backdrop {
+    z-index: -1 !important;
+} */
+
 
 
 @media screen and (min-width: 768px) {

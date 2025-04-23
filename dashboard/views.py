@@ -1,8 +1,11 @@
-from django.views.generic import TemplateView, ListView, UpdateView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
+from cloudinary import uploader
 from django.forms import inlineformset_factory
 from django.db import transaction
 from products.models import Product, ProductSpecification, SpecificationType
@@ -112,3 +115,34 @@ class DashboardProductEditView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('dashboard_product_list')
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('dashboard_product_list')
+    template_name = 'dashboard/product_confirm_delete.html'
+    context_object_name = 'product'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        product_name = self.object.name
+        public_id = None
+
+        if self.object.image:
+            public_id = self.object.image.public_id
+
+        if public_id and public_id != 'placeholder':
+            try:
+                result = uploader.destroy(public_id)
+            except Exception as e:
+                messages.warning(request, f"Product '{product_name}' deleted, but failed to delete image {public_id} from Cloudinary.")
+
+        try:
+            self.object.delete()
+            messages.success(request, f'Product "{product_name}" was deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting product "{product_name}" from database: {e}')
+            return redirect('dashboard_product_edit', pk=self.object.pk)
+
+        return redirect(self.get_success_url())
