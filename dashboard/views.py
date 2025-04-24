@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
+from django.shortcuts import redirect
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from cloudinary import uploader
 from django.forms import inlineformset_factory
 from django.db import transaction
@@ -146,3 +145,61 @@ class DashboardProductDeleteView(DeleteView):
             return redirect('dashboard_product_edit', pk=self.object.pk)
 
         return redirect(self.get_success_url())
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'dashboard/product_add.html'
+    success_url = reverse_lazy('dashboard_product_list')
+
+    SpecificationFormSet = inlineformset_factory(
+        Product,
+        ProductSpecification,
+        form=ProductSpecificationForm,
+        fields=('spec_type', 'value'),
+        extra=1,
+        can_delete=False
+    )
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.request.method == 'GET':
+            context = super().get_context_data(**kwargs)
+            context['spec_formset'] = self.SpecificationFormSet(prefix='specs')
+        context['page_title'] = "Add New Product"
+        context['active_nav'] = 'products'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        spec_formset = self.SpecificationFormSet(request.POST, request.FILES, prefix='specs')
+
+        if form.is_valid() and spec_formset.is_valid():
+            return self.form_valid(form, spec_formset)
+        else:
+            messages.error(self.request, 'Failed to add product. Please check the form for errors.')
+            return self.form_invalid(form, spec_formset)
+
+    def form_valid(self, form, spec_formset):
+        try:
+            with transaction.atomic():
+                self.object = form.save()
+                spec_formset.instance = self.object
+                spec_formset.save()
+            messages.success(self.request, f'Product "{self.object.name}" was created successfully.')
+            return redirect(self.get_success_url())
+        except Exception as e:
+            messages.error(self.request, f'An error occurred while saving: {e}')
+            return self.form_invalid(form, spec_formset)
+
+    def form_invalid(self, form, spec_formset):
+        context = {
+            'form': form,
+            'spec_formset': spec_formset,
+            'page_title': "Add New Product",
+            'active_nav': 'products',
+        }
+
+        return self.render_to_response(context)

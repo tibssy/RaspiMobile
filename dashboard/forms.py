@@ -3,6 +3,7 @@ from products.models import Product, Category, SpecificationType, ProductSpecifi
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML, Field, Div
 from crispy_forms.bootstrap import AppendedText, PrependedText
+from decimal import Decimal
 
 
 class ProductForm(forms.ModelForm):
@@ -93,6 +94,14 @@ class ProductForm(forms.ModelForm):
                 )
             )
         )
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+
+        if price is not None and price <= Decimal('0.00'):
+            raise forms.ValidationError("Price must be a positive value (greater than 0).")
+
+        return price
 
 
 class ProductSpecificationForm(forms.ModelForm):
