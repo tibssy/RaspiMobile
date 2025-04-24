@@ -12,6 +12,7 @@ gunicorn==23.0.0
 humanize==4.12.2
 idna==3.10
 packaging==24.2
+pillow==11.2.1
 psycopg2==2.9.10
 requests==2.32.3
 six==1.17.0
@@ -19,4 +20,5 @@ sqlparse==0.5.3
 stripe==12.0.0
 typing_extensions==4.13.0
 urllib3==2.3.0
+vaderSentiment==3.3.2
 whitenoise==6.9.0

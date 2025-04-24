@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
-from django.core.validators import MinValueValidator
+from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
 
@@ -53,3 +54,22 @@ class ProductSpecification(models.Model):
 
     def __str__(self):
         return f'{self.spec_type.name}: {self.value}'
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], help_text='Rate the product from 1 (worst) to 5 (best).')
+    comment = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    is_approved = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_on']
+        unique_together = ('product', 'user')
+        verbose_name = 'Product Review'
+        verbose_name_plural = 'Product Reviews'
+
+    def __str__(self):
+        return f'Review for "{self.product.name}" by {self.user.username} ({self.rating}/5)'

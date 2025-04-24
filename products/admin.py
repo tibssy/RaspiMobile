@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, SpecificationType, ProductSpecification
+from .models import Category, Product, SpecificationType, ProductSpecification, Review
 from django.utils.html import format_html
 
 
@@ -42,3 +42,18 @@ class ProductSpecificationAdmin(admin.ModelAdmin):
     list_display = ('product', 'spec_type', 'value')
     search_fields = ('product__name', 'spec_type__name', 'value')
     list_filter = ('spec_type',)
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'rating', 'is_approved', 'created_on')
+    list_filter = ('rating', 'created_on', 'is_approved')
+    search_fields = ('user__username', 'product__name', 'comment')
+    readonly_fields = ('created_on', 'updated_on')
+    list_editable = ('is_approved',)
+    actions = ['approve_reviews']
+
+    def approve_reviews(self, request, queryset):
+        queryset.update(is_approved=True)
+
+    approve_reviews.short_description = "Approve selected reviews"

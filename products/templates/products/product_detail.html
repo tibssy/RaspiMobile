@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block extra_title %}- {{ product.name }}{% endblock %}
 
@@ -8,15 +9,18 @@
     <div class="container my-4">
         <div class="row">
             <div class="col-lg-6 mb-3 mb-lg-0">
-                {% if "placeholder" in product.image.url %}
-                    <img src="{% static 'images/default_product.webp' %}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{% trans 'Placeholder Image' %}">
+                 {% if product.image and product.image.public_id != 'placeholder' %}
+                     <img src="{{ product.image.url }}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{{ product.name }}">
                 {% else %}
-                    <img src="{{ product.image.url }}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{{ product.name }}">
+                    <img src="{% static 'images/default_product.webp' %}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{% trans 'Default product image' %}">
                 {% endif %}
             </div>
             <div class="col-lg-6">
                 <h1>{{ product.name }}</h1>
                 <p class="lead fw-bold text-success fs-3">€{{ product.price }}</p>
+                {% if average_rating %}
+                    <p>Average Rating: {{ average_rating }}/5 ({{ review_count }} reviews)</p>
+                {% endif %}
                 <p>{{ product.description }}</p>
                 <p><strong>{% trans "SKU:" %}</strong> {{ product.sku|default:"N/A" }}</p>
 
@@ -84,10 +88,58 @@
         </div>
 
         <hr class="my-4">
-        <h2>{% trans "Reviews" %}</h2>
 
-        <!-- TODO: include product review html here-->
+        <h2 class="mb-3">{% trans "Reviews" %} ({{ review_count }})</h2>
+        <div class="reviews-list mb-4">
+            {% for review in reviews %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Rating: {{ review.rating }}/5
+                            <span class="ms-2">
+                                {% for i in "12345" %}
+                                    {% if i|add:0 <= review.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            By: {{ review.user.username }} on {{ review.created_on|date:"d M Y" }}
+                        </h6>
+                        <p class="card-text">{{ review.comment|linebreaksbr }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                 {% if not user_has_reviewed %}
+                     <p>{% trans "No approved reviews yet. Be the first to write one!" %}</p>
+                 {% endif %}
+            {% endfor %}
+        </div>
 
-
+        <div class="add-review-section border-top pt-4">
+            {% if user.is_authenticated %}
+                {% if user_has_reviewed %}
+                     <p class="alert alert-info">{% trans "Thank you! Your review is pending approval or has already been submitted." %}</p>
+                {% else %}
+                    <h3 class="mb-3">{% trans "Write Your Review" %}</h3>
+                     {% include 'partials/messages.html' %}
+                    <form method="post" action="{% url 'product_detail' pk=product.pk %}">
+                        {% csrf_token %}
+                        {{ review_form|crispy }}
+                        <button type="submit" class="btn btn-primary text-white mt-2">{% trans "Submit Review" %}</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                {% url 'account_login' as login_url %}
+                <p>
+                    {% trans "Please" %}
+                        <a href="{{ login_url }}?next={{ request.path|urlencode }}">{% trans "log in" %}</a>
+                    {% trans "to write a review." %}
+                </p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
