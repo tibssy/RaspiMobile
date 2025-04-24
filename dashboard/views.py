@@ -1,14 +1,17 @@
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404, HttpResponseRedirect
+from django.views import View
 from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from cloudinary import uploader
 from django.forms import inlineformset_factory
-from django.db import transaction
+from django.db import transaction, models
 from products.models import Product, ProductSpecification, SpecificationType
-from .forms import ProductForm, ProductSpecificationForm
+from orders.models import Order
+from .forms import ProductForm, ProductSpecificationForm, OrderStatusForm
 
 
 def is_staff_user(user):
@@ -203,3 +206,55 @@ class DashboardProductCreateView(CreateView):
         }
 
         return self.render_to_response(context)
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardOrderListView(ListView):
+    model = Order
+    template_name = 'dashboard/order_list.html'
+    context_object_name = 'orders'
+    paginate_by = 15
+
+    def get_queryset(self):
+        queryset = Order.objects.select_related('user').prefetch_related(
+            'items', 'items__product'
+        )
+        sort_by = self.request.GET.get('sort', '-date_ordered')
+        allowed_sort_fields = ['date_ordered', '-date_ordered', 'status', '-status', 'order_number', '-order_number', 'order_total', '-order_total']
+        if sort_by not in allowed_sort_fields:
+            sort_by = '-date_ordered'
+        queryset = queryset.order_by(sort_by)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_sort'] = self.request.GET.get('sort', '-date_ordered')
+        context['active_nav'] = 'orders'
+        context['page_title'] = 'Order Management'
+        context['total_order_count'] = context['paginator'].count
+        context['status_form_class'] = OrderStatusForm
+        return context
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardUpdateOrderStatusView(View):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        order_pk = kwargs.get('pk')
+        order = get_object_or_404(Order, pk=order_pk)
+        form = OrderStatusForm(request.POST, instance=order)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Status for order {order.order_number} updated successfully.')
+        else:
+            error_str = ', '.join([f"{field}: {err[0]}" for field, err in form.errors.items()])
+            messages.error(request, f'Failed to update status for order {order.order_number}. Error: {error_str}')
+
+        redirect_url = reverse('dashboard_order_list')
+        sort_param = request.GET.get('sort')
+        if sort_param:
+            redirect_url += f'?sort={sort_param}'
+
+        return HttpResponseRedirect(redirect_url)

@@ -1,5 +1,6 @@
 from django import forms
 from products.models import Product, Category, SpecificationType, ProductSpecification
+from orders.models import Order
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML, Field, Div
 from crispy_forms.bootstrap import AppendedText, PrependedText
@@ -123,3 +124,15 @@ class ProductSpecificationForm(forms.ModelForm):
         self.fields['spec_type'].queryset = SpecificationType.objects.order_by('name')
         self.fields['spec_type'].empty_label = 'Select Type...'
         self.fields['value'].widget.attrs['placeholder'] = 'Enter specification value'
+
+
+class OrderStatusForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select form-select-sm'})
+        }
+        labels = {
+            'status': ''
+        }
