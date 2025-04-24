@@ -52,7 +52,6 @@ class ProductDetailView(FormMixin, DetailView):
     context_object_name = 'product'
     form_class = ReviewForm
 
-
     def get_object(self):
         obj = get_object_or_404(Product.objects.filter(is_active=True), pk=self.kwargs['pk'])
         return obj
@@ -73,7 +72,6 @@ class ProductDetailView(FormMixin, DetailView):
 
         avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
         context['average_rating'] = round(avg_rating, 1) if avg_rating else None
-
         return context
 
     def post(self, request, *args, **kwargs):

@@ -1,0 +1,124 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block extra_title %} - Review Management{% endblock %}
+
+{% block dashboard_content %}
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-3">
+        <h3 class="mb-0 me-md-auto">
+            Review List
+            {% if reviews and is_paginated %}
+                <small class="text-muted fs-6">({{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ paginator.count }})</small>
+            {% elif reviews %}
+                 <small class="text-muted fs-6">({{ total_review_count }})</small>
+            {% endif %}
+        </h3>
+
+        <div class="btn-group btn-group-sm me-md-3 mb-2 mb-md-0" role="group" aria-label="Filter reviews">
+            <a href="{% url 'dashboard_review_list' %}?status=pending{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="btn {% if current_status_filter == 'pending' %}bg-success text-white{% else %}btn-outline-secondary{% endif %}">Pending</a>
+            <a href="{% url 'dashboard_review_list' %}?status=approved{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="btn {% if current_status_filter == 'approved' %}bg-success text-white{% else %}btn-outline-secondary{% endif %}">Approved</a>
+            <a href="{% url 'dashboard_review_list' %}?status=all{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="btn {% if current_status_filter == 'all' %}bg-success text-white{% else %}btn-outline-secondary{% endif %}">All</a>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-sort me-1"></i> Sort By
+                {% if current_sort == '-created_on' %} (Newest)
+                {% elif current_sort == 'created_on' %} (Oldest)
+                {% elif current_sort == 'rating' %} (Rating Low-High)
+                {% elif current_sort == '-rating' %} (Rating High-Low)
+                {% elif current_sort == 'product__name' %} (Product A-Z)
+                {% elif current_sort == 'user__username' %} (User A-Z)
+                {% else %} (Newest)
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end px-1" aria-labelledby="sortDropdown">
+                <li><h6 class="dropdown-header">Date</h6></li>
+                <li><a class="dropdown-item {% if current_sort == '-created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=-created_on"><i class="fas fa-calendar-alt fa-fw me-2"></i>Newest First</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=created_on"><i class="fas fa-calendar-day fa-fw me-2"></i>Oldest First</a></li>
+                <li><hr class="dropdown-divider"></li>
+                 <li><h6 class="dropdown-header">Rating</h6></li>
+                <li><a class="dropdown-item {% if current_sort == '-rating' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=-rating"><i class="fas fa-sort-amount-up fa-fw me-2"></i>Rating (High-Low)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'rating' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=rating"><i class="fas fa-sort-amount-down fa-fw me-2"></i>Rating (Low-High)</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><h6 class="dropdown-header">Product / User</h6></li>
+                 <li><a class="dropdown-item {% if current_sort == 'product__name' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=product__name"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Product (A-Z)</a></li>
+                 <li><a class="dropdown-item {% if current_sort == 'user__username' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=user__username"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>User (A-Z)</a></li>
+            </ul>
+        </div>
+    </div>
+
+    {% include 'partials/messages.html' %}
+
+    {% if reviews %}
+        <div class="list-group shadow-sm mb-4">
+            {% for review in reviews %}
+                <div class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 py-3">
+                    <div class="flex-grow-1 mb-2 mb-md-0">
+                        <h5 class="mb-1">
+                            <a href="{% url 'product_detail' review.product.pk %}" target="_blank" title="View Product">{{ review.product.name }}</a>
+                            - {{ review.rating }}/5
+                            <span class="ms-1">
+                                {% for i in "12345" %}{% if i|add:0 <= review.rating %}<i class="fas fa-star text-warning"></i>{% else %}<i class="far fa-star text-muted"></i>{% endif %}{% endfor %}
+                            </span>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                             By: {{ review.user.username }} on {{ review.created_on|date:"d M Y, H:i" }}
+                        </h6>
+                         <p class="card-text bg-light p-2 rounded border small">{{ review.comment|linebreaksbr|truncatewords:50 }}</p>
+                    </div>
+
+                    <div class="flex-shrink-0 text-md-end">
+                        <form method="POST" action="{% url 'dashboard_review_toggle_approval' review.pk %}" class="d-inline-block">
+                            {% csrf_token %}
+                            <input type="hidden" name="status_filter" value="{{ current_status_filter|default:'pending' }}">
+                            <input type="hidden" name="sort" value="{{ current_sort|default:'-created_on' }}">
+                            <input type="hidden" name="page" value="{{ page_obj.number|default:'1' }}">
+
+                            <button type="submit" class="btn btn-sm {% if review.is_approved %}btn-outline-success{% else %}btn-outline-warning{% endif %}"
+                                    title="{% if review.is_approved %}Click to Unapprove{% else %}Click to Approve{% endif %}">
+                                {% if review.is_approved %}
+                                    <i class="fas fa-check-circle me-1"></i> Approved
+                                {% else %}
+                                     <i class="fas fa-times-circle me-1"></i> Approve
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination justify-content-center mb-2">
+            <span class="step-links">
+                 <a href="?page=1&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-left primary-fg"></i>
+                </a>
+                 {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span class="current-page-button">{{ page_number }}</span>
+                     {% elif page_number >= page_obj.number|add:-2 and page_number <= page_obj.number|add:2 %}
+                         <a href="?page={{ page_number }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% elif page_number == page_obj.paginator.num_pages|add:-4 and page_obj.number < page_obj.paginator.num_pages|add:-2 %}
+                         <span class="px-2">...</span>
+                    {% elif page_number == 4 and page_obj.number > 3 %}
+                          <span class="px-2">...</span>
+                     {% endif %}
+                {% endfor %}
+                 <a href="?page={{ page_obj.paginator.num_pages }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-right primary-fg"></i>
+                </a>
+            </span>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-info mt-3" role="alert">
+            No reviews found matching your criteria.
+        </div>
+    {% endif %}
+
+{% endblock dashboard_content %}

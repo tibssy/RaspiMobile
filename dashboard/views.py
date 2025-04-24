@@ -9,9 +9,9 @@ from django.contrib import messages
 from cloudinary import uploader
 from django.forms import inlineformset_factory
 from django.db import transaction, models
-from products.models import Product, ProductSpecification, SpecificationType
+from products.models import Product, ProductSpecification, SpecificationType, Review
 from orders.models import Order
-from .forms import ProductForm, ProductSpecificationForm, OrderStatusForm
+from .forms import ProductForm, ProductSpecificationForm, OrderStatusForm, ReviewApprovalForm
 
 
 def is_staff_user(user):
@@ -256,5 +256,69 @@ class DashboardUpdateOrderStatusView(View):
         sort_param = request.GET.get('sort')
         if sort_param:
             redirect_url += f'?sort={sort_param}'
+
+        return HttpResponseRedirect(redirect_url)
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardReviewListView(ListView):
+    model = Review
+    template_name = 'dashboard/review_list.html'
+    context_object_name = 'reviews'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Review.objects.select_related('user', 'product')
+        filter_status = self.request.GET.get('status', 'pending')
+
+        if filter_status == 'approved':
+            queryset = queryset.filter(is_approved=True)
+        elif filter_status == 'pending':
+            queryset = queryset.filter(is_approved=False)
+
+        sort_by = self.request.GET.get('sort', '-created_on')
+        allowed_sort_fields = ['created_on', '-created_on', 'rating', '-rating', 'product__name', 'user__username']
+        if sort_by not in allowed_sort_fields:
+            sort_by = '-created_on'
+
+        queryset = queryset.order_by(sort_by)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_sort'] = self.request.GET.get('sort', '-created_on')
+        context['current_status_filter'] = self.request.GET.get('status', 'pending')
+        context['active_nav'] = 'comments'
+        context['page_title'] = 'Review Management'
+        context['total_review_count'] = context['paginator'].count
+        context['approval_form'] = ReviewApprovalForm()
+        return context
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardReviewToggleApprovalView(View):
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        review_pk = kwargs.get('pk')
+        review = get_object_or_404(Review, pk=review_pk)
+        review.is_approved = not review.is_approved
+        review.save(update_fields=['is_approved', 'updated_on'])
+        action = 'approved' if review.is_approved else 'unapproved'
+        messages.success(request, f'Review for "{review.product.name}" by {review.user.username} has been {action}.')
+        redirect_url = reverse('dashboard_review_list')
+        # query_params = request.GET.copy()
+        status_filter = request.POST.get('status_filter')
+        sort_param = request.POST.get('sort')
+        page_num = request.POST.get('page')
+
+        params = {}
+        if status_filter: params['status'] = status_filter
+        if sort_param: params['sort'] = sort_param
+        if page_num: params['page'] = page_num
+
+        if params:
+            from urllib.parse import urlencode
+            redirect_url += f'?{urlencode(params)}'
 
         return HttpResponseRedirect(redirect_url)

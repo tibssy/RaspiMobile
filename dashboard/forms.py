@@ -1,5 +1,5 @@
 from django import forms
-from products.models import Product, Category, SpecificationType, ProductSpecification
+from products.models import Product, Category, SpecificationType, ProductSpecification, Review
 from orders.models import Order
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML, Field, Div
@@ -136,3 +136,11 @@ class OrderStatusForm(forms.ModelForm):
         labels = {
             'status': ''
         }
+
+
+class ReviewApprovalForm(forms.ModelForm):
+    is_approved = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+
+    class Meta:
+        model = Review
+        fields = ['is_approved']

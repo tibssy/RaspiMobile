@@ -6,16 +6,23 @@ from .views import (
     DashboardProductDeleteView,
     DashboardProductCreateView,
     DashboardOrderListView,
-    DashboardUpdateOrderStatusView
+    DashboardUpdateOrderStatusView,
+    DashboardReviewListView,
+    DashboardReviewToggleApprovalView,
 )
 
 
 urlpatterns = [
     path('', DashboardOverviewView.as_view(), name='dashboard_overview'),
+    # Product URLs
     path('products/', DashboardProductListView.as_view(), name='dashboard_product_list'),
     path('products/add/', DashboardProductCreateView.as_view(), name='dashboard_product_add'),
     path('products/<int:pk>/edit/', DashboardProductEditView.as_view(), name='dashboard_product_edit'),
     path('products/<int:pk>/delete/', DashboardProductDeleteView.as_view(), name='dashboard_product_delete'),
+    # Order URLs
     path('orders/', DashboardOrderListView.as_view(), name='dashboard_order_list'),
     path('orders/<int:pk>/update_status/', DashboardUpdateOrderStatusView.as_view(), name='dashboard_order_update_status'),
+    # Review URLs
+    path('reviews/', DashboardReviewListView.as_view(), name='dashboard_review_list'),
+    path('reviews/<int:pk>/toggle_approval/', DashboardReviewToggleApprovalView.as_view(), name='dashboard_review_toggle_approval'),
 ]
