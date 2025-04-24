@@ -1,0 +1,103 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block extra_title %} - Statistics{% endblock %}
+
+{% block dashboard_content %}
+    <div id="statisticsChartsContainer">
+        <h3 class="mb-4">{{ page_title }}</h3>
+        <div class="row g-4">
+            <div class="col-lg-6" data-chart-id="sales">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
+                        <span id="salesChartTitle">Sales Trend {{ range_title_suffix }}</span>
+                        <div class="dropdown range-dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
+                                <i class="fas fa-calendar-alt fa-sm"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                                <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="chart-container flex-grow-1">
+                            <canvas id="salesTrendChart"
+                                {% if chart_labels %} data-labels="{{ chart_labels }}" {% endif %}
+                                {% if sales_data %} data-sales="{{ sales_data }}" {% endif %}
+                            ></canvas>
+                        </div>
+                        <div id="salesTrendChartMsg" class="text-center text-muted mt-3 p-5 d-none">
+                             No sales data available for the selected period.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-chart-id="orders">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
+                        <span id="ordersChartTitle">Order Volume {{ range_title_suffix }}</span>
+                        <div class="dropdown range-dropdown">
+                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
+                                <i class="fas fa-calendar-alt fa-sm"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                                <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="chart-container flex-grow-1">
+                            <canvas id="orderVolumeChart"
+                                {% if order_count_data %} data-orders="{{ order_count_data }}" {% endif %}
+                            ></canvas>
+                        </div>
+                         <div id="orderVolumeChartMsg" class="text-center text-muted mt-3 p-5 d-none">
+                             No order data available for the selected period.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mt-4" data-chart-id="topProducts">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
+                        <span id="topProductsChartTitle">Top 10 Selling Products {{ range_title_suffix }}</span>
+                        <div class="dropdown range-dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
+                                 <i class="fas fa-calendar-alt fa-sm"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                               <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
+                                <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 450px;">
+                            <canvas id="topProductsChart"
+                                {% if top_product_labels %} data-labels="{{ top_product_labels }}" {% endif %}
+                                {% if top_product_revenue %} data-revenue="{{ top_product_revenue }}" {% endif %}
+                            ></canvas>
+                        </div>
+                        <div id="topProductsChartMsg" class="text-center text-muted mt-3 d-none">
+                             No product sales data found for the selected period.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock dashboard_content %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/statistics_charts.js' %}"></script>
+{% endblock extra_js %}

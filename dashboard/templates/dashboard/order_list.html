@@ -33,7 +33,7 @@
                 <li><h6 class="dropdown-header">Date</h6></li>
                 <li><a class="dropdown-item {% if current_sort == '-date_ordered' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=-date_ordered"><i class="fas fa-calendar-alt fa-fw me-2"></i>Newest First</a></li>
                 <li><a class="dropdown-item {% if current_sort == 'date_ordered' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=date_ordered"><i class="fas fa-calendar-day fa-fw me-2"></i>Oldest First</a></li>
-                 <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Status</h6></li>
                 <li><a class="dropdown-item {% if current_sort == 'status' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=status"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Status (A-Z)</a></li>
                 <li><a class="dropdown-item {% if current_sort == '-status' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=-status"><i class="fas fa-sort-alpha-up fa-fw me-2"></i>Status (Z-A)</a></li>
@@ -48,8 +48,6 @@
             </ul>
         </div>
     </div>
-
-    {% include 'partials/messages.html' %}
 
     {% if orders %}
         <div class="list-group shadow-sm mb-4">

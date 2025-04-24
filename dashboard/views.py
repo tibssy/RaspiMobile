@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.core.exceptions import SuspiciousOperation
 from django.views import View
 from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.decorators import user_passes_test
@@ -9,9 +10,14 @@ from django.contrib import messages
 from cloudinary import uploader
 from django.forms import inlineformset_factory
 from django.db import transaction, models
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Sum, Count, F, FloatField
+from django.db.models.functions import TruncDate, Cast
 from products.models import Product, ProductSpecification, SpecificationType, Review
-from orders.models import Order
+from orders.models import Order, OrderItem
 from .forms import ProductForm, ProductSpecificationForm, OrderStatusForm, ReviewApprovalForm
+import json
 
 
 def is_staff_user(user):
@@ -322,3 +328,113 @@ class DashboardReviewToggleApprovalView(View):
             redirect_url += f'?{urlencode(params)}'
 
         return HttpResponseRedirect(redirect_url)
+
+
+@method_decorator(user_passes_test(is_staff_user, login_url=reverse_lazy('account_login')), name='dispatch')
+class DashboardStatisticsView(TemplateView):
+    template_name = 'dashboard/statistics.html'
+
+    def get_start_date(self, range_param):
+        today = timezone.now().date()
+        if range_param == '30':
+            return today - timedelta(days=30)
+        elif range_param == '10':
+            return today - timedelta(days=10)
+        else:
+            return None
+
+    def get_chart_data(self, chart_id, range_param):
+        start_date = self.get_start_date(range_param)
+        order_qs = Order.objects.all()
+        order_item_qs = OrderItem.objects.all()
+
+        if start_date:
+            order_qs = order_qs.filter(date_ordered__date__gte=start_date)
+            order_item_qs = order_item_qs.filter(order__date_ordered__date__gte=start_date)
+
+        if chart_id == 'sales' or chart_id == 'orders':
+            daily_stats_query = order_qs.annotate(day=TruncDate('date_ordered')).values('day').annotate(total_sales=Sum('order_total'), order_count=Count('id')).order_by('day')
+            stats_dict = {stat['day']: {'sales': stat['total_sales'], 'count': stat['order_count']} for stat in daily_stats_query}
+            chart_labels = []
+            sales_data = []
+            order_count_data = []
+            date_format = '%b %d, %Y' if range_param == 'all' else '%b %d'
+
+            if start_date:
+                days_in_range = (timezone.now().date() - start_date).days
+                for i in range(days_in_range, -1, -1):
+                    current_date = timezone.now().date() - timedelta(days=i)
+                    chart_labels.append(current_date.strftime(date_format))
+                    if current_date in stats_dict:
+                        sales_data.append(float(stats_dict[current_date]['sales']))
+                        order_count_data.append(stats_dict[current_date]['count'])
+                    else:
+                        sales_data.append(0)
+                        order_count_data.append(0)
+            else:
+                for stat in daily_stats_query:
+                    chart_labels.append(stat['day'].strftime(date_format))
+                    sales_data.append(float(stat['total_sales']))
+                    order_count_data.append(stat['order_count'])
+
+            if chart_id == 'sales':
+                return {'labels': chart_labels, 'data': sales_data}
+            else:
+                return {'labels': chart_labels, 'data': order_count_data}
+
+        elif chart_id == 'topProducts':
+            top_products_query = order_item_qs.values('product__name').annotate(total_revenue=Sum(F('quantity') * Cast(F('price'), FloatField()))).order_by('-total_revenue')[:10]
+            top_product_labels = [item['product__name'] for item in top_products_query][::-1]
+            top_product_revenue = [item['total_revenue'] for item in top_products_query][::-1]
+            return {'labels': top_product_labels, 'data': top_product_revenue}
+        else:
+            raise SuspiciousOperation(f"Invalid chart_id requested: {chart_id}")
+
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('fetch') == 'true':
+            chart_id = request.GET.get('chart_id')
+            range_param = request.GET.get('range', '30')
+            if chart_id not in ['sales', 'orders', 'topProducts']:
+                return JsonResponse({'error': 'Invalid chart ID'}, status=400)
+            if range_param not in ['10', '30', 'all']:
+                range_param = '30'
+
+            try:
+                chart_data = self.get_chart_data(chart_id, range_param)
+                return JsonResponse(chart_data)
+            except Exception as e:
+                return JsonResponse({'error': 'Failed to fetch chart data'}, status=500)
+
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Dashboard Statistics"
+        context['active_nav'] = 'statistics'
+        initial_range = '30'
+        context['current_range'] = initial_range
+        context['range_title_suffix'] = "(Last 30 Days)"
+
+        try:
+            sales_initial = self.get_chart_data('sales', initial_range)
+            orders_initial = self.get_chart_data('orders', initial_range)
+            top_products_initial = self.get_chart_data('topProducts', initial_range)
+
+            context['chart_labels'] = json.dumps(sales_initial.get('labels', []))
+            context['sales_data'] = json.dumps(sales_initial.get('data', []))
+            context['order_count_data'] = json.dumps(orders_initial.get('data', []))
+            context['top_product_labels'] = json.dumps(top_products_initial.get('labels', []))
+            context['top_product_revenue'] = json.dumps(top_products_initial.get('data', []))
+        except Exception as e:
+            messages.error(self.request, "Could not load initial chart data.")
+
+            context['chart_labels'] = '[]'
+            context['sales_data'] = '[]'
+            context['order_count_data'] = '[]'
+            context['top_product_labels'] = '[]'
+            context['top_product_revenue'] = '[]'
+
+        return context

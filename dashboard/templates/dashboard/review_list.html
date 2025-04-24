@@ -37,18 +37,16 @@
                 <li><a class="dropdown-item {% if current_sort == '-created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=-created_on"><i class="fas fa-calendar-alt fa-fw me-2"></i>Newest First</a></li>
                 <li><a class="dropdown-item {% if current_sort == 'created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=created_on"><i class="fas fa-calendar-day fa-fw me-2"></i>Oldest First</a></li>
                 <li><hr class="dropdown-divider"></li>
-                 <li><h6 class="dropdown-header">Rating</h6></li>
+                <li><h6 class="dropdown-header">Rating</h6></li>
                 <li><a class="dropdown-item {% if current_sort == '-rating' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=-rating"><i class="fas fa-sort-amount-up fa-fw me-2"></i>Rating (High-Low)</a></li>
                 <li><a class="dropdown-item {% if current_sort == 'rating' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=rating"><i class="fas fa-sort-amount-down fa-fw me-2"></i>Rating (Low-High)</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Product / User</h6></li>
-                 <li><a class="dropdown-item {% if current_sort == 'product__name' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=product__name"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Product (A-Z)</a></li>
-                 <li><a class="dropdown-item {% if current_sort == 'user__username' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=user__username"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>User (A-Z)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'product__name' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=product__name"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Product (A-Z)</a></li>
+                <li><a class="dropdown-item {% if current_sort == 'user__username' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=user__username"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>User (A-Z)</a></li>
             </ul>
         </div>
     </div>
-
-    {% include 'partials/messages.html' %}
 
     {% if reviews %}
         <div class="list-group shadow-sm mb-4">

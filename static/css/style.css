@@ -168,8 +168,8 @@ a > i {
 
 .btn.btn-secondary {
     box-shadow: var(--box-shadow-small);
-    background-color: #d5d5d5;
-    border-color: #b4bbc2;
+    background-color: #f0f0f0;
+    border-color: #e1e1e1;
     color: var(--primary-text);
     font-weight: 600;
     transition: filter 0.3s ease-in-out;
@@ -180,8 +180,8 @@ a > i {
 
     &:focus {
         filter: brightness(80%);
-        background-color: #b4bbc2;
-        border-color: #91989e;
+        background-color: #e2e7ec;
+        border-color: #c7cdd3;
         color: var(--primary-text);
     }
 }
@@ -262,6 +262,12 @@ a > i {
 .primary-fg {
     color: var(--primary-background);
 }
+
+.tertiary-bg {
+    background-color: var(--tertiary-background);
+}
+
+
 
 .shadow-normal {
     box-shadow: var(--box-shadow-normal);
@@ -464,12 +470,19 @@ a > i {
 }
 
 
+.chart-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
 
-
-/* .modal-backdrop {
-    z-index: -1 !important;
-} */
-
+.chart-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 
 
 @media screen and (min-width: 768px) {

@@ -9,6 +9,7 @@ from .views import (
     DashboardUpdateOrderStatusView,
     DashboardReviewListView,
     DashboardReviewToggleApprovalView,
+    DashboardStatisticsView,
 )
 
 
@@ -25,4 +26,6 @@ urlpatterns = [
     # Review URLs
     path('reviews/', DashboardReviewListView.as_view(), name='dashboard_review_list'),
     path('reviews/<int:pk>/toggle_approval/', DashboardReviewToggleApprovalView.as_view(), name='dashboard_review_toggle_approval'),
+    # Statistics URL
+    path('statistics/', DashboardStatisticsView.as_view(), name='dashboard_statistics'),
 ]
