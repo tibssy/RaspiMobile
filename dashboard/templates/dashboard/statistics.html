@@ -8,14 +8,14 @@
         <h3 class="mb-4">{{ page_title }}</h3>
         <div class="row g-4">
             <div class="col-lg-6" data-chart-id="sales">
-                <div class="card shadow-sm h-100">
+                <div class="card elevate h-100">
                     <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
                         <span id="salesChartTitle">Sales Trend {{ range_title_suffix }}</span>
                         <div class="dropdown range-dropdown">
                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
                                 <i class="fas fa-calendar-alt fa-sm"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                            <ul class="dropdown-menu dropdown-menu-end elevate px-1">
                                 <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>
@@ -37,14 +37,14 @@
             </div>
 
             <div class="col-lg-6" data-chart-id="orders">
-                <div class="card shadow-sm h-100">
+                <div class="card elevate h-100">
                     <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
                         <span id="ordersChartTitle">Order Volume {{ range_title_suffix }}</span>
                         <div class="dropdown range-dropdown">
                              <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
                                 <i class="fas fa-calendar-alt fa-sm"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                            <ul class="dropdown-menu dropdown-menu-end elevate px-1">
                                 <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>
@@ -65,14 +65,14 @@
             </div>
 
             <div class="col-lg-12 mt-4" data-chart-id="topProducts">
-                <div class="card shadow-sm">
+                <div class="card elevate">
                     <div class="card-header d-flex justify-content-between align-items-center tertiary-bg">
                         <span id="topProductsChartTitle">Top 10 Selling Products {{ range_title_suffix }}</span>
                         <div class="dropdown range-dropdown">
                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Select Time Range">
                                  <i class="fas fa-calendar-alt fa-sm"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end px-1">
+                            <ul class="dropdown-menu dropdown-menu-end elevate px-1">
                                <li><a class="dropdown-item range-selector-link {% if current_range == '10' %}active{% endif %}" href="#" data-range="10">Last 10 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == '30' %}active{% endif %}" href="#" data-range="30">Last 30 Days</a></li>
                                 <li><a class="dropdown-item range-selector-link {% if current_range == 'all' %}active{% endif %}" href="#" data-range="all">All Time</a></li>

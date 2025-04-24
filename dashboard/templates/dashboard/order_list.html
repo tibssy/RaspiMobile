@@ -29,7 +29,7 @@
                 {% else %} (Newest)
                 {% endif %}
             </button>
-            <ul class="dropdown-menu dropdown-menu-end px-1" aria-labelledby="sortDropdown">
+            <ul class="dropdown-menu dropdown-menu-end elevate px-1" aria-labelledby="sortDropdown">
                 <li><h6 class="dropdown-header">Date</h6></li>
                 <li><a class="dropdown-item {% if current_sort == '-date_ordered' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=-date_ordered"><i class="fas fa-calendar-alt fa-fw me-2"></i>Newest First</a></li>
                 <li><a class="dropdown-item {% if current_sort == 'date_ordered' %}active{% endif %}" href="{% url 'dashboard_order_list' %}?sort=date_ordered"><i class="fas fa-calendar-day fa-fw me-2"></i>Oldest First</a></li>
@@ -50,7 +50,7 @@
     </div>
 
     {% if orders %}
-        <div class="list-group shadow-sm mb-4">
+        <div class="list-group elevate mb-4">
             {% for order in orders %}
                 <div class="list-group-item list-group-item-action d-flex flex-column flex-lg-row justify-content-between align-items-lg-start overflow-x-hidden gap-3 py-3">
 

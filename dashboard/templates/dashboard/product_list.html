@@ -23,7 +23,7 @@
                 {% elif current_sort == 'created_on' %}(Date {% if current_dir == 'asc' %}Old-New{% else %}New-Old{% endif %})
             {% endif %}
             </button>
-            <ul class="dropdown-menu dropdown-menu-end px-1" aria-labelledby="sortDropdown">
+            <ul class="dropdown-menu dropdown-menu-end elevate px-1" aria-labelledby="sortDropdown">
                 <!-- Name Sorting -->
                 <li><h6 class="dropdown-header">Name</h6></li>
                 <li><a class="dropdown-item {% if current_sort == 'name' and current_dir == 'asc' %}active{% endif %}" href="{% url 'dashboard_product_list' %}?sort=name&dir=asc"><i class="fas fa-sort-alpha-down fa-fw me-2"></i>Name (A-Z)</a></li>
@@ -55,7 +55,7 @@
     </div>
 
     {% if products %}
-        <div class="list-group shadow-sm mb-4">
+        <div class="list-group elevate mb-4">
             {% for product in products %}
                 <div class="list-group-item list-group-item-action d-flex flex-column flex-md-row justify-content-between align-items-md-center overflow-x-hidden gap-2 py-3">
                     <div class="d-flex align-items-center flex-grow-1 me-md-3">

@@ -12,9 +12,9 @@
     --secondary-text: #d4d4d4;
     --accent: #04c96e;
     --shadow: #00000080;
-    --shadow-light: #00000071;
+    --shadow-light: #00000060;
     --danger-color: #c42424;
-    --box-shadow-small: 0 2px 2px var(--shadow);
+    --box-shadow-small: 0 2px 2px var(--shadow-light);
     --box-shadow-normal: 0 2px 4px var(--shadow);
     --box-shadow-large: 0 4px 8px var(--shadow-light);
     --footer-height: 60px;
@@ -313,6 +313,10 @@ a > i {
     & img:hover {
         filter: contrast(120%) saturate(160%);
     }
+}
+
+.elevate {
+    filter: drop-shadow(var(--box-shadow-small));
 }
 
 .pagination .step-links {

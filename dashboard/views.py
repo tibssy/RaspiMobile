@@ -15,7 +15,7 @@ from datetime import timedelta
 from django.db.models import Sum, Count, F, FloatField
 from django.db.models.functions import TruncDate, Cast
 from products.models import Product, ProductSpecification, SpecificationType, Review
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, OrderStatus
 from .forms import ProductForm, ProductSpecificationForm, OrderStatusForm, ReviewApprovalForm
 import json
 
@@ -32,6 +32,80 @@ class DashboardOverviewView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = "Dashboard"
         context['active_nav'] = 'overview'
+
+        try:
+            today = timezone.now().date()
+            thirty_days_ago = today - timedelta(days=30)
+            seven_days_ago = today - timedelta(days=7)
+            context['total_product_count'] = Product.objects.count()
+            context['pending_order_count'] = Order.objects.filter(status=OrderStatus.PENDING).count()
+            context['pending_review_count'] = Review.objects.filter(is_approved=False).count()
+
+            recent_sales = Order.objects.filter(
+                date_ordered__date__gte=thirty_days_ago,
+                status__in=[
+                    OrderStatus.PENDING,
+                    OrderStatus.PROCESSING,
+                    OrderStatus.SHIPPED,
+                    OrderStatus.DELIVERED
+                ]
+            ).aggregate(total=Sum('order_total'))
+            context['recent_sales_total'] = recent_sales.get('total') or 0
+
+            daily_sales_query = Order.objects.filter(
+                date_ordered__date__gte=seven_days_ago,
+                status__in=[
+                    OrderStatus.PENDING,
+                    OrderStatus.PROCESSING,
+                    OrderStatus.SHIPPED,
+                    OrderStatus.DELIVERED
+                ]
+            ).annotate(
+                day=TruncDate('date_ordered')
+            ).values('day').annotate(
+                total_sales=Sum('order_total')
+            ).order_by('day')
+
+            sales_dict = {stat['day']: float(stat['total_sales'] or 0) for stat in daily_sales_query}
+            overview_sales_labels = []
+            overview_sales_data = []
+            for i in range(6, -1, -1):
+                current_date = today - timedelta(days=i)
+                overview_sales_labels.append(current_date.strftime('%b %d'))
+                overview_sales_data.append(sales_dict.get(current_date, 0))
+
+            context['overview_sales_labels'] = json.dumps(overview_sales_labels)
+            context['overview_sales_data'] = json.dumps(overview_sales_data)
+            status_counts = Order.objects.values('status').annotate(count=Count('id')).order_by('status')
+            status_display_map = dict(OrderStatus.choices)
+            overview_status_labels = [status_display_map.get(item['status'], item['status']) for item in status_counts]
+            overview_status_data = [item['count'] for item in status_counts]
+
+            status_colors = {
+                OrderStatus.PENDING: 'rgba(255, 193, 7, 0.7)',
+                OrderStatus.PROCESSING: 'rgba(13, 202, 240, 0.7)',
+                OrderStatus.SHIPPED: 'rgba(13, 110, 253, 0.7)',
+                OrderStatus.DELIVERED: 'rgba(25, 135, 84, 0.7)',
+                OrderStatus.CANCELLED: 'rgba(220, 53, 69, 0.7)',
+                OrderStatus.FAILED: 'rgba(108, 117, 125, 0.7)',
+            }
+            default_color = 'rgba(150, 150, 150, 0.7)'
+            overview_status_colors_list = [status_colors.get(item['status'], default_color) for item in status_counts]
+            context['overview_status_labels'] = json.dumps(overview_status_labels)
+            context['overview_status_data'] = json.dumps(overview_status_data)
+            context['overview_status_colors'] = json.dumps(overview_status_colors_list)
+        except Exception as e:
+            messages.error(self.request, "An error occurred while loading dashboard data. Please try again later.")
+            context['total_product_count'] = 0
+            context['pending_order_count'] = 0
+            context['pending_review_count'] = 0
+            context['recent_sales_total'] = 0
+            context['overview_sales_labels'] = '[]'
+            context['overview_sales_data'] = '[]'
+            context['overview_status_labels'] = '[]'
+            context['overview_status_data'] = '[]'
+            context['overview_status_colors'] = '[]'
+
         return context
 
 

@@ -32,7 +32,7 @@
                 {% else %} (Newest)
                 {% endif %}
             </button>
-            <ul class="dropdown-menu dropdown-menu-end px-1" aria-labelledby="sortDropdown">
+            <ul class="dropdown-menu dropdown-menu-end elevate px-1" aria-labelledby="sortDropdown">
                 <li><h6 class="dropdown-header">Date</h6></li>
                 <li><a class="dropdown-item {% if current_sort == '-created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=-created_on"><i class="fas fa-calendar-alt fa-fw me-2"></i>Newest First</a></li>
                 <li><a class="dropdown-item {% if current_sort == 'created_on' %}active{% endif %}" href="{% url 'dashboard_review_list' %}?status={{ current_status_filter|default:'pending' }}&sort=created_on"><i class="fas fa-calendar-day fa-fw me-2"></i>Oldest First</a></li>
@@ -49,7 +49,7 @@
     </div>
 
     {% if reviews %}
-        <div class="list-group shadow-sm mb-4">
+        <div class="list-group elevate mb-4">
             {% for review in reviews %}
                 <div class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 py-3">
                     <div class="flex-grow-1 mb-2 mb-md-0">
@@ -73,7 +73,7 @@
                             <input type="hidden" name="sort" value="{{ current_sort|default:'-created_on' }}">
                             <input type="hidden" name="page" value="{{ page_obj.number|default:'1' }}">
 
-                            <button type="submit" class="btn btn-sm {% if review.is_approved %}btn-outline-success{% else %}btn-outline-warning{% endif %}"
+                            <button type="submit" class="btn btn-sm elevate {% if review.is_approved %}bg-success text-white{% else %}bg-warning{% endif %}"
                                     title="{% if review.is_approved %}Click to Unapprove{% else %}Click to Approve{% endif %}">
                                 {% if review.is_approved %}
                                     <i class="fas fa-check-circle me-1"></i> Approved

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     const chartInstances = {};
     const statisticsContainer = document.getElementById('statisticsChartsContainer');
 
@@ -69,13 +68,25 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const updateChart = async (chartDOMId, chartType, range, linkElement) => {
-        const chartWrapper = document.getElementById(chartDOMId).closest('[data-chart-id]');
-        if (!chartWrapper) return;
+        const chartWrapper = document.getElementById(chartDOMId)?.closest('[data-chart-id]');
+        if (!chartWrapper) {
+             console.error(`Chart wrapper not found for ${chartDOMId}`);
+             return;
+        }
+
         const backendChartId = chartWrapper.dataset.chartId;
         const titleElement = document.getElementById(`${backendChartId}ChartTitle`);
-        const loadingSpinner = document.createElement('i');
-        loadingSpinner.className = 'fas fa-spinner fa-spin ms-2';
-        if (titleElement) titleElement.appendChild(loadingSpinner);
+        let loadingSpinner = null;
+
+        if (titleElement) {
+            if (!titleElement.querySelector('.fa-spinner')) {
+                loadingSpinner = document.createElement('i');
+                loadingSpinner.className = 'fas fa-spinner fa-spin ms-2';
+                titleElement.appendChild(loadingSpinner);
+            }
+        } else {
+            console.warn(`Title element not found for ${backendChartId}ChartTitle`);
+        }
 
         const dropdown = linkElement.closest('.range-dropdown');
         if (dropdown) {
@@ -86,31 +97,55 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const response = await fetch(`/dashboard/statistics/?fetch=true&chart_id=${backendChartId}&range=${range}`);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                let errorMsg = `HTTP error! status: ${response.status}`;
+                try {
+                     const errorData = await response.json();
+                     if (errorData && errorData.error) {
+                         errorMsg = errorData.error;
+                     }
+                } catch(jsonError) { }
+                throw new Error(errorMsg);
             }
             const newData = await response.json();
 
             const chartInstance = chartInstances[chartDOMId];
+            const msgId = `${chartDOMId}Msg`;
+
+            let baseTitleText = '';
+            if (titleElement) {
+                 baseTitleText = (titleElement.firstChild && titleElement.firstChild.nodeType === Node.TEXT_NODE)
+                                 ? titleElement.firstChild.textContent.split('(')[0].trim()
+                                 : titleElement.textContent.split('(')[0].trim();
+            }
+            const suffix = `(${range === '10' ? 'Last 10 Days' : range === '30' ? 'Last 30 Days' : 'All Time'})`;
+
             if (chartInstance && newData.labels && newData.data) {
-                if (newData.labels.length > 0 && newData.data.length > 0) {
+                if (newData.labels.length > 0 && newData.data.length > 0 && newData.labels.length === newData.data.length) {
                     chartInstance.data.labels = newData.labels;
                     chartInstance.data.datasets[0].data = newData.data;
                     chartInstance.update();
-                    updateChartVisibility(chartDOMId, `${chartDOMId}Msg`, true);
-                    let suffix = `(${range === '10' ? 'Last 10 Days' : range === '30' ? 'Last 30 Days' : 'All Time'})`;
-                    if (titleElement) titleElement.textContent = `${titleElement.textContent.split('(')[0].trim()} ${suffix}`;
+                    updateChartVisibility(chartDOMId, msgId, true);
+                    if (titleElement) titleElement.firstChild.textContent = `${baseTitleText} ${suffix} `;
+
                 } else {
-                    updateChartVisibility(chartDOMId, `${chartDOMId}Msg`, false);
-                     if (titleElement) titleElement.textContent = `${titleElement.textContent.split('(')[0].trim()} (${range === '10' ? 'Last 10 Days' : range === '30' ? 'Last 30 Days' : 'All Time'}) - No Data`;
+                    updateChartVisibility(chartDOMId, msgId, false);
+                    if (titleElement) titleElement.firstChild.textContent = `${baseTitleText} ${suffix} - No Data `;
                 }
             } else {
-                 updateChartVisibility(chartDOMId, `${chartDOMId}Msg`, false);
+                 console.warn(`Chart instance missing or invalid data received for ${chartDOMId}`);
+                 updateChartVisibility(chartDOMId, msgId, false);
+                 if (titleElement) titleElement.firstChild.textContent = `${baseTitleText} ${suffix} - Error Loading `;
             }
 
         } catch (error) {
             console.error(`Failed to fetch or update chart ${chartDOMId}:`, error);
+             const msgId = `${chartDOMId}Msg`;
+             updateChartVisibility(chartDOMId, msgId, false);
+              if (titleElement) titleElement.firstChild.textContent = `${titleElement.textContent.split('(')[0].trim()} - Error `;
         } finally {
-             if (titleElement && loadingSpinner) titleElement.removeChild(loadingSpinner);
+             if (titleElement && loadingSpinner && titleElement.contains(loadingSpinner)) {
+                titleElement.removeChild(loadingSpinner);
+            }
         }
     };
 
@@ -136,11 +171,15 @@ document.addEventListener('DOMContentLoaded', function () {
             initializeChart('topProductsChart', initialTopLabels, initialTopRevenue);
 
          } catch(e) {
-            console.error("Error during initial chart JSON parsing:", e);
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'alert alert-danger mt-3';
-            errorDiv.textContent = 'Could not load initial chart data due to a parsing error. Please check console.';
-            if(statisticsContainer) statisticsContainer.prepend(errorDiv);
+              console.error("Error during initial chart JSON parsing:", e);
+               const errorDiv = document.createElement('div');
+               errorDiv.className = 'alert alert-danger mt-3';
+               errorDiv.textContent = 'Could not load initial chart data due to a parsing error. Please check console.';
+               if(statisticsContainer) {
+                   if (!statisticsContainer.querySelector('.alert.alert-danger')) {
+                       statisticsContainer.prepend(errorDiv);
+                   }
+               }
          }
     };
 

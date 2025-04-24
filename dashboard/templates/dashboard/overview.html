@@ -1,5 +1,6 @@
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block extra_title %} - Dashboard{% endblock %}
 
@@ -10,33 +11,99 @@
     <hr>
 
     <h4>Quick Stats</h4>
-    <div class="row g-3">
-        <div class="col-lg-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Total Products</h5>
-                    <p class="card-text fs-2">123</p>
-                    <a href="#" class="btn primary-bg btn-sm text-white">Manage Products</a>
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card text-center elevate h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Products</h5>
+                        <p class="card-text fs-2 fw-bold">{{ total_product_count|intcomma }}</p>
+                    </div>
+                    <a href="{% url 'dashboard_product_list' %}" class="btn primary-bg btn-sm text-white mt-2">Manage Products</a>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-             <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Orders</h5>
-                    <p class="card-text fs-2">15</p>
-                    <a href="#" class="btn btn-warning btn-sm">View Orders</a>
+        <div class="col-lg-3 col-md-6 col-12">
+             <div class="card text-center elevate h-100">
+                 <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">Pending Orders</h5>
+                        <p class="card-text fs-2 fw-bold">{{ pending_order_count|intcomma }}</p>
+                    </div>
+                    <a href="{% url 'dashboard_order_list' %}" class="btn btn-warning btn-sm text-dark mt-2">View Orders</a>
                 </div>
             </div>
         </div>
-         <div class="col-lg-4">
-             <div class="card text-center">
+         <div class="col-lg-3 col-md-6 col-12">
+             <div class="card text-center elevate h-100">
+                 <div class="card-body d-flex flex-column justify-content-between">
+                     <div>
+                        <h5 class="card-title">Pending Reviews</h5>
+                        <p class="card-text fs-2 fw-bold">{{ pending_review_count|intcomma }}</p>
+                    </div>
+                    <a href="{% url 'dashboard_review_list' %}?status=pending" class="btn btn-info btn-sm mt-2">Moderate Reviews</a>
+                </div>
+            </div>
+        </div>
+         <div class="col-lg-3 col-md-6 col-12">
+             <div class="card text-center elevate h-100">
+                 <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">Sales (Last 30d)</h5>
+                        <p class="card-text fs-2 fw-bold">€{{ recent_sales_total|floatformat:2|intcomma }}</p>
+                    </div>
+                    <a href="{% url 'dashboard_statistics' %}?range=30" class="btn btn-success btn-sm text-white mt-2">View Statistics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Visual Overview</h4>
+     <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card elevate">
+                <div class="card-header tertiary-bg">
+                    Sales Trend (Last 7 Days)
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">New Users (Month)</h5>
-                    <p class="card-text fs-2">42</p>
-                    <a href="#" class="btn btn-info btn-sm text-black">Manage Users</a>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas
+                            id="overviewSalesChart"
+                            {% if overview_sales_labels %} data-labels="{{ overview_sales_labels|default:'[]' }}" {% endif %}
+                            {% if overview_sales_data %} data-sales="{{ overview_sales_data|default:'[]' }}" {% endif %}
+                        ></canvas>
+                    </div>
+                    <div id="overviewSalesChartMsg" class="text-center text-muted p-4 d-none">
+                        Not enough sales data for trend.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card elevate">
+                <div class="card-header tertiary-bg">
+                    Order Status Distribution
+                </div>
+                 <div class="card-body">
+                     <div class="chart-container" style="height: 250px;">
+                        <canvas
+                            id="overviewOrderStatusChart"
+                            {% if overview_status_labels %} data-labels="{{ overview_status_labels|default:'[]' }}" {% endif %}
+                            {% if overview_status_data %} data-data="{{ overview_status_data|default:'[]' }}" {% endif %}
+                            {% if overview_status_colors %} data-colors="{{ overview_status_colors|default:'[]' }}" {% endif %}
+                        ></canvas>
+                    </div>
+                     <div id="overviewOrderStatusChartMsg" class="text-center text-muted p-4 d-none">
+                        No order data available.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock dashboard_content %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/dashboard_overview.js' %}"></script>
+{% endblock extra_js %}
