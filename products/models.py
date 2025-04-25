@@ -3,6 +3,7 @@ from cloudinary.models import CloudinaryField
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
+from django.db.models import Avg
 
 
 class Category(models.Model):
@@ -37,6 +38,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def average_rating(self):
+        avg = self.reviews.filter(is_approved=True).aggregate(average=Avg('rating'))
+        return avg.get('average') or 0
 
 
 class SpecificationType(models.Model):

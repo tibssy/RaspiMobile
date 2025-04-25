@@ -17,6 +17,7 @@ class ProductListView(ListView):
         queryset = Product.objects.filter(is_active=True)
         search_query = self.request.GET.get('q')
         sort_by = self.request.GET.get('sort')
+        queryset = queryset.annotate(calculated_average_rating=Avg('reviews__rating', filter=Q(reviews__is_approved=True)))
 
         if search_query:
             queryset = queryset.filter(
@@ -34,10 +35,18 @@ class ProductListView(ListView):
             queryset = queryset.order_by('price')
         elif sort_by == 'price_desc':
             queryset = queryset.order_by('-price')
+        elif sort_by == 'rating_desc':
+            queryset = queryset.order_by('-calculated_average_rating')
         else:
             queryset = queryset.order_by('-created_on')
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_term'] = self.request.GET.get('q', '')
+        context['current_sort'] = self.request.GET.get('sort', '')
+        return context
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

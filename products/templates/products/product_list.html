@@ -8,82 +8,101 @@
     <div class="container d-flex flex-column flex-fill my-4">
         <h1 class="text-center border-bottom mb-4 pb-2">{% trans "Products" %}</h1>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center">
             {% if search_term %}
-                <p class="text-center fs-4">{% blocktrans %}Showing results for "{{ search_term }}"{% endblocktrans %}</p>
+                <p class="fs-5 mb-0 me-3">{% blocktrans %}Showing results for "{{ search_term }}"{% endblocktrans %}</p>
             {% else %}
-                <p class="text-center fs-4">{% blocktrans %}All products{% endblocktrans %}</p>
+                <p class="fs-5 mb-0 me-3">{% blocktrans %}All products{% endblocktrans %}</p>
             {% endif %}
 
             <div class="dropdown ms-auto me-0">
-                <button class="btn dropdown-toggle " type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-arrow-down-wide-short me-1"></i>
+                    {% if current_sort == 'price_asc' %}
+                        Price: Low-High
+                    {% elif current_sort == 'price_desc' %}
+                        Price: High-Low
+                    {% elif current_sort == 'rating_desc' %}
+                        Rating: High-Low
+                    {% elif current_sort == 'newest' or not current_sort %}
+                        Newest Arrivals
+                    {% else %}
+                        Sort By
+                    {% endif %}
                 </button>
-                <ul class="dropdown-menu p-1" aria-labelledby="dropdownMenuButton">
+
+                <ul class="dropdown-menu dropdown-menu-end elevate p-1" aria-labelledby="dropdownMenuButton">
                     <li>
-                        <a class="dropdown-item" href="?sort=newest{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-regular fa-calendar-plus me-2"></i>Newest Arrivals
+                        <a class="dropdown-item {% if current_sort == 'newest' or not current_sort %}active{% endif %}" href="?sort=newest{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-regular fa-calendar-plus me-2 fa-fw"></i>Newest Arrivals
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="?sort=price_asc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-solid fa-arrow-down-1-9 me-1"></i>Price: Low to High
+                        <a class="dropdown-item {% if current_sort == 'price_asc' %}active{% endif %}" href="?sort=price_asc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-solid fa-arrow-down-1-9 me-2 fa-fw"></i>Price: Low to High
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="?sort=price_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-solid fa-arrow-up-9-1 me-1"></i>Price: High to Low
+                        <a class="dropdown-item {% if current_sort == 'price_desc' %}active{% endif %}" href="?sort=price_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-solid fa-arrow-up-9-1 me-2 fa-fw"></i>Price: High to Low
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {% if current_sort == 'rating_desc' %}active{% endif %}" href="?sort=rating_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
+                            <i class="fa-solid fa-star me-2 fa-fw"></i>Rating: High to Low
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center mt-3">
             {% for product in products %}
                 <div class="col my-3">
                     {% include 'products/partials/product_card.html' %}
                 </div>
             {% empty %}
-                <div class="col">
-                    <p>{% trans "No products available." %}</p>
+                <div class="col-12">
+                    <p class="alert alert-warning text-center">{% trans "No products found matching your criteria." %}</p>
                 </div>
             {% endfor %}
         </div>
     </div>
 
     <!-- Pagination -->
-    <div class="pagination justify-content-center mb-2">
-        <span class="step-links">
-            <a href="?page=1{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
-                <i class="fa-solid fa-angles-left primary-fg"></i>
-            </a>
+    {% if is_paginated %}
+        <div class="pagination justify-content-center mb-2">
+            <span class="step-links">
+                <a href="?page=1{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-left primary-fg"></i>
+                </a>
 
-            {% for page_number in page_obj.paginator.page_range %}
-                {% if page_number == page_obj.number %}
-                    <span class="current-page-button">{{ page_number }}</span>
-                {% elif page_number <= 5 %}
-                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                        {{ page_number }}
-                    </a>
-                {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
-                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                        {{ page_number }}
-                    </a>
-                {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
-                    {% if not page_obj.paginator.num_pages <= 5 and page_number == page_obj.number|add:3 %}
-                        <span>...</span>
+                {% for page_number in page_obj.paginator.page_range %}
+                    {% if page_number == page_obj.number %}
+                        <span class="current-page-button">{{ page_number }}</span>
+                    {% elif page_number <= 5 %}
+                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
+                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
+                            {{ page_number }}
+                        </a>
+                    {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
+                        {% if not page_obj.paginator.num_pages <= 5 and page_number == page_obj.number|add:3 %}
+                            <span class="px-2">...</span>
+                        {% endif %}
+                    {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
+                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
+                            {{ page_number }}
+                        </a>
                     {% endif %}
-                {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
-                    <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                        {{ page_number }}
-                    </a>
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
 
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
-                <i class="fa-solid fa-angles-right primary-fg"></i>
-            </a>
-        </span>
-    </div>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
+                    <i class="fa-solid fa-angles-right primary-fg"></i>
+                </a>
+            </span>
+        </div>
+    {% endif %}
 {% endblock %}

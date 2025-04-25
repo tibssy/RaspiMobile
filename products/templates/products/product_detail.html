@@ -8,7 +8,7 @@
 {% block content %}
     <div class="container my-4">
         <div class="row">
-            <div class="col-lg-6 mb-3 mb-lg-0">
+            <div class="col-lg-6 mb-3 mb-lg-0 elevate">
                  {% if product.image and product.image.public_id != 'placeholder' %}
                      <img src="{{ product.image.url }}" class="img-fluid rounded {% if product.stock_quantity == 0 %}out-of-stock-img{% endif %}" alt="{{ product.name }}">
                 {% else %}
@@ -18,9 +18,27 @@
             <div class="col-lg-6">
                 <h1>{{ product.name }}</h1>
                 <p class="lead fw-bold text-success fs-3">€{{ product.price }}</p>
-                {% if average_rating %}
-                    <p>Average Rating: {{ average_rating }}/5 ({{ review_count }} reviews)</p>
-                {% endif %}
+                <div class="mb-3">
+                    {% if average_rating is not None %}
+                        <span class="rating-stars me-2" title="{{ average_rating|floatformat:1 }} / 5">
+                            {% for i in "12345" %}
+                                {% if i|add:0 <= average_rating %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% elif i|add:0|add:"-0.5" <= average_rating %}
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="text-muted">
+                            {{ average_rating|floatformat:1 }} / 5
+                            ({% blocktrans count counter=review_count %}{{ counter }} review{% plural %}{{ counter }} reviews{% endblocktrans %})
+                        </span>
+                    {% else %}
+                        <span class="text-muted">{% trans "No reviews yet" %}</span>
+                    {% endif %}
+                </div>
                 <p>{{ product.description }}</p>
                 <p><strong>{% trans "SKU:" %}</strong> {{ product.sku|default:"N/A" }}</p>
 
