@@ -488,96 +488,27 @@ a > i {
     height: 100%;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-#div_id_rating fieldset > div {
-    display: inline-flex;        /* Make items horizontal */
-    flex-direction: row-reverse; /* Reverse visual order */
-    justify-content: flex-end;   /* Align stars to the right (start due to reverse) */
-    gap: 0.15rem;                /* Space between stars */
-    border: none;                /* Remove fieldset border if needed */
-    padding: 0;
-    margin: 0;
-    line-height: 1;
-}
-
-/* Target the form-check element (likely child of the flex container) */
-#div_id_rating fieldset > div .form-check {
-    padding: 0; /* Reset padding */
-    margin: 0;  /* Reset margin */
-}
-
-/* Hide the actual radio button input */
-#div_id_rating .form-check-input[type="radio"] {
-    opacity: 0;
-    position: absolute;
-    width: 1px; height: 1px; margin: -1px; padding: 0;
-    overflow: hidden; border: 0; clip: rect(0 0 0 0);
-    white-space: nowrap; clip-path: inset(100%);
-}
-
-/* Style the label (sibling of the input, inside form-check) */
-#div_id_rating .form-check-label {
-    font-size: 1.75rem; /* Adjust star size */
-    color: #e4e5e9;     /* Default empty star color */
+.rating-star-visual {
+    font-size: 1.75rem;
+    color: #b0b0b0;
     cursor: pointer;
-    padding: 0 0.1em;   /* Adjust spacing */
-    margin: 0;
+    padding: 0 0.15rem;
     transition: color 0.2s ease-in-out;
     line-height: 1;
-    display: inline-block;
+
+    &:hover {
+        color: #ffda6a;
+    }
+
+    &.selected {
+        color: #ffc107;
+    }
 }
 
-/* Add Font Awesome star icon to the label */
-#div_id_rating .form-check-label::before {
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    content: "\f005"; /* fa-star unicode */
-    display: inline-block;
+.rating-radios-actual {
+    text-align: center;
+    display: none;
 }
-
-/* --- Hover/Checked Styling (Using sibling selector on the REVERSED items) --- */
-
-/* Color stars on hover */
-#div_id_rating fieldset > div .form-check label:hover,
-#div_id_rating fieldset > div .form-check label:hover ~ .form-check label {
-    color: #ffca2c; /* Hover yellow */
-}
-
-/* Color the selected stars yellow */
-/* This selects labels within .form-check elements that are siblings
-   AFTER a .form-check element containing a checked radio */
-#div_id_rating fieldset > div .form-check input[type="radio"]:checked ~ .form-check label {
-    color: #ffc107; /* Selected yellow */
-}
-
-/* --- End Hover/Checked Styling --- */
-
-
-/* Focus style for accessibility */
-#div_id_rating .form-check-input[type="radio"]:focus + .form-check-label {
-    outline: 2px dashed #0d6efd;
-    outline-offset: 2px;
-}
-
-
-
-
-
-
-
-
-
-
 
 
 @media screen and (min-width: 768px) {
