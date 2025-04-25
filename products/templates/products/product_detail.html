@@ -22,12 +22,9 @@
                     {% if average_rating is not None %}
                         <span class="rating-stars me-2" title="{{ average_rating|floatformat:1 }} / 5">
                             {% for i in "12345" %}
-                                {% if i|add:0 <= average_rating %}
-                                    <i class="fas fa-star text-warning"></i>
-                                {% elif i|add:0|add:"-0.5" <= average_rating %}
-                                    <i class="fas fa-star-half-alt text-warning"></i>
-                                {% else %}
-                                    <i class="far fa-star text-warning"></i>
+                                {% if i|add:0 <= average_rating %} <i class="fas fa-star text-warning"></i>
+                                {% elif i|add:0|add:"-0.5" <= average_rating %} <i class="fas fa-star-half-alt text-warning"></i>
+                                {% else %} <i class="far fa-star text-warning"></i>
                                 {% endif %}
                             {% endfor %}
                         </span>
@@ -42,18 +39,20 @@
                 <p>{{ product.description }}</p>
                 <p><strong>{% trans "SKU:" %}</strong> {{ product.sku|default:"N/A" }}</p>
 
+                 <div class="my-3">
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left me-2"></i> {% trans "Back to Products" %}
+                    </a>
+                </div>
+
                 {% if product.stock_quantity > 0 %}
-                    <p><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
+                    <p class="mb-1"><strong>{% trans "Stock:" %}</strong> {{ product.stock_quantity }}</p>
                     {% if product.stock_quantity < 10 %}
                          <p class="badge rounded-pill bg-warning text-dark fw-bold fs-6 mb-2">
-                            {% blocktrans count counter=product.stock_quantity %}
-                                Hurry, only {{ counter }} left!
-                            {% plural %}
-                                Hurry, only {{ counter }} left!
-                            {% endblocktrans %}
-                        </p>
+                            {% blocktrans count counter=product.stock_quantity %} Hurry, only {{ counter }} left! {% plural %} Hurry, only {{ counter }} left! {% endblocktrans %}
+                         </p>
                     {% endif %}
-                    <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mb-1 add-to-cart-form" data-product-id="{{ product.pk }}">
+                    <form action="{% url 'add_to_cart' product_id=product.pk %}" method="post" class="mt-2 add-to-cart-form" data-product-id="{{ product.pk }}">
                         {% csrf_token %}
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="btn btn-primary text-white fw-bold w-100 add-to-cart-button">
@@ -62,7 +61,7 @@
                         </button>
                     </form>
                 {% else %}
-                    <p class="text-danger fs-5 fw-bold">{% trans "Currently Out of Stock" %}</p>
+                    <p class="text-danger fs-5 fw-bold mt-2">{% trans "Currently Out of Stock" %}</p>
                 {% endif %}
 
             </div>
@@ -111,22 +110,18 @@
         <div class="reviews-list mb-4">
             {% for review in reviews %}
                 <div class="card mb-3 shadow-sm">
-                    <div class="card-body">
+                     <div class="card-body">
                         <h5 class="card-title">
                             Rating: {{ review.rating }}/5
                             <span class="ms-2">
                                 {% for i in "12345" %}
-                                    {% if i|add:0 <= review.rating %}
-                                        <i class="fas fa-star text-warning"></i>
-                                    {% else %}
-                                        <i class="far fa-star text-warning"></i>
+                                    {% if i|add:0 <= review.rating %} <i class="fas fa-star text-warning"></i>
+                                    {% else %} <i class="far fa-star text-warning"></i>
                                     {% endif %}
                                 {% endfor %}
                             </span>
                         </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            By: {{ review.user.username }} on {{ review.created_on|date:"d M Y" }}
-                        </h6>
+                        <h6 class="card-subtitle mb-2 text-muted"> By: {{ review.user.username }} on {{ review.created_on|date:"d M Y" }} </h6>
                         <p class="card-text">{{ review.comment|linebreaksbr }}</p>
                     </div>
                 </div>
@@ -152,11 +147,7 @@
                 {% endif %}
             {% else %}
                 {% url 'account_login' as login_url %}
-                <p>
-                    {% trans "Please" %}
-                        <a href="{{ login_url }}?next={{ request.path|urlencode }}">{% trans "log in" %}</a>
-                    {% trans "to write a review." %}
-                </p>
+                <p> {% trans "Please" %} <a href="{{ login_url }}?next={{ request.path|urlencode }}">{% trans "log in" %}</a> {% trans "to write a review." %} </p>
             {% endif %}
         </div>
     </div>

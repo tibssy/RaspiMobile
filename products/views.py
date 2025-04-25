@@ -78,7 +78,7 @@ class ProductDetailView(FormMixin, DetailView):
         context['reviews'] = reviews
         context['review_count'] = reviews.count()
         context['review_form'] = self.get_form()
-        related_products = Product.objects.filter(categories__in=product.categories.all(), is_active=True).exclude(pk=product.pk).distinct()
+        related_products = Product.objects.filter(categories__in=product.categories.all(), is_active=True).exclude(pk=product.pk).distinct().annotate(calculated_average_rating=Avg('reviews__rating', filter=Q(reviews__is_approved=True)))
         context['related_products'] = related_products[:4]
         context['user_has_reviewed'] = False
 
