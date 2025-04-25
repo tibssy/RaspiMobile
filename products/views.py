@@ -17,7 +17,11 @@ class ProductListView(ListView):
         queryset = Product.objects.filter(is_active=True)
         search_query = self.request.GET.get('q')
         sort_by = self.request.GET.get('sort')
+        selected_category_slugs = self.request.GET.getlist('category')
         queryset = queryset.annotate(calculated_average_rating=Avg('reviews__rating', filter=Q(reviews__is_approved=True)))
+
+        if selected_category_slugs:
+            queryset = queryset.filter(categories__slug__in=selected_category_slugs).distinct()
 
         if search_query:
             queryset = queryset.filter(
@@ -50,6 +54,8 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['all_categories'] = Category.objects.all().order_by('name')
+        context['selected_categories'] = self.request.GET.getlist('category')
         context['search_term'] = self.request.GET.get('q', '')
         context['current_sort'] = self.request.GET.get('sort', '')
         return context

@@ -6,57 +6,85 @@
 
 {% block content %}
     <div class="container d-flex flex-column flex-fill my-4">
-        <h1 class="text-center border-bottom mb-4 pb-2">{% trans "Products" %}</h1>
+        <h1 class="fs-2 border-bottom mb-3 pb-2">{% trans "Products" %}</h1>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="flex-grow-1">
+                {% if search_term %}
+                    <p class="fs-5 mb-0 me-3">{% blocktrans %}Results for "{{ search_term }}"{% endblocktrans %}</p>
+                {% else %}
+                    <p class="fs-5 mb-0 me-3">{% blocktrans %}All products{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-between flex-grow-1 flex-md-grow-0 gap-md-2">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle primary-dropdown" type="button" id="categoryFilterDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                         <i class="fa-solid fa-filter me-1"></i> Categories
+                         {% if selected_categories|length > 0 %}
+                            <span class="badge rounded-pill bg-success ms-1">{{ selected_categories|length }}</span>
+                         {% endif %}
+                    </button>
+                    <div class="dropdown-menu p-3 elevate" aria-labelledby="categoryFilterDropdown" style="min-width: 250px;">
+                        <form action="{% url 'product_list' %}" method="GET" id="categoryFilterForm">
+                             {% if current_sort %}
+                                 <input type="hidden" name="sort" value="{{ current_sort }}">
+                             {% endif %}
+                             {% if search_term %}
+                                 <input type="hidden" name="q" value="{{ search_term }}">
+                             {% endif %}
 
-        <div class="d-flex justify-content-between align-items-center">
-            {% if search_term %}
-                <p class="fs-5 mb-0 me-3">{% blocktrans %}Showing results for "{{ search_term }}"{% endblocktrans %}</p>
-            {% else %}
-                <p class="fs-5 mb-0 me-3">{% blocktrans %}All products{% endblocktrans %}</p>
-            {% endif %}
+                            <h6 class="mb-2">Filter by Category</h6>
+                            <div class="category-filter-list mb-2" style="max-height: 200px; overflow-y: auto;">
+                                {% for category in all_categories %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="category" value="{{ category.slug }}" id="cat-{{ category.pk }}" {% if category.slug in selected_categories %}checked{% endif %}>
+                                        <label class="form-check-label" for="cat-{{ category.pk }}">{{ category.name }}</label>
+                                    </div>
+                                {% empty %}
+                                     <p class="text-muted small">No categories available.</p>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <a href="{% url 'product_list' %}{% if current_sort %}?sort={{ current_sort }}{% endif %}{% if search_term %}{% if current_sort %}&{% else %}?{% endif %}q={{ search_term }}{% endif %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+                                <button type="submit" class="btn btn-sm btn-primary text-white">Apply Filters</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-            <div class="dropdown ms-auto me-0">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-arrow-down-wide-short me-1"></i>
-                    {% if current_sort == 'price_asc' %}
-                        Price: Low-High
-                    {% elif current_sort == 'price_desc' %}
-                        Price: High-Low
-                    {% elif current_sort == 'rating_desc' %}
-                        Rating: High-Low
-                    {% elif current_sort == 'newest' or not current_sort %}
-                        Newest Arrivals
-                    {% else %}
-                        Sort By
-                    {% endif %}
-                </button>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle primary-dropdown" type="button" id="sortDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-arrow-down-wide-short me-1"></i>
+                        {% if current_sort == 'price_asc' or current_sort == 'price_desc' %}
+                            Price
+                            {% if current_sort == 'price_asc' %}
+                                <i class="fa-solid fa-arrow-up ms-1" title="Ascending"></i>
+                            {% else %}
+                                <i class="fa-solid fa-arrow-down ms-1" title="Descending"></i>
+                            {% endif %}
+                        {% elif current_sort == 'rating_desc' %}
+                            Rating
+                            <i class="fa-solid fa-arrow-down ms-1" title="Descending"></i>
+                        {% elif current_sort == 'newest' or not current_sort %}
+                            Newest
+                        {% else %}
+                            Sort By
+                        {% endif %}
+                    </button>
 
-                <ul class="dropdown-menu dropdown-menu-end elevate p-1" aria-labelledby="dropdownMenuButton">
-                    <li>
-                        <a class="dropdown-item {% if current_sort == 'newest' or not current_sort %}active{% endif %}" href="?sort=newest{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-regular fa-calendar-plus me-2 fa-fw"></i>Newest Arrivals
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item {% if current_sort == 'price_asc' %}active{% endif %}" href="?sort=price_asc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-solid fa-arrow-down-1-9 me-2 fa-fw"></i>Price: Low to High
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item {% if current_sort == 'price_desc' %}active{% endif %}" href="?sort=price_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-solid fa-arrow-up-9-1 me-2 fa-fw"></i>Price: High to Low
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item {% if current_sort == 'rating_desc' %}active{% endif %}" href="?sort=rating_desc{% if search_term %}&q={{ search_term|urlencode }}{% endif %}">
-                            <i class="fa-solid fa-star me-2 fa-fw"></i>Rating: High to Low
-                        </a>
-                    </li>
-                </ul>
+                    <ul class="dropdown-menu dropdown-menu-end p-1 elevate" aria-labelledby="sortDropdownButton">
+                        {% url 'product_list' as base_url %}
+                        {% with base_params=request.GET.copy %}
+                            {% with sort_val='newest' %}{% with _=base_params.pop %}{% with _=base_params.setlist %}<a class="dropdown-item {% if current_sort == sort_val or not current_sort %}active{% endif %}" href="{{ base_url }}?sort={{ sort_val }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'sort' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}">{% endwith %}{% endwith %}{% endwith %}<i class="fa-regular fa-calendar-plus me-2 fa-fw"></i>Newest Arrivals</a></li>
+                            {% with sort_val='price_asc' %}{% with _=base_params.pop %}{% with _=base_params.setlist %}<a class="dropdown-item {% if current_sort == sort_val %}active{% endif %}" href="{{ base_url }}?sort={{ sort_val }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'sort' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}">{% endwith %}{% endwith %}{% endwith %}<i class="fa-solid fa-arrow-down-1-9 me-2 fa-fw"></i>Price: Low to High</a></li>
+                            {% with sort_val='price_desc' %}{% with _=base_params.pop %}{% with _=base_params.setlist %}<a class="dropdown-item {% if current_sort == sort_val %}active{% endif %}" href="{{ base_url }}?sort={{ sort_val }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'sort' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}">{% endwith %}{% endwith %}{% endwith %}<i class="fa-solid fa-arrow-up-9-1 me-2 fa-fw"></i>Price: High to Low</a></li>
+                            {% with sort_val='rating_desc' %}{% with _=base_params.pop %}{% with _=base_params.setlist %}<a class="dropdown-item {% if current_sort == sort_val %}active{% endif %}" href="{{ base_url }}?sort={{ sort_val }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'sort' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}">{% endwith %}{% endwith %}{% endwith %}<i class="fa-solid fa-star me-2 fa-fw"></i>Rating: High to Low</a></li>
+                        {% endwith %}
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center mt-3">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 justify-content-center">
             {% for product in products %}
                 <div class="col my-3">
                     {% include 'products/partials/product_card.html' %}
@@ -72,36 +100,29 @@
     <!-- Pagination -->
     {% if is_paginated %}
         <div class="pagination justify-content-center mb-2">
-            <span class="step-links">
-                <a href="?page=1{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
-                    <i class="fa-solid fa-angles-left primary-fg"></i>
-                </a>
+           <span class="step-links">
+                 {% url 'product_list' as base_url %}
+                 {% with base_params=request.GET.copy %}
+                    <a href="{{ base_url }}?page=1{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'page' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
+                        <i class="fa-solid fa-angles-left primary-fg"></i>
+                    </a>
 
-                {% for page_number in page_obj.paginator.page_range %}
-                    {% if page_number == page_obj.number %}
-                        <span class="current-page-button">{{ page_number }}</span>
-                    {% elif page_number <= 5 %}
-                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                            {{ page_number }}
-                        </a>
-                    {% elif page_number > 5 and page_number <= page_obj.number|add:2 %}
-                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                            {{ page_number }}
-                        </a>
-                    {% elif page_number > page_obj.number|add:2 and page_number <= page_obj.paginator.num_pages|add:-2 %}
-                        {% if not page_obj.paginator.num_pages <= 5 and page_number == page_obj.number|add:3 %}
-                            <span class="px-2">...</span>
-                        {% endif %}
-                    {% elif page_number > page_obj.paginator.num_pages|add:-2 %}
-                        <a href="?page={{ page_number }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
-                            {{ page_number }}
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                    {% for page_number in page_obj.paginator.page_range %}
+                         {% if page_number == page_obj.number %}
+                            <span class="current-page-button">{{ page_number }}</span>
+                        {% elif page_number >= page_obj.number|add:-2 and page_number <= page_obj.number|add:2 %}
+                            <a href="{{ base_url }}?page={{ page_number }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'page' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}" class="page-button">
+                                {{ page_number }}
+                            </a>
+                         {% elif page_number == page_obj.number|add:-3 or page_number == page_obj.number|add:3 %}
+                              <span class="px-2">...</span>
+                         {% endif %}
+                    {% endfor %}
 
-                <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&q={{ search_term|urlencode }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
-                    <i class="fa-solid fa-angles-right primary-fg"></i>
-                </a>
+                    <a href="{{ base_url }}?page={{ page_obj.paginator.num_pages }}{% for key, values in base_params.lists %}{% for value in values %}{% if key != 'page' %}&{{ key }}={{ value|urlencode }}{% endif %}{% endfor %}{% endfor %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
+                        <i class="fa-solid fa-angles-right primary-fg"></i>
+                    </a>
+                 {% endwith %}
             </span>
         </div>
     {% endif %}
