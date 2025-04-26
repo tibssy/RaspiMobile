@@ -8,18 +8,27 @@
             <ul class="list-unstyled">
                 {% for item in current_cart_items %}
                     <li class="bg-white rounded-3 shadow-normal overflow-hidden mb-2 position-relative">
-                        <a href="{% url 'product_detail' pk=item.product.id %}" class="text-decoration-none text-dark d-flex">
+                        <div class="text-decoration-none text-dark d-flex">
                             {% with product=item.product %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid cart-image">
+                                <a href="{% url 'product_detail' pk=product.id %}" class="flex-shrink-0">
+                                    {% if "placeholder" in product.image.url %}
+                                        <img src="{% static 'images/default_product.webp' %}" alt="{{ product.name }}" class="img-fluid cart-image">
+                                    {% else %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid cart-image">
+                                    {% endif %}
+                                </a>
+
                                 <div class="d-flex flex-column justify-content-between w-100 ms-2 my-2 me-3">
-                                    <strong>{{ product.name }}</strong>
-                                    <div class="d-flex justify-content-between fs-5">
+                                    <a href="{% url 'product_detail' pk=product.id %}" class="text-decoration-none text-dark">
+                                        <strong>{{ product.name }}</strong>
+                                    </a>
+                                    <div class="d-flex justify-content-between fs-5 align-items-center">
                                         <small class="text-muted">Qty: <strong>{{ item.quantity }}</strong></small>
                                         <span class="fw-bold text-success">€{{ item.total_price|floatformat:2 }}</span>
                                     </div>
                                 </div>
                             {% endwith %}
-                        </a>
+                        </div>
                         <a href="{% url 'remove_from_cart' item.product.id %}"
                            class="remove-from-cart-button position-absolute top-0 end-0 p-2"
                            data-product-id="{{ item.product.id }}"
