@@ -9,7 +9,10 @@
             <div class="mc-field-group input-group mb-3 w-75 mx-auto">
                 <label for="mce-EMAIL" class="visually-hidden">{% trans "Email Address" %} <span class="asterisk">*</span></label>
                 <input type="email" name="EMAIL" class="required email form-control" id="mce-EMAIL" required placeholder="{% trans 'Enter your email' %}" value="">
-                <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary rounded w-100 text-white mx-0">{% trans "Subscribe" %}</button>
+                <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary rounded fw-bold text-white px-5 mx-auto">
+                    <i class="fa-solid fa-bell me-2"></i>
+                    {% trans "Subscribe" %}
+                </button>
             </div>
             <div id="mce-responses" class="clear foot text-center">
                 <div class="response alert alert-danger mt-2" id="mce-error-response" style="display: none;"></div>

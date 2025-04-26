@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const quantity = Number(rawValue);
         const maxStock = parseInt(quantityInput.getAttribute('max'), 10);
         const minStock = parseInt(quantityInput.getAttribute('min'), 10) || 1;
-        const errorContainer = quantityInput.closest('.col-3').querySelector('.client-stock-error');
+        const errorContainer = quantityInput.closest('.col-7').querySelector('.client-stock-error');
         let isValid = true;
         let errorMessage = '';
 

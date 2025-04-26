@@ -23,41 +23,39 @@
                         {% for form in order_item_formset %}
                             {% if form.product %}
                                 <li class="list-group-item lh-sm">
-                                    <div class="row align-items-center">
-                                        <div class="col-3 col-md-3 px-1">
-                                            {% if form.product.image and form.product.image.url %}
-                                                <img src="{{ form.product.image.url }}" alt="{{ form.product.name }}" class="img-fluid rounded cart-image">
-                                            {% else %}
-                                                <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" class="img-fluid rounded cart-image">
-                                            {% endif %}
+                                    <div class="row align-items-center g-2">
+                                        <div class="col-3 px-1">
+                                            {% with product=form.product %}
+                                                {% if "placeholder" in product.image.url %}
+                                                    <img src="{% static 'images/default_product.webp' %}" alt="{{ product.name }}" class="img-fluid rounded cart-image">
+                                                {% else %}
+                                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded cart-image">
+                                                {% endif %}
+                                            {% endwith %}
                                         </div>
-                                        <div class="col-4 col-md-4">
-                                            <h6 class="my-0">{{ form.product.name }}</h6>
+                                        <div class="col-9 col-sm-5">
+                                            <h6 class="my-0 text-truncate">{{ form.product.name }}</h6>
                                             <small class="text-muted">€{{ form.product.price|floatformat:2 }} each</small>
-                                        </div>
-                                        <div class="col-3 col-md-3">
                                             {{ form.product_id }}
-                                            {{ form.quantity|as_crispy_field }}
-                                            <div class="client-stock-error text-danger small mt-1" style="display: none;"></div>
-                                            {% if form.quantity.errors %}
-                                                {% for error in form.quantity.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ error }}
-                                                    </div>
-                                                {% endfor %}
-                                            {% endif %}
-                                            {% if form.non_field_errors %}
-                                                 <div class="invalid-feedback d-block">
-                                                     {% for error in form.non_field_errors %}
-                                                         {{ error }}
-                                                     {% endfor %}
-                                                 </div>
-                                            {% endif %}
                                         </div>
-                                        <div class="col-2 col-md-2 text-end">
-                                            <span class="text-muted item-subtotal" data-price="{{ form.product.price }}">
-                                                €{% widthratio form.quantity.initial|default:form.quantity.value|default:0 1 form.product.price %}
-                                            </span>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="row align-items-center gx-2">
+                                                <div class="col-7">
+                                                    {{ form.quantity|as_crispy_field }}
+                                                    <div class="client-stock-error text-danger small mt-1" style="display: none;"></div>
+                                                    {% if form.quantity.errors or form.non_field_errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {% for error in form.quantity.errors %}{{ error }}{% endfor %}
+                                                        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-5 text-end">
+                                                    <span class="text-muted item-subtotal" data-price="{{ form.product.price }}">
+                                                        €{% widthratio form.quantity.initial|default:form.quantity.value|default:0 1 form.product.price %}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
