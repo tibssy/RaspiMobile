@@ -258,12 +258,12 @@ a > i {
 
     &.is-invalid {
         border: 1px solid transparent;
-        border-bottom: 1px solid var(--danger-color);
+        border-bottom: 1px solid var(--danger-color) !important;
 
         &:focus {
             outline: none;
             background-color: #fff;
-            border: 1px solid var(--danger-color);
+            border: 1px solid var(--danger-color) !important;
             border-radius: 6px;
             box-shadow: var(--box-shadow-normal);
         }
