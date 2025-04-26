@@ -61,12 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 border: '1px solid transparent',
                 backgroundColor: secondaryColorVar,
                 color: '#fff',
-            },
-            '.u-color-primary': {
-                color: primaryBackgroundVar,
             }
         }
     };
+
     const elements = stripe.elements({ appearance, clientSecret });
 
     const paymentElementOptions = {
