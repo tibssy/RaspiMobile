@@ -100,15 +100,6 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
 #chatContainer,
 #cartSidebarContainer,
 #profileSidebarContainer {
@@ -245,12 +236,13 @@ a > i {
 }
 
 
+
 .form-control,
 .form-select {
     line-height: 1.8;
-    border-radius: 0;
-    border: 1px solid transparent;
-    border-bottom: 1px solid var(--accent);
+    border-radius: 0 !important;
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid var(--accent) !important;
     transition-property: transform, background-color, border, box-shadow, border-radius;
     transition-delay: 0s;
     transition-duration: 0.3s;
@@ -259,8 +251,8 @@ a > i {
     &:focus {
         outline: none;
         background-color: #fff;
-        border: 1px solid var(--accent);
-        border-radius: 6px;
+        border: 1px solid var(--accent) !important;
+        border-radius: 6px !important;
         box-shadow: var(--box-shadow-normal);
     }
 
@@ -556,6 +548,7 @@ a > i {
 }
 
 
+
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;
@@ -590,8 +583,6 @@ a > i {
         z-index: 1;
         /* max-height: none; */
     }
-
-
 
     .hero-content {
         position: relative;
