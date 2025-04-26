@@ -1,9 +1,90 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1>Home</h1>
-        <h2>Welcome to RaspiMobile!</h2>
-        <p>Your go-to place for Raspberry Pi mobile solutions.</p>
-    </div>
+    <section class="hero-section mb-3">
+        <picture>
+            <source media="(max-width: 480px)" srcset="{% static 'images/hero-small.webp' %}">
+            <source media="(max-width: 768px)" srcset="{% static 'images/hero-medium.webp' %}">
+            <source media="(max-width: 992px)" srcset="{% static 'images/hero-large.webp' %}">
+            <img src="{% static 'images/hero.webp' %}" alt="{% trans 'Innovative Raspberry Pi based tablets' %}" >
+        </picture>
+
+        <div class="hero-content">
+            <h1 class="display-4 fw-bold mb-3">{% trans "RaspiMobile Solutions" %}</h1>
+            <p class="lead mb-4">{% trans "Innovative Raspberry Pi tablets and accessories." %}</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg text-white fw-bold">
+                <i class="fa-solid fa-cart-shopping text-light me-2"></i>{% trans "Shop Now" %}
+            </a>
+        </div>
+    </section>
+
+    <section class="d-relative intro-section py-5 mb-3">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-4">{% trans "Experience True Device Freedom" %}</h2>
+                    <p class="lead mb-3">
+                        {% blocktrans %}
+                        At RaspiMobile, we engineer cutting-edge tablets and phones built around the powerful Raspberry Pi Compute Module. Explore our wide range of devices, designed for modularity and tailored to your specific needs.
+                        {% endblocktrans %}
+                    </p>
+                    <p class="mb-0">
+                        {% blocktrans %}
+                        Say goodbye to planned obsolescence! Our unique approach guarantees <strong class="text-success">lifetime operating system updates</strong>, offering unparalleled flexibility with Android or your favorite Linux distributions and desktop environments. You own your device, truly.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if featured_products %}
+        <section class="container mb-3">
+            <h2 class="text-center fw-bold mb-4">{% trans "Featured Products" %}</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center g-4">
+                {% for product in featured_products %}
+                    <div class="col hide-card-footer">
+                        {% include 'products/partials/product_card.html' with product=product %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if featured_products and best_rated_products %}
+        <div class="container">
+            <hr class="my-5">
+        </div>
+    {% endif %}
+
+    {% if best_rated_products %}
+        <section class="container mb-3">
+            <h2 class="text-center fw-bold mb-4">{% trans "Top Rated Picks" %}</h2>
+            <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4">
+                {% for product in best_rated_products %}
+                    <div class="col col-lg-6 hide-card-footer">
+                        {% include 'products/partials/product_card.html' with product=product %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if not featured_products %}
+                 <p class="text-center mt-4">
+                     <a href="{% url 'product_list' %}?sort=rating_desc" class="btn btn-outline-secondary">
+                         {% trans "See More Top Rated" %} <i class="fas fa-arrow-right ms-1"></i>
+                     </a>
+                 </p>
+             {% endif %}
+        </section>
+    {% endif %}
+
+    <section class="container text-center py-5 mb-3 bg-light rounded">
+        <h3 class="fw-bold mb-3">{% trans "Discover the Full Range" %}</h3>
+        <p class="lead mb-4">{% trans "Explore our complete collection of innovative products and accessories." %}</p>
+        <a href="{% url 'product_list' %}" class="btn btn-secondary btn-lg fw-bold">
+             <i class="fa-solid fa-store me-2"></i>{% trans "Visit the Shop" %}
+        </a>
+    </section>
+
 {% endblock %}

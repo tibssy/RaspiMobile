@@ -1,14 +1,7 @@
-"""
-This module defines the URL patterns for the 'home' app.
-
-It maps the root URL ('') to the 'home' view function,
-providing access to the home page.
-"""
-
 from django.urls import path
-from . import views
+from .views import HomeView
+
 
 urlpatterns = [
-    # Maps the root URL to the home view.
-    path('', views.home, name='home'),
+    path('', HomeView.as_view(), name='home'),
 ]
