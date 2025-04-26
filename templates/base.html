@@ -4,6 +4,7 @@
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
 {% url 'home' as home_url %}
+{% url 'about' as about_url %}
 {% url 'product_list' as products_url %}
 {% url 'dashboard_overview' as dashboard_url %}
 
@@ -38,6 +39,7 @@
 
     <!-- Google Fonts -->
     {% block extra_css %}
+        <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -52,6 +54,8 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- Global JS -->
         <script src="{% static 'js/script.js' %}"></script>
+        <!-- Mailchimp JS -->
+        <script type="text/javascript" src="{% static 'js/mailchimp-ajax.js' %}"></script>
     {% endblock %}
 
     {% block extra_js %}
@@ -107,6 +111,10 @@
         <a href="https://github.com/tibssy" target="_blank" aria-label="GitHub Repository">
             <i class="fa-brands fa-github fs-2"></i>
             <span class="visually-hidden">GitHub Repository</span>
+        </a>
+        <a href="https://www.termsfeed.com/live/e2b8c527-8a87-4c88-8d4f-d2b37697941d" target="_blank">
+            <i class="fas fa-file-alt fs-2"></i>
+            <span class="visually-hidden">Privacy Policy</span>
         </a>
     </footer>
 

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block extra_title %}- {% trans "About Us" %}{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <h1 class="text-center display-5 fw-bold mb-4 border-bottom pb-3">{% trans "About RaspiMobile" %}</h1>
+
+                <section class="mb-5">
+                    <h2 class="fw-bold h3 mb-3">{% trans "Our Mission: True Device Freedom" %}</h2>
+                    <p class="lead">
+                        {% blocktrans %}
+                        Welcome to RaspiMobile, where innovation meets empowerment. We specialize in creating cutting-edge tablets, phones, and accessories built around the versatile Raspberry Pi Compute Module. Our goal is to provide powerful, modular devices that adapt to your needs, not the other way around.
+                        {% endblocktrans %}
+                    </p>
+                    <p>
+                        {% blocktrans %}
+                        Tired of devices designed to become obsolete? So are we. RaspiMobile stands against planned obsolescence by offering devices designed for longevity and user control. We believe you should truly own your technology.
+                        {% endblocktrans %}
+                    </p>
+                </section>
+
+                <section class="mb-5">
+                    <h2 class="fw-bold h3 mb-3">{% trans "What Makes Us Different?" %}</h2>
+                    <ul>
+                        <li class="mb-2"><strong>{% trans "Raspberry Pi Powered:" %}</strong> {% trans "Leveraging the flexibility and power of the Raspberry Pi Compute Module for unique, customizable devices." %}</li>
+                        <li class="mb-2"><strong>{% trans "Modularity First:" %}</strong> {% trans "Our products are designed with modularity in mind, allowing for easier repairs and upgrades." %}</li>
+                        <li class="mb-2"><strong><span class="text-success">{% trans "Lifetime OS Updates:" %}</span></strong> {% trans "We are committed to providing ongoing operating system support. Choose Android or your preferred Linux distribution and desktop environment – the choice is yours, forever." %}</li>
+                        <li class="mb-2"><strong>{% trans "Openness and Control:" %}</strong> {% trans "Experience true ownership with devices that give you control over your software and hardware." %}</li>
+                        <li class="mb-2"><strong>{% trans "Quality Accessories:" %}</strong> {% trans "Complement your device with our curated selection of high-quality accessories, including headphones and more." %}</li>
+                    </ul>
+                </section>
+
+                <section class="mb-5">
+                    <h2 class="fw-bold h3 mb-3">{% trans "Our Products" %}</h2>
+                    <p>
+                        {% blocktrans %}
+                        From high-performance tablets suitable for demanding tasks to essential accessories that enhance your mobile experience, our product line is carefully curated to offer quality and innovation. Explore our shop to find the perfect Raspberry Pi-based solution for you.
+                        {% endblocktrans %}
+                    </p>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'product_list' %}" class="btn btn-primary text-white fw-bold">
+                            <i class="fa-solid fa-store me-2 text-white"></i>{% trans "Explore Our Shop" %}
+                        </a>
+                    </div>
+                </section>
+
+                <section class="mb-4">
+                    <h2 class="fw-bold h3 mb-3">{% trans "Our Commitment to Privacy" %}</h2>
+                    <p>
+                        {% blocktrans %}
+                        We value your privacy and are committed to protecting your personal information. Our practices are outlined in detail in our Privacy Policy. We encourage you to read it to understand how we collect, use, and safeguard your data.
+                        {% endblocktrans %}
+                    </p>
+                    <p class="text-center">
+                         <a href="https://www.termsfeed.com/live/e2b8c527-8a87-4c88-8d4f-d2b37697941d" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-file-alt me-2"></i>{% trans "View Privacy Policy" %}
+                         </a>
+                    </p>
+                </section>
+
+                <hr class="my-5">
+
+                <section id="contact-us" class="mb-5">
+                    <h2 class="fw-bold h3 mb-4 text-center">{% trans "Contact Us" %}</h2>
+                    <p class="text-center lead mb-4">
+                        {% trans "Have questions or feedback? Fill out the form below, and we'll get back to you as soon as possible." %}
+                    </p>
+                    <form method="post" action="{% url 'about' %}#contact-us">
+                        {% csrf_token %}
+                        {{ contact_form|crispy }}
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary text-white fw-bold px-5">
+                                <i class="fa-solid fa-paper-plane me-2"></i> {% trans "Send Message" %}
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Newsletter -->
+                <section class="container py-5 mb-3 bg-light rounded">
+                    {% include 'partials/subscribe.html' %}
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}
