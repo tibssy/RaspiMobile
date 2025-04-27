@@ -1,7 +1,19 @@
+"""
+Contact forms for the RaspiMobile home application.
+
+Includes the main contact form used on the About Us page.
+"""
+
 from django import forms
 
 
 class ContactForm(forms.Form):
+    """
+    A form for users to submit contact inquiries via the website.
+
+    Handles collection of sender's name, email, subject, and message.
+    """
+
     name = forms.CharField(
         max_length=100,
         required=True,
@@ -23,6 +35,13 @@ class ContactForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form and add custom widget attributes.
+
+        Sets placeholders, aria-labels, specific labels, and applies
+        Bootstrap's 'form-control' class to all field widgets.
+        """
+
         super().__init__(*args, **kwargs)
         labels = {
             'name': 'Your Name',
