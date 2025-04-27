@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_title %}{% trans "500 - Internal Server Error" %}{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-fill justify-content-center align-items-center five-o-o">
+        <div class="container mt-2">
+            <div class="row justify-content-center">
+                <div class="col-md-6 p-5 text-center rounded elevate blur-bg">
+                    <h1 class="display-1 text-danger fw-bold elevate">
+                        500
+                    </h1>
+                    <p class="lead">
+                        {% trans "Something went wrong on our end." %}
+                    </p>
+                    <p class="text-muted elevate">
+                        {% trans "We're working to fix it. Please try again later." %}
+                    </p>
+                    <a href="/" class="btn btn-primary text-white mt-3">
+                        {% trans "Return to Homepage" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

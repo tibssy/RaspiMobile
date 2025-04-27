@@ -548,6 +548,28 @@ a > i {
 }
 
 
+.four-o-three {
+    background: url(../images/four_o_three.webp) no-repeat center center / cover;
+}
+
+.four-o-four {
+    background: url(../images/four_o_four.webp) no-repeat center center / cover;
+}
+
+.four-o-five {
+    background: url(../images/four_o_five.webp) no-repeat center center / cover;
+}
+
+.five-o-o {
+    background: url(../images/five_o_o.webp) no-repeat center center / cover;
+}
+
+.blur-bg {
+    background-color: #fff8;
+    backdrop-filter: blur(20px);
+}
+
+
 
 @media screen and (min-width: 768px) {
     .nav-item {
@@ -635,16 +657,34 @@ a > i {
         max-width: 250px;
     }
 
+    .hero-section p {
+        font-size: 1.6rem;
+    }
+
 }
 
 @media screen and (min-width: 1200px) {
     .hero-section {
         min-height: 60vh;
+        padding: 30px;
+
+        & p {
+            font-size: 1.8rem;
+        }
+
+        & a {
+            font-size: 1.2rem;
+        }
     }
 }
 
 @media screen and (min-width: 1400px) {
     .hero-section {
         min-height: 70vh;
+        padding: 50px;
+
+        & a {
+            font-size: 1.4rem;
+        }
     }
 }

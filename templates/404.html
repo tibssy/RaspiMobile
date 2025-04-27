@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_title %}{% trans "404 - Page Not Found" %}{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-fill justify-content-center align-items-center four-o-four">
+        <div class="container mt-2">
+            <div class="row justify-content-center">
+                <div class="col-md-6 p-5 text-center rounded elevate blur-bg">
+                    <h1 class="display-1 text-danger fw-bold elevate">
+                        404
+                    </h1>
+                    <p class="lead elevate">
+                        {% trans "Oops! The page you're looking for cannot be found." %}
+                    </p>
+                    <a href="/" class="btn btn-primary text-white mt-3">
+                        {% trans "Go to Homepage" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
