@@ -39,7 +39,11 @@ class ShippingAddress(models.Model):
         :rtype: str
         """
 
-        user_info = f" ({self.user.get_username()})" if self.user else " (Guest/Unlinked)"
+        if self.user:
+            user_info = f" ({self.user.get_username()})"
+        else:
+            user_info = " (Guest/Unlinked)"
+
         return f"{self.full_name}, {self.address1}, {self.city}{user_info}"
 
     class Meta:

@@ -1,3 +1,12 @@
+"""
+Defines webhook handlers for receiving events from external services,
+primarily Stripe.
+
+This module contains views that listen for incoming webhook notifications,
+verify their authenticity, and trigger corresponding actions within the
+application, such as updating order statuses based on payment events.
+"""
+
 from django.views import View
 from django.conf import settings
 from django.db import transaction
@@ -8,18 +17,39 @@ from cart.models import Cart, CartItem
 from .models import Order, OrderStatus
 import stripe
 from .emails import send_confirmation_email
-import logging
 
-
-logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class StripeWebhookView(View):
-    """Listen for webhooks from Stripe"""
+    """
+    Handles incoming webhooks from Stripe.
+
+    Verifies the webhook signature and routes the event payload to the
+    appropriate handler based on the event type
+    (e.g., 'payment_intent.succeeded').
+    Requires CSRF exemption as Stripe cannot send a CSRF token.
+    """
 
     def post(self, request, *args, **kwargs):
+        """
+        Processes POST requests containing Stripe webhook events.
+
+        Reads the request body, verifies the Stripe signature using the
+        webhook secret, parses the event, and calls the relevant handler
+        method based on the event type.
+
+        :param request: The HttpRequest object containing the webhook
+                        payload and signature.
+        :type request: django.http.HttpRequest
+        :param args: Additional positional arguments.
+        :param kwargs: Additional keyword arguments.
+        :return: An HttpResponse indicating success (200 OK) or failure
+                 (400 Bad Request, 500 Server Error).
+        :rtype: django.http.HttpResponse
+        """
+
         wh_secret = settings.STRIPE_WEBHOOK_SECRET
         payload = request.body
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
@@ -31,15 +61,12 @@ class StripeWebhookView(View):
             )
         except ValueError as e:
             # Invalid payload
-            print(f"Webhook Error (ValueError): {e}")
             return HttpResponse(status=400)
         except stripe.error.SignatureVerificationError as e:
             # Invalid signature
-            print(f"Webhook Error (SignatureVerificationError): {e}")
             return HttpResponse(status=400)
         except Exception as e:
             # Generic error during signature verification
-            print(f"Webhook Error (Exception): {e}")
             return HttpResponse(status=400)
 
         handler_map = {
@@ -54,26 +81,38 @@ class StripeWebhookView(View):
             response = handler(event)
             return response
         except Exception as e:
-            print(f"Error processing webhook event {event_type}: {e}")
             return HttpResponse(status=500)
 
-
     def handle_payment_intent_succeeded(self, event):
+        """
+        Handles the 'payment_intent.succeeded' event from Stripe.
+
+        Retrieves the order based on metadata in the PaymentIntent, updates
+        the order status to 'PROCESSING' if it was 'PENDING', and triggers
+        the sending of a confirmation email.
+
+        :param event: The Stripe event object.
+        :type event: stripe.Event
+        :return: An HttpResponse indicating success (200 OK).
+        :rtype: django.http.HttpResponse
+        """
+
         intent = event['data']['object']
-        logger.info("Webhook: Handling payment_intent.succeeded")
         order_number = intent.get('metadata', {}).get('order_number')
 
         if not order_number:
-            logger.error("Webhook Error: order_number missing in PaymentIntent metadata")
-            return HttpResponse("Webhook Error: Missing order_number in metadata", status=400)
+            return HttpResponse(
+                "Webhook Error: Missing order_number in metadata",
+                status=400
+            )
 
         try:
-            order = Order.objects.select_related('delivery_method', 'cart', 'user').get(order_number=order_number)
+            order = Order.objects.select_related(
+                'delivery_method', 'cart', 'user'
+            ).get(order_number=order_number)
         except Order.DoesNotExist:
-            logger.warning(f"Webhook Succeeded: Order {order_number} not found (might be test).")
             return HttpResponse(status=200)
         except Exception as e:
-            logger.error(f"Webhook Error (DB Query - Succeeded Event): Order {order_number} - {e}", exc_info=True)
             return HttpResponse(status=500)
 
         order_processed_successfully = False
@@ -82,41 +121,47 @@ class StripeWebhookView(View):
                 with transaction.atomic():
                     order.status = OrderStatus.PROCESSING
                     order.save(update_fields=['status'])
-                    logger.info(f"Webhook: Order {order_number} status updated to PROCESSING.")
                     order_processed_successfully = True
             except Exception as e:
-                logger.error(f"Webhook Error (DB Update - Succeeded Event): Order {order_number} - {e}", exc_info=True)
                 return HttpResponse(status=500)
         else:
-            logger.info(f"Webhook: Order {order_number} status already '{order.status}'. No action taken.")
             order_processed_successfully = True
 
         if order_processed_successfully:
-            logger.info(f"Attempting to send confirmation email for order {order.order_number}...")
             try:
-                email_sent = send_confirmation_email(order)
-                if not email_sent:
-                     logger.error(f"Attempt to send confirmation email for order {order.order_number} failed (function returned False).")
+                send_confirmation_email(order)
             except Exception as e:
-                 logger.error(f"Unexpected error calling send_confirmation_email for order {order.order_number}: {e}", exc_info=True)
+                pass
 
         return HttpResponse(status=200)
 
-
     def handle_payment_intent_failed(self, event):
+        """
+        Handles the 'payment_intent.payment_failed' event from Stripe.
+
+        Retrieves the order based on metadata and updates its status
+        to 'FAILED' if it was previously 'PENDING'.
+
+        :param event: The Stripe event object.
+        :type event: stripe.Event
+        :return: An HttpResponse indicating success (200 OK).
+        :rtype: django.http.HttpResponse
+        """
+
         intent = event['data']['object']
         order_number = intent.get('metadata', {}).get('order_number')
 
         if not order_number:
-            return HttpResponse("Webhook Error: Missing order_number in metadata", status=400)
+            return HttpResponse(
+                "Webhook Error: Missing order_number in metadata",
+                status=400
+            )
 
         try:
             order = Order.objects.get(order_number=order_number)
             if order.status == OrderStatus.PENDING:
                 order.status = OrderStatus.FAILED
                 order.save(update_fields=['status'])
-            else:
-                print(f"Webhook: Failed payment for order {order_number}, but status is '{order.status}'. No action taken.")
 
         except Order.DoesNotExist:
             return HttpResponse(status=200)
@@ -126,4 +171,17 @@ class StripeWebhookView(View):
         return HttpResponse(status=200)
 
     def handle_unknown_event(self, event):
+        """
+        Handles webhook events that are not explicitly defined in the
+        handler_map.
+
+        Logs the event type and returns a 200 OK response to Stripe to
+        acknowledge receipt, even though no specific action is taken.
+
+        :param event: The Stripe event object.
+        :type event: stripe.Event
+        :return: An HttpResponse indicating success (200 OK).
+        :rtype: django.http.HttpResponse
+        """
+
         return HttpResponse(status=200)

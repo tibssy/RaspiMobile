@@ -1,13 +1,43 @@
+"""
+Defines forms used within the dashboard application.
+
+Includes forms for creating/editing products (`ProductForm`), managing product
+specifications (`ProductSpecificationForm`), updating order statuses
+(`OrderStatusForm`), and approving reviews (`ReviewApprovalForm`). Uses
+django-crispy-forms for layout rendering.
+"""
+
 from django import forms
-from products.models import Product, Category, SpecificationType, ProductSpecification, Review
+from products.models import (
+    Product,
+    Category,
+    SpecificationType,
+    ProductSpecification,
+    Review
+)
 from orders.models import Order
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML, Field, Div
-from crispy_forms.bootstrap import AppendedText, PrependedText
+from crispy_forms.layout import (
+    Layout,
+    Fieldset,
+    Row,
+    Column,
+    HTML,
+    Field,
+    Div
+)
+from crispy_forms.bootstrap import PrependedText
 from decimal import Decimal
 
 
 class ProductForm(forms.ModelForm):
+    """
+    Form for creating and updating Product instances via the dashboard.
+
+    Includes fields for basic product details, categories, image upload,
+    and inventory/status flags. Uses Crispy Forms for layout.
+    """
+
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all().order_by('name'),
         widget=forms.CheckboxSelectMultiple,
@@ -17,10 +47,17 @@ class ProductForm(forms.ModelForm):
         label='Replace current image',
         required=False,
         widget=forms.ClearableFileInput,
-        help_text='Select a new image file to replace the current one. Leave blank to keep existing.'
+        help_text=(
+            'Select a new image file to replace the current one. '
+            'Leave blank to keep existing.'
+        )
     )
 
     class Meta:
+        """
+        Metaclass options for the ProductForm.
+        """
+
         model = Product
         fields = [
             'name', 'price', 'image', 'categories', 'description',
@@ -35,6 +72,15 @@ class ProductForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the ProductForm and configures its Crispy Forms helper.
+
+        Sets up layout using Crispy Forms components
+        (Rows, Columns, Fieldsets). Adds placeholders and autofocus to
+        relevant fields. Disables default form tag and CSRF for
+        integration with UpdateView/CreateView templates.
+        """
+
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
@@ -52,14 +98,22 @@ class ProductForm(forms.ModelForm):
         self.fields['name'].widget.attrs['autofocus'] = True
         for field_name, field in self.fields.items():
             if field_name in placeholders:
-                field.widget.attrs['placeholder'] = placeholders.get(field_name, "")
+                field.widget.attrs['placeholder'] = placeholders.get(
+                    field_name, ""
+                )
 
         self.helper.layout = Layout(
             Fieldset(
                 'Product Details',
                 Row(
-                    Column('name', css_class='form-group col-md-6 mb-3'),
-                    Column(PrependedText('price', '€', css_class="mb-3"), css_class='form-group col-md-6 mb-3'),
+                    Column(
+                        'name',
+                        css_class='form-group col-md-6 mb-3'
+                    ),
+                    Column(
+                        PrependedText('price', '€', css_class="mb-3"),
+                        css_class='form-group col-md-6 mb-3'
+                    ),
                 ),
                 Div(
                     HTML("""
@@ -67,7 +121,10 @@ class ProductForm(forms.ModelForm):
                         <div class="d-flex flex-column flex-md-row align-items-md-start gap-3">
                     """),
                     HTML('{% include "dashboard/partials/product_image_preview.html" with form=form %}'),
-                    Column(Field('image'), css_class='flex-grow-1'),
+                    Column(
+                        Field('image'),
+                        css_class='flex-grow-1'
+                    ),
                     HTML("""
                         </div>
                     """),
@@ -75,8 +132,14 @@ class ProductForm(forms.ModelForm):
                 ),
                 Field('description', css_class='mb-3'),
                 Row(
-                    Column('sku', css_class='form-group col-md-6 mb-3'),
-                    Column('stock_quantity', css_class='form-group col-md-6 mb-3'),
+                    Column(
+                        'sku',
+                        css_class='form-group col-md-6 mb-3'
+                    ),
+                    Column(
+                        'stock_quantity',
+                        css_class='form-group col-md-6 mb-3'
+                    ),
                 ),
                 Div(
                     Field('categories'),
@@ -97,16 +160,37 @@ class ProductForm(forms.ModelForm):
         )
 
     def clean_price(self):
+        """
+        Validates the price field to ensure it is a positive value.
+
+        :raises forms.ValidationError: If the price is zero or negative.
+        :return: The cleaned price value.
+        :rtype: decimal.Decimal or None
+        """
+
         price = self.cleaned_data.get('price')
 
         if price is not None and price <= Decimal('0.00'):
-            raise forms.ValidationError("Price must be a positive value (greater than 0).")
+            raise forms.ValidationError(
+                "Price must be a positive value (greater than 0)."
+            )
 
         return price
 
 
 class ProductSpecificationForm(forms.ModelForm):
+    """
+    Form for individual ProductSpecification instances within an inline
+    formset.
+
+    Used in the dashboard to add, edit, or delete specifications associated
+    with a product.
+    """
+
     class Meta:
+        """
+        Metaclass options for the ProductSpecificationForm.
+        """
         model = ProductSpecification
         fields = ('spec_type', 'value')
         labels = {
@@ -120,18 +204,42 @@ class ProductSpecificationForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the ProductSpecificationForm.
+
+        Orders the SpecificationType choices alphabetically and adds a
+        placeholder/empty label to the select widget. Sets a placeholder for
+        the value field.
+        """
+
         super().__init__(*args, **kwargs)
-        self.fields['spec_type'].queryset = SpecificationType.objects.order_by('name')
+        self.fields['spec_type'].queryset = SpecificationType.objects.order_by(
+            'name'
+        )
         self.fields['spec_type'].empty_label = 'Select Type...'
-        self.fields['value'].widget.attrs['placeholder'] = 'Enter specification value'
+        self.fields['value'].widget.attrs['placeholder'] = (
+            'Enter specification value'
+        )
 
 
 class OrderStatusForm(forms.ModelForm):
+    """
+    Simple form for updating the status of an Order.
+
+    Used in the dashboard order list view for quick status updates.
+    """
+
     class Meta:
+        """
+        Metaclass options for the OrderStatusForm.
+        """
+
         model = Order
         fields = ['status']
         widgets = {
-            'status': forms.Select(attrs={'class': 'form-select form-select-sm'})
+            'status': forms.Select(
+                attrs={'class': 'form-select form-select-sm'}
+            )
         }
         labels = {
             'status': ''
@@ -139,8 +247,21 @@ class OrderStatusForm(forms.ModelForm):
 
 
 class ReviewApprovalForm(forms.ModelForm):
-    is_approved = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    """
+    Form specifically for toggling the `is_approved` status of a Review.
+
+    Used in the dashboard review list for approve/unapprove actions.
+    """
+
+    is_approved = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
 
     class Meta:
+        """
+        Metaclass options for the ReviewApprovalForm.
+        """
+
         model = Review
         fields = ['is_approved']

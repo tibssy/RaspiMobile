@@ -13,7 +13,8 @@ from .models import ShippingAddress
 # Define reusable validators
 phone_regex = RegexValidator(
     regex=r'^\+?1?\d{9,15}$',
-    message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+    message="Phone number must be entered in the format: '+999999999'. "
+            "Up to 15 digits allowed."
 )
 
 zipcode_regex = RegexValidator(
@@ -203,7 +204,9 @@ class ShippingAddressForm(forms.ModelForm):
 
         if country in us_variants:
             if not state:
-                self.add_error('state',
-                               "State is required for shipments within the United States.")
+                self.add_error(
+                    'state',
+                    "State is required for shipments within the United States."
+                )
 
         return cleaned_data

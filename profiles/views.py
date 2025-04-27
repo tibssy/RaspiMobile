@@ -135,12 +135,17 @@ class DeleteAccountView(View):
         try:
             logout(request)
             user.delete()
-            messages.success(request,
-                             "Your account has been successfully deleted.")
+            messages.success(
+                request,
+                "Your account has been successfully deleted."
+            )
             return redirect('home')
         except Exception as e:
-            messages.error(request,
-                           "There was an error deleting your account. Please contact support if the issue persists.")
+            message = (
+                "There was an error deleting your account. "
+                "Please contact support if the issue persists."
+            )
+            messages.error(request, message)
             return redirect('home')
 
     def get(self, request, *args, **kwargs):

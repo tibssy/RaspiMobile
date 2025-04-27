@@ -10,6 +10,8 @@ from .views import HomeView, AboutView
 
 
 urlpatterns = [
+    # URL pattern for Home page
     path('', HomeView.as_view(), name='home'),
+    # URL pattern for About page
     path('about/', AboutView.as_view(), name='about'),
 ]

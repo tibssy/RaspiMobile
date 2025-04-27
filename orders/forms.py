@@ -1,3 +1,12 @@
+"""
+Defines forms used within the orders application, particularly during checkout.
+
+Includes forms for selecting a delivery method (`DeliveryMethodForm`)
+and a formset for handling order item quantities (`OrderItemFormSet` based on
+`OrderItemQuantityForm`). Uses django-crispy-forms for layout rendering
+where applicable.
+"""
+
 from django import forms
 from .models import DeliveryMethod
 from django.forms import formset_factory
@@ -7,6 +16,13 @@ from products.models import Product
 
 
 class DeliveryMethodForm(forms.Form):
+    """
+    Form for selecting a delivery method during checkout.
+
+    Uses a ModelChoiceField with a RadioSelect widget to display active
+    delivery methods.
+    """
+
     delivery_method = forms.ModelChoiceField(
         queryset=DeliveryMethod.objects.filter(is_active=True),
         widget=forms.RadioSelect,
@@ -16,11 +32,15 @@ class DeliveryMethodForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the form and configures its Crispy Forms helper.
+        """
+
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = Layout(
-             Fieldset(
+            Fieldset(
                 'Delivery Options',
                 'delivery_method'
             )
@@ -28,13 +48,32 @@ class DeliveryMethodForm(forms.Form):
 
 
 class OrderItemQuantityForm(forms.Form):
+    """
+    A single form within the OrderItemFormSet, representing one item line.
+
+    Contains the quantity and a hidden field for the product ID. Includes
+    validation to check quantity against available stock.
+    """
+
     quantity = forms.IntegerField(
         min_value=1,
-        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm quantity-input', 'min': '1'})
+        widget=forms.NumberInput(
+            attrs={'class': 'form-control form-control-sm quantity-input',
+                   'min': '1'})
     )
     product_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def clean(self):
+        """
+        Performs cross-field validation.
+
+        Checks if the requested quantity exceeds the available stock for the
+        associated product.
+
+        :return: The cleaned data dictionary.
+        :rtype: dict
+        """
+
         cleaned_data = super().clean()
         quantity = cleaned_data.get('quantity')
         product_id = cleaned_data.get('product_id')
@@ -49,7 +88,8 @@ class OrderItemQuantityForm(forms.Form):
 
         if quantity is not None and product is not None:
             if quantity > product.stock_quantity:
-                self.add_error('quantity', f'Only {product.stock_quantity} available.')
+                self.add_error('quantity',
+                               f'Only {product.stock_quantity} available.')
 
         return cleaned_data
 

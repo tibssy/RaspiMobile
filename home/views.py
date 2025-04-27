@@ -83,7 +83,8 @@ class AboutView(FormMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Adds the contact form instance to the template context for GET requests.
+        Adds the contact form instance to the template context for GET
+        requests.
 
         :param kwargs: Keyword arguments passed to the view.
         :return: Context dictionary containing the 'contact_form'.
@@ -135,8 +136,8 @@ class AboutView(FormMixin, TemplateView):
 
         email_subject = f"[RaspiMobile Contact Form] - {subject}"
         email_message = (
-            f"You have received a new message from your website contact form.\n\n"
-            f"Here are the details:\n"
+            f"You have received a new message from your website contact "
+            f"form.\n\nHere are the details:\n"
             f"Name: {name}\n"
             f"Email: {from_email}\n\n"
             f"Message:\n{message_body}\n"
@@ -151,11 +152,16 @@ class AboutView(FormMixin, TemplateView):
                 recipient_list=[admin_email, ],
                 fail_silently=False,
             )
-            messages.success(self.request,
-                             'Thank you for your message! We will get back to you soon.')
+            message = (
+                'Thank you for your message! We will get back to you soon.'
+            )
+            messages.success(self.request, message)
         except Exception as e:
-            messages.error(self.request,
-                           'Sorry, there was an error sending your message. Please try again later.')
+            message = (
+                'Sorry, there was an error sending your message. '
+                'Please try again later.'
+            )
+            messages.error(self.request, message)
 
         return super().form_valid(form)
 
