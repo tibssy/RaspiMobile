@@ -6,13 +6,14 @@ from django.utils.decorators import method_decorator
 from .models import ShippingAddress
 from .forms import ShippingAddressForm
 from django.urls import reverse_lazy
+from django.contrib.auth import logout
 
 
 @method_decorator(login_required, name='dispatch')
-class EditCreateAddressView(View):
-    template_name = 'profiles/edit_create_address.html'
+class ManageProfileView(View):
+    template_name = 'profiles/manage_profile.html'
     form_class = ShippingAddressForm
-    success_url = reverse_lazy('edit_create_address')
+    success_url = reverse_lazy('manage_profile')
 
     def get_object(self):
         return ShippingAddress.objects.filter(user=self.request.user).first()
@@ -21,6 +22,7 @@ class EditCreateAddressView(View):
         instance = self.get_object()
         address_form = self.form_class(instance=instance)
         context = {
+            'page_title': "Manage Profile & Address",
             'address_form': address_form,
             'existing_address': instance is not None
         }
@@ -48,8 +50,26 @@ class EditCreateAddressView(View):
             messages.error(request, "Please correct the errors below.")
 
         context = {
+            'page_title': "Manage Profile & Address",
             'address_form': address_form,
             'existing_address': instance is not None
         }
-
         return render(request, self.template_name, context)
+
+
+@method_decorator(login_required, name='dispatch')
+class DeleteAccountView(View):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            logout(request)
+            user.delete()
+            messages.success(request, "Your account has been successfully deleted.")
+            return redirect('home')
+        except Exception as e:
+            messages.error(request, "There was an error deleting your account. Please contact support if the issue persists.")
+            return redirect('home')
+
+    def get(self, request, *args, **kwargs):
+        messages.error(request, "Invalid request method.")
+        return redirect('manage_profile')

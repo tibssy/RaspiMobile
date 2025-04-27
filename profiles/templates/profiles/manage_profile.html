@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+
+{% block extra_title %}- {{ page_title|default:"Manage Profile" }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-4">{{ page_title|default:"Manage Profile" }}</h1>
+        <section id="shipping-address" class="mb-5">
+            <h2 class="h4 mb-3 border-bottom pb-2">{% trans "Shipping Address" %}</h2>
+            {% if existing_address %}
+                <p>{% trans "Update your saved shipping address below." %}</p>
+            {% else %}
+                <p>{% trans "Save a shipping address to speed up future checkouts." %}</p>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-10 col-lg-8 mx-auto">
+                    <form method="post" action="{% url 'manage_profile' %}" novalidate>
+                        {% csrf_token %}
+                        {% crispy address_form %}
+                        <button type="submit" class="btn btn-primary w-100 text-white mt-3">
+                            {% if existing_address %}
+                                 <i class="fas fa-save text-white me-2"></i>{% trans "Update Address" %}
+                            {% else %}
+                                 <i class="fas fa-plus text-white me-2"></i>{% trans "Save Address" %}
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <section id="account-deletion" class="mb-4">
+            <h2 class="h4 mb-3 text-danger border-bottom border-danger pb-2">{% trans "Danger Zone" %}</h2>
+            <div class="row">
+                 <div class="col-md-10 col-lg-8 mx-auto">
+                    <p class="text-danger">{% trans "Deleting your account is permanent and cannot be undone." %}</p>
+                     <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                        <i class="fas fa-trash-alt me-1"></i> {% trans "Delete My Account" %}
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteAccountModalLabel">{% trans "Confirm Account Deletion" %}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{% trans "Are you absolutely sure you want to delete your account?" %}</p>
+                        <p class="fw-bold text-danger">{% trans "This action cannot be undone. All your data, including order history and saved addresses, will be permanently removed." %}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <form method="post" action="{% url 'delete_account' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">{% trans "Yes, Delete My Account" %}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
