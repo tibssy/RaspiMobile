@@ -226,33 +226,12 @@ A dedicated dashboard provides administrators and staff members with tools to ma
 ![Image](https://github.com/user-attachments/assets/75406c67-cf6b-4370-a566-f15669b57030)
 
 
+### Fully Responsive Design & Social Presence
+*   **Responsive Layout:** The entire application, including the shop, checkout, user profile areas, and dashboard, is built with a responsive design ensuring optimal viewing and usability across various devices (desktops, tablets, and mobile phones). Layouts adapt gracefully to different screen sizes.
+*   **Social Media Integration:** RaspiMobile maintains a presence on social media platforms like Facebook to engage with the community, share updates, and promote products. Links are provided in the site footer.
 
+![Image](https://github.com/user-attachments/assets/de760f61-dc01-4a53-8d26-bdaceaae60d2)
 
-### Site Navigation & Sidebar
-<!-- Describe the main navbar and the interactive sidebar (User, Cart) -->
-
-### Product Browsing, Search & Filtering
-<!-- Describe how users find products (list view, search bar, category filters, sorting) -->
-
-### Product Detail Page
-<!-- Describe the product detail view (images, description, specifications, reviews) -->
-
-### Shopping Cart
-<!-- Describe cart functionality (adding, removing, quantity updates, session/DB storage, AJAX updates) -->
-
-### Checkout Process
-<!-- Describe the steps involved in checkout (shipping form, delivery options, order summary) -->
-
-### User Profiles & Order History
-<!-- Describe user profile features (viewing/saving address, viewing past orders) -->
-
-### Product Reviews
-<!-- Describe the review submission and display system -->
-
-### Staff Dashboard
-<!-- Briefly mention the dashboard and its key management areas (Products, Orders, Reviews, Statistics) -->
-
----
 
 ## Design
 
