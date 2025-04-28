@@ -195,6 +195,22 @@ Registered users benefit from personalized features accessible via the sidebar:
 ![Image](https://github.com/user-attachments/assets/2fea4254-25af-4e36-bb7d-716cc2f2f389)
 
 
+### Staff Dashboard (Admin/Staff Only)
+A dedicated dashboard provides administrators and staff members with tools to manage the e-commerce site:
+
+*   **Centralized Management:** Offers quick navigation between different management sections (Overview, Products, Orders, Comments/Reviews, Statistics).
+*   **At-a-Glance Overview:** The main dashboard page displays key performance indicators ("Quick Stats") such as Total Products, Pending Orders, Pending Reviews, and Recent Sales figures.
+*   **Visual Analytics:** Includes charts powered by Chart.js for visualizing recent Sales Trends (line chart) and Order Status Distribution (doughnut chart).
+*   **Actionable Links:** Quick Stats cards provide direct links to relevant management pages (e.g., "Manage Products", "View Orders", "Moderate Reviews").
+*   *(Specific Management sections like Product CRUD, Order Status Updates, Review Approval, and detailed Statistics are available via the dashboard navigation.)*
+
+![Image](https://github.com/user-attachments/assets/589a733b-33ba-43b7-aec0-e0ecec3a765c)
+
+
+
+
+
+
 
 
 
