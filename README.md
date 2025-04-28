@@ -429,20 +429,71 @@ Responsiveness was checked using browser developer tools across various common s
 
 ## Deployment
 
-<!-- Describe the deployment process -->
+This project is deployed on **Heroku**. The live application can be accessed here:
 
-### Platform
-<!-- Specify the deployment platform (e.g., Heroku, Render, AWS) -->
+#### [Visit RaspiMobile Deployed Site](link-to-your-deployed-site) <!-- Update this link -->
 
-### Deployment Steps
-<!-- Outline the key steps taken to deploy the application -->
+### Platform Choice
 
-### Environment Variables
-<!-- List necessary environment variables (without values) -->
+Heroku was chosen for its ease of use, seamless integration with GitHub for continuous deployment, extensive add-on market (like Heroku Postgres), and straightforward configuration for Django applications.
 
+### Pre-deployment Project Setup
 
-#### [Visit RaspiMobile Deployed Site](link-to-your-deployed-site) <!-- Update this link later -->
+Before deploying to Heroku, the following configurations were essential:
 
+1.  **`requirements.txt`:** Created to list all Python dependencies (`pip freeze > requirements.txt`), including:
+    *   `django`
+    *   `gunicorn` (Production WSGI server)
+    *   `psycopg2-binary` (or `psycopg2`) (PostgreSQL adapter)
+    *   `dj-database-url` (To parse `DATABASE_URL` environment variable)
+    *   `whitenoise` (To serve static files efficiently)
+    *   `cloudinary`, `dj3-cloudinary-storage` (For Cloudinary integration)
+    *   `stripe` (For Stripe payments)
+2.  **`Procfile`:** Created in the root directory to define process types:
+    *   `web: gunicorn your_project_name.wsgi:application` (Tells Heroku how to run the web server, replace `your_project_name` with your actual Django project folder name).
+    *   `release: python manage.py migrate`.
+3.  **Static Files Configuration (`settings.py` & `wsgi.py`):**
+    *   Configured `STATIC_URL`, `STATICFILES_DIRS`, and `STATIC_ROOT`.
+    *   Added `whitenoise.middleware.WhiteNoiseMiddleware` to `MIDDLEWARE`.
+4.  **Database Configuration (`settings.py`):**
+    *   Used `dj_database_url.parse()` to configure the `DATABASES['default']` setting, reading from the `DATABASE_URL` environment variable.
+    *   Set `DISABLE_COLLECTSTATIC=1` as a temporary Heroku config var during the *first* deployment if needed, then removed it.
+5.  **Security & Production Settings (`settings.py`):**
+    *   Set `DEBUG = False` (controlled via environment variable).
+    *   Configured `ALLOWED_HOSTS` to include the Heroku app URL and any custom domains.
+    *   Ensured `SECRET_KEY` was read from an environment variable, not hardcoded.
+    *   Configured `CSRF_TRUSTED_ORIGINS` to include the Heroku app URL (`https://*.herokuapp.com` or specific URL).
+6.  **`.python-version` :** Created to specify the desired Python version (e.g., `python-3.13`).
+
+### Heroku Deployment Steps
+
+1.  **Create Heroku Account & App:**
+    *   Sign up/log in at [Heroku](https://dashboard.heroku.com/).
+    *   Create a new app, choosing a unique name and region.
+2.  **Set Config Vars:**
+    *   Navigate to the "Settings" tab and click "Reveal Config Vars".
+    *   Add all necessary environment variables, including:
+        *   `SECRET_KEY` (Generate a new strong and complicated password for production)
+        *   `CLOUDINARY_URL`
+        *   `STRIPE_PUBLIC_KEY`
+        *   `STRIPE_SECRET_KEY`
+        *   `STRIPE_WEBHOOK_SECRET`
+        *   `DATABASE_URL`
+        *   `ALLOWED_HOSTS` ('127.0.0.1', '.herokuapp.com')
+        *   `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, etc.
+        *   `DEBUG=0` (Set to 0 or False for production)
+        *   `DISABLE_COLLECTSTATIC=1` (Only needed temporarily for the very first deployment if static files cause issues, then remove).
+3.  **Connect GitHub & Deploy:**
+    *   Navigate to the "Deploy" tab.
+    *   Select "GitHub" as the deployment method.
+    *   Search for and connect the project's GitHub repository.
+    *   Choose either:
+        *   **Automatic Deploys:** Enable this for a specific branch (e.g., `main`) to automatically redeploy whenever code is pushed to that branch.
+        *   **Manual Deploy:** Select a branch and click "Deploy Branch" to trigger a deployment manually.
+
+This configured deployment ensures the Django application, its dependencies, database, static files, and sensitive settings are correctly handled in the Heroku production environment.
+
+#### [Visit RaspiMobile Deployed Site](https://raspimobile-5d0ba24a84d8.herokuapp.com/)
 
 ---
 
@@ -457,22 +508,18 @@ Responsiveness was checked using browser developer tools across various common s
     - Chart.js
     - django-allauth
     - crispy-forms
-    - Pillow / psycopg2 / etc.
+    - Pillow
     - VADER Sentiment (for reviews)
 - **Services:**
     - Stripe (Payments)
     - Cloudinary (Image Hosting)
     - Mailchimp (Newsletter)
-    - [Deployment Platform Name]
 - **Assets:**
     - FontAwesome (Icons)
     - Google Fonts (Specify fonts)
-    - [Source of any specific images/graphics if applicable]
-- **Code Snippets / Inspiration:**
-    - [Link to specific Stack Overflow answer, tutorial, etc. if heavily relied upon]
 
 ---
 
 ## Acknowledgments
 
-<!-- Thank anyone who helped (mentors, instructors, peers) -->
+Thank you to my mentor, **Brian Macharia**, for his continuous support and valuable feedback. His tips and resources have been instrumental in enhancing my coding and testing skills.
