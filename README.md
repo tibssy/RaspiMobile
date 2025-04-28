@@ -135,6 +135,31 @@ Users can easily explore the full range of products through the dedicated Shop p
 
 ![Image](https://github.com/user-attachments/assets/cfc72923-5400-48e9-8f70-8c9f10e178f7)
 
+
+### Product Detail Page
+Clicking on a product reveals a comprehensive detail page featuring:
+
+*   **High-Quality Imagery:** A large primary image showcasing the product.
+*   **Detailed Information:** Includes product name, price, SKU, a descriptive text, and current stock levels.
+*   **Technical Specifications:** A clear table lists relevant technical details (e.g., Connectivity, Driver Size), crucial for RaspiMobile's target audience.
+*   **Review Integration:** Displays average star ratings and individual user reviews (or indicates "No reviews yet"). Users can also submit their own reviews via an integrated form (*review form not fully visible in screenshot, but implied by feature list*).
+*   **Stock Urgency:** Prominent badges like "Hurry, only X left!" create urgency for low-stock items.
+*   **Clear Call to Action:** An "Add to Cart" button is readily available.
+*   **Related Products:** Suggests other relevant items to encourage further browsing (*section heading visible*).
+
+### Interactive Sidebar & Shopping Cart
+The site features an interactive sidebar providing quick access to key functions without leaving the current page:
+
+*   **Dynamic Cart View:** Clicking "Add to Cart" or the cart icon smoothly opens the sidebar, displaying the current shopping cart contents via AJAX.
+*   **Cart Item Details:** Each item shows its image, name, quantity, line total, and a button to remove it.
+*   **Real-time Summary:** The sidebar displays the total number of items and the running subtotal.
+*   **Clear Next Steps:** Buttons like "View Cart & Checkout" guide the user forward in the purchase process.
+*   *(Other Sidebar Sections: The sidebar also contains sections for User Profile/Orders and potentially an AI Assistant, accessible via header icons.)*
+
+
+
+![Image](https://github.com/user-attachments/assets/b2fa4722-d4db-48a9-8aa5-70f0cbe2cc5f)
+
 ### Site Navigation & Sidebar
 <!-- Describe the main navbar and the interactive sidebar (User, Cart) -->
 
