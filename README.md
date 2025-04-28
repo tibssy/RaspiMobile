@@ -306,6 +306,8 @@ The database schema is designed to logically connect different aspects of the e-
 *   **Orders & Items:** An `Order` contains multiple `OrderItem` instances (via a ForeignKey from `OrderItem` to `Order` with `related_name='items'`). Each `OrderItem` links to one `Product` (ForeignKey) and stores the quantity and price *at the time of the order*.
 *   **Orders & Delivery:** An `Order` is associated with one `DeliveryMethod` (ForeignKey, SET_NULL).
 
+![Image](https://github.com/user-attachments/assets/29da0728-2b69-4bdc-894d-f15e938da321)
+
 ---
 
 ## Testing
@@ -499,8 +501,6 @@ This configured deployment ensures the Django application, its dependencies, dat
 
 ## Credits
 
-<!-- List all third-party libraries, tools, assets, tutorials, etc. used -->
-
 - **Frameworks & Libraries:**
     - Django
     - Bootstrap
@@ -517,6 +517,12 @@ This configured deployment ensures the Django application, its dependencies, dat
 - **Assets:**
     - FontAwesome (Icons)
     - Google Fonts (Specify fonts)
+- **Tools:**
+    - Leonardo AI (for product image generation)
+    - Upscayl (for upscale generated images)
+    - GIMP (for image editing)
+    - GitHub (for version control)
+    - Pycharm Community Edition (for write code)
 
 ---
 
