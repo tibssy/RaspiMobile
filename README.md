@@ -232,23 +232,35 @@ A dedicated dashboard provides administrators and staff members with tools to ma
 
 ![Image](https://github.com/user-attachments/assets/de760f61-dc01-4a53-8d26-bdaceaae60d2)
 
+---
 
 ## Design
 
-### Imagery
-<!-- Describe the overall visual style, use of product images, logo etc. -->
+The visual design of RaspiMobile aims for a clean, modern, and functional aesthetic that reflects its tech-focused product offering while ensuring a user-friendly experience.
 
 ### Color Palette
-<!-- Detail the main colors used and their purpose -->
 
-### Icons and Visual Cues
-<!-- Mention icon libraries used (e.g., FontAwesome) and how icons enhance UX -->
+*   **Primary Color:** A distinct green (`#45c95d`, `#198754`) is used consistently across headers, footers, buttons, active states, and highlights, establishing a strong brand identity.
+*   **Accent Colors:** Contrasting colors like yellow/orange are used sparingly for important indicators (e.g., low stock badges). Standard Bootstrap colors (success, danger, warning, info) are utilized for alerts and status badges, providing familiar visual cues.
+*   **Background & Text:** A clean white background (`#fff`) is used for main content areas to maximize readability, contrasting with dark text for clarity and green elements for branding.
+
+### Layout & Responsiveness
+
+*   **Bootstrap Framework:** The site heavily utilizes the Bootstrap 5 grid system and components (Navbar, Dropdowns, Buttons, Alerts, List Groups, Cards) to create a structured and consistent layout.
+*   **Responsive Design:** All pages are designed to be fully responsive, adapting gracefully to different screen sizes from mobile phones to desktops. Navigation collapses, sidebars transform, and content reflows for optimal viewing on any device.
+*   **Sidebar Interaction:** An interactive sidebar provides access to user, cart, and potentially other functions without full page reloads, sliding over or pushing content depending on screen size.
+*   **Clear Structure:** Pages like Checkout and Product Details use multi-column layouts to organize information logically (e.g., form vs. summary). Dashboard pages employ list groups and cards for clear presentation of management tasks and data.
 
 ### Typography
-<!-- Specify the fonts used and their application -->
 
-### Layout
-<!-- Describe the overall layout structure (e.g., responsive design, use of Bootstrap grid, sidebar interaction) -->
+*   **Font Family:** The primary font used is "Roboto Condensed" (imported via Google Fonts), a clean and readable sans-serif typeface suitable for both headings and body text, contributing to the modern feel.
+*   **Hierarchy:** Clear visual hierarchy is established using varying font weights (bold for headings/important info) and sizes, guiding the user's eye through the content.
+
+### Imagery & Icons
+
+*   **Product Images:** Clear, high-quality images are used for product listings and details.
+*   **Branding:** The RaspiMobile logo incorporates the recognizable Raspberry Pi symbol, reinforcing the brand's core identity.
+*   **Iconography:** FontAwesome icons are used extensively throughout the interface (navigation, buttons, indicators, status messages) to provide quick visual cues and enhance usability without relying solely on text. Icons are consistently styled to match the primary color scheme where appropriate.
 
 ---
 
