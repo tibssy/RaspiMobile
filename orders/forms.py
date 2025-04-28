@@ -13,17 +13,43 @@ from django.forms import formset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset
 from products.models import Product
+from django.utils.safestring import mark_safe
+
+
+class DeliveryMethodChoiceField(forms.ModelChoiceField):
+    """
+    Custom ModelChoiceField that displays delivery method name, price,
+    and description in the choice label.
+    """
+
+    def label_from_instance(self, obj):
+        """
+        Generates the label for each delivery method option.
+
+        Includes name, price, and description (if available).
+        Uses mark_safe to allow HTML for better formatting within the label.
+
+        :param obj: The DeliveryMethod instance.
+        :type obj: DeliveryMethod
+        :return: An HTML string representing the choice label.
+        :rtype: SafeString
+        """
+        label_html = f"{obj.name} (+€{obj.price:.2f})"
+        if obj.description:
+            label_html += f"<br><small class='text-muted'>{obj.description}</small>"
+        return mark_safe(label_html)
 
 
 class DeliveryMethodForm(forms.Form):
     """
     Form for selecting a delivery method during checkout.
 
-    Uses a ModelChoiceField with a RadioSelect widget to display active
-    delivery methods.
+    Uses a custom ModelChoiceField (`DeliveryMethodChoiceField`) with a
+    RadioSelect widget to display active delivery methods with their
+    descriptions.
     """
 
-    delivery_method = forms.ModelChoiceField(
+    delivery_method = DeliveryMethodChoiceField(
         queryset=DeliveryMethod.objects.filter(is_active=True),
         widget=forms.RadioSelect,
         required=True,
@@ -35,7 +61,6 @@ class DeliveryMethodForm(forms.Form):
         """
         Initializes the form and configures its Crispy Forms helper.
         """
-
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False

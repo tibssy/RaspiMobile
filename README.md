@@ -266,7 +266,47 @@ The visual design of RaspiMobile aims for a clean, modern, and functional aesthe
 
 ## Technical Details / Solutions
 
-<!-- Describe interesting technical implementations -->
+### Core Technologies
+
+RaspiMobile is built using a modern web stack focused on Python and Django, leveraging several key technologies:
+
+*   **Backend:** Django (Python framework), PostgreSQL (Database, typical for production).
+*   **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap 5 (CSS Framework).
+*   **User Authentication:** `django-allauth` for robust handling of registration, login, logout, and potential social authentication.
+*   **Image Handling:** Cloudinary Python SDK (`cloudinary`) for cloud-based image storage, transformations, and delivery.
+*   **Payment Processing:** Stripe API (specifically Payment Intents and Stripe Elements) for secure, PCI-compliant payment handling.
+*   **Asynchronous Communication:** Django views handle standard requests, while JavaScript Fetch API is used for AJAX calls (Cart updates, Dashboard statistics). Stripe Webhooks handle asynchronous payment confirmations.
+*   **Charting:** Chart.js library for rendering dynamic and interactive charts in the staff dashboard.
+*   **Form Handling:** Django Forms, `django-crispy-forms` with the Bootstrap 5 template pack for rendering dashboard forms efficiently.
+*   **Sentiment Analysis:** VADER Sentiment library for basic sentiment analysis of product reviews.
+*   **Icons:** FontAwesome for scalable vector icons.
+
+### Key Implementation Details
+
+*   **Interactive Sidebar & AJAX Cart:** The sidebar (containing user info, cart, etc.) uses JavaScript to toggle visibility and Bootstrap's Carousel component. Cart operations (add/remove) utilize the Fetch API to send asynchronous POST requests to dedicated Django views. These views process the request, update the database or session, render updated HTML partials for the sidebar content and messages, and return JSON responses. The JavaScript then dynamically updates the relevant sections of the page without a full reload, providing a smooth user experience.
+*   **Stripe Payment Flow:**
+    1.  **Checkout:** Order details (shipping, items, delivery) are finalized.
+    2.  **Payment Page:** A Django view (`PaymentView`) creates a Stripe PaymentIntent on the backend, passing the `client_secret` and `public_key` to the template.
+    3.  **Stripe Elements:** JavaScript (`stripe_elements.js`) uses the received keys to initialize Stripe.js and mount the secure Payment Element, which collects payment details directly via Stripe's servers.
+    4.  **Confirmation:** On form submission, JavaScript calls `stripe.confirmPayment`, redirecting the user to Stripe for any necessary authentication (like 3D Secure) and then back to the site's Order Confirmation page.
+    5.  **Webhook Verification:** A dedicated webhook handler view (`StripeWebhookView`) listens for asynchronous events from Stripe (e.g., `payment_intent.succeeded`, `payment_intent.payment_failed`), verifies the signature, updates the order status in the database accordingly, and triggers confirmation emails.
+*   **Dynamic Dashboard Statistics:** The statistics page uses JavaScript (`statistics_charts.js`) and Chart.js. Initial data is loaded via Django template context. When a user selects a different date range, an AJAX request (Fetch API) is sent to a dedicated endpoint within the `DashboardStatisticsView`. The Django view queries the database based on the requested range, aggregates the data, and returns it as JSON. The JavaScript then updates the corresponding Chart.js instance dynamically.
+*   **Review Auto-Approval:** The `ReviewForm`'s `save` method incorporates VADER sentiment analysis. Before saving, it analyzes the review comment's sentiment. If the compound score meets a positive threshold, the `is_approved` flag is automatically set to `True`, allowing positive reviews to appear immediately while others await manual moderation.
+*   **Responsive Design:** Bootstrap 5's grid system, utility classes, and components are used throughout to ensure the layout adapts effectively to various screen sizes, from mobile to desktop.
+
+### Model Relationships
+
+The database schema is designed to logically connect different aspects of the e-commerce platform:
+
+*   **User & Profile:** Django's built-in `User` model (`settings.AUTH_USER_MODEL`) is used. A separate `ShippingAddress` model (in `profiles`) has a ForeignKey to `User`, allowing users to save their address details.
+*   **Products & Categories:** A `Product` can belong to multiple `Category` instances via a ManyToManyField.
+*   **Products & Specifications:** A `Product` can have multiple `ProductSpecification` entries. Each `ProductSpecification` links the `Product` to a specific `SpecificationType` (e.g., "Color") and holds the `value` (e.g., "Blue"). `SpecificationType` can also be linked to `Category` (ManyToMany) to help organize available specs.
+*   **Products & Reviews:** A `Review` belongs to one `Product` (ForeignKey) and one `User` (ForeignKey). A unique constraint ensures a user can only review a specific product once.
+*   **Orders & Users/Carts:** An `Order` can optionally belong to a registered `User` (ForeignKey, SET_NULL) and can optionally be linked back to the `Cart` it originated from (ForeignKey, SET_NULL).
+*   **Orders & Items:** An `Order` contains multiple `OrderItem` instances (via a ForeignKey from `OrderItem` to `Order` with `related_name='items'`). Each `OrderItem` links to one `Product` (ForeignKey) and stores the quantity and price *at the time of the order*.
+*   **Orders & Delivery:** An `Order` is associated with one `DeliveryMethod` (ForeignKey, SET_NULL).
+
+---
 
 ### Core Technologies
 <!-- List main frameworks/libraries: Django, Bootstrap, JavaScript, Stripe, Cloudinary etc. -->
