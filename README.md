@@ -183,6 +183,22 @@ Payment processing is handled securely and efficiently using Stripe Elements:
 ![Image](https://github.com/user-attachments/assets/dc49c0fe-1511-418b-8f1a-d3ba14fd297a)
 
 
+### User Profiles & Order History (Authenticated Users)
+Registered users benefit from personalized features accessible via the sidebar:
+
+*   **Order Confirmation & Summary:** After payment, users are directed to a clear order summary page confirming the transaction and displaying all relevant details (order number, status, date, total, shipping address, items ordered).
+*   **Persistent Shopping Carts:** Items added to the cart remain associated with the user's account.
+*   **Guest Cart Merging:** If a user adds items as a guest and then logs in or signs up, their guest cart contents are automatically merged with their existing account cart.
+*   **Profile Management:** Users can view their primary shipping details directly in the sidebar.
+*   **Recent Orders:** The sidebar displays a list of the user's recent orders, including order number, date, and status indicators (e.g., Processing, Shipped, Delivered), with links to view the full order summary.
+
+![Image](https://github.com/user-attachments/assets/2fea4254-25af-4e36-bb7d-716cc2f2f389)
+
+
+
+
+
+
 ### Site Navigation & Sidebar
 <!-- Describe the main navbar and the interactive sidebar (User, Cart) -->
 
