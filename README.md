@@ -308,45 +308,122 @@ The database schema is designed to logically connect different aspects of the e-
 
 ---
 
-### Core Technologies
-<!-- List main frameworks/libraries: Django, Bootstrap, JavaScript, Stripe, Cloudinary etc. -->
-
-### Interactive Sidebar & Cart (AJAX)
-<!-- Explain how the sidebar and AJAX cart updates work -->
-
-### Stripe Payment Integration
-<!-- Detail the implementation of Stripe Elements and Payment Intents -->
-
-### Dashboard & Charting
-<!-- Explain how the dashboard statistics and charts are generated/updated -->
-
-### Model Relationships
-<!-- Include a description or diagram of key Django model relationships -->
-
-### Authentication & Authorization
-<!-- Mention use of django-allauth and staff user checks -->
-
----
-
 ## Testing
 
-<!-- Describe the testing process and add results/screenshots later -->
-<!-- Mention tools used: Lighthouse, W3C Validator, Linters (e.g., Flake8/Black for Python, ESLint for JS), Django Tests -->
+A comprehensive testing strategy was employed to ensure the quality, performance, accessibility, and reliability of the RaspiMobile application across various aspects.
 
 ### Lighthouse Scores
-<!-- Add Lighthouse screenshots/scores for key pages -->
+
+Google Lighthouse was used extensively to audit key pages (including Home, Product List, Product Detail, Cart, Checkout, Profile, and Dashboard pages where applicable) for performance, accessibility, best practices, and SEO. Both mobile and desktop scores were analyzed to ensure a good user experience on all devices.
+
+*   **Home Page:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/255852e5-218d-403f-8f37-49d9296e2ce9)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/1c200feb-c955-4842-bb59-09f9158bce53)
+*   **About Page:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/3d9cc612-4f73-49f3-b3d3-d482f9798b04)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/53eccf00-3182-450a-a438-789b72aa5285)
+* **Product List Page:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/ae2e7b61-d6ed-4307-8671-3d42ff5760ac)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/953481df-f5db-46b7-97d3-85fdfb99b53e)
+*   **Product Detail Page:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/1799df33-f30d-47f2-8738-cf9df8336699)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/13ce20d8-2787-492d-b5ef-19e10a5096d8)
+*   **Checkout Page:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/fb3830bc-04a1-4f6f-8cf0-285df75ecaf4)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/f2bf15b2-047d-41cf-8c62-d38f44019745)
+*   **Dashboard Overview:**
+    *   Mobile: ![Image](https://github.com/user-attachments/assets/b06f18b1-b0d1-4811-a2e1-4c80f4390504)
+    *   Desktop: ![Image](https://github.com/user-attachments/assets/d0592592-b980-4725-aa4b-82d684da2ec8)
+
 
 ### W3C Validation (HTML & CSS)
-<!-- Add results/screenshots or notes from validators -->
 
-### Linter Checks (Python/JavaScript)
-<!-- Add results/screenshots or notes from linters -->
+*   **HTML:** The generated HTML for publicly accessible pages and dashboard templates was validated using the [W3C HTML Validator](https://validator.w3.org/). Efforts were made to resolve validation errors and warnings, ensuring compliance with HTML5 standards. *(Note: Some pages requiring login might not have been directly validated via the online tool).*
 
-### Unit Testing / Code Coverage
-<!-- Describe unit tests written and results (e.g., coverage report) -->
+![Image](https://github.com/user-attachments/assets/ca311518-f6a9-4e2f-8b94-4930068dae8e)
 
-### Browser & Responsiveness Testing
-<!-- List browsers/devices tested -->
+![Image](https://github.com/user-attachments/assets/9237d301-06f5-408a-9409-bfb6447b59da)
+
+![Image](https://github.com/user-attachments/assets/41d3bbb0-87f8-4191-a139-f56fb2f31c21)
+
+![Image](https://github.com/user-attachments/assets/432b34ee-6e51-4c61-8e2e-7d332084fc24)
+
+![Image](https://github.com/user-attachments/assets/b20a620c-13f0-4178-8e66-a300193fe96c)
+
+
+*   **CSS:** The custom CSS (`static/css/style.css`) was checked using the [W3C CSS Validator](https://jigsaw.w3.org/css-validator/). While the validator flagged some errors related to modern CSS features like **CSS Nesting**, these features are now widely supported by modern browsers and were used intentionally for code organization and maintainability. The core layout and styles rendered correctly across target browsers despite these validation warnings, which are primarily due to the validator not being fully up-to-date with the latest CSS specifications.
+
+
+### Code Validation (Linters)
+
+*   **Python:** The Python code across all Django apps (home, products, cart, orders, profiles, dashboard) was checked for adherence to PEP8 standards and potential errors using a linter (e.g., Flake8, Pylint, or an online tool like PEP8CI).
+    *   `[Add Notes or Sample Linter Results/Screenshots Here - No need for every file like before, maybe just a summary or link]`
+    * home/views.py: ![Image](https://github.com/user-attachments/assets/c725dc4f-28a2-489d-bad4-6bd1c927947c)
+    * home/urls.py: ![Image](https://github.com/user-attachments/assets/64bae44e-f5f2-4f97-af06-ba28c2ee1547)
+    * home/tests.py: ![Image](https://github.com/user-attachments/assets/8eed00a3-68e9-4e86-90b7-f81bd8168605)
+    * home/forms.py: ![Image](https://github.com/user-attachments/assets/8ede21d4-7824-4f5c-8b00-2e5465a9b1c4)
+    * products/views.py: ![Image](https://github.com/user-attachments/assets/591e1dd9-ce14-4581-a692-3b08b87b5758)
+    * products/urls.py: ![Image](https://github.com/user-attachments/assets/80cd9b22-d4c9-4ca6-b853-5ad147e32041)
+    * products/models.py: ![Image](https://github.com/user-attachments/assets/001fbd46-7ebd-4bdd-ab95-5bfd806b0d02)
+    * products/forms.py: ![Image](https://github.com/user-attachments/assets/044d8577-0180-45af-b917-8ba18a359a54)
+    * products/apps.py: ![Image](https://github.com/user-attachments/assets/009b2615-b033-4883-b30e-f10e82be2b7d)
+    * products/admin.py: ![Image](https://github.com/user-attachments/assets/e5032432-50cd-4cfc-b719-a87324b72235)
+    * cart/views.py: ![Image](https://github.com/user-attachments/assets/a1806530-1744-4a56-ba21-0d0a119fc2e3)
+    * cart/urls.py: ![Image](https://github.com/user-attachments/assets/57cc76de-00d9-46a8-9276-37b5a1268dab)
+    * cart/signals.py: ![Image](https://github.com/user-attachments/assets/28c5ec5b-9556-435d-aba7-e40f76f33c54)
+    * cart/models.py: ![Image](https://github.com/user-attachments/assets/06ce90cc-506c-45db-8356-7138217f9e3b)
+    * cart/context_processors.py: ![Image](https://github.com/user-attachments/assets/12914e38-70bb-48d9-806b-20aecb652b5d)
+    * cart/apps.py: ![Image](https://github.com/user-attachments/assets/28c4ccb4-285f-4eb7-bd16-9aecc48129b7)
+    * cart/admin.py: ![Image](https://github.com/user-attachments/assets/c1dc8c2c-caa3-4b83-95cd-a51b38f8c2a1)
+    * orders/webhooks.py: ![Image](https://github.com/user-attachments/assets/d4f5448e-81aa-40d8-aad8-65aa68bdb1ce)
+    * orders/views.py: ![Image](https://github.com/user-attachments/assets/86cc0159-c438-4156-b04a-d67c59af1b94)
+    * orders/urls.py: ![Image](https://github.com/user-attachments/assets/550ffffc-0eeb-43f7-8c8c-c202f0ce0385)
+    * orders/models.py: ![Image](https://github.com/user-attachments/assets/7724335d-15dd-4421-91bc-1067c5503c68)
+    * orders/forms.py: ![Image](https://github.com/user-attachments/assets/421fa90c-2a12-4078-901b-f97b217fb409)
+    * orders/emails.py: ![Image](https://github.com/user-attachments/assets/9f33ca56-ffe5-43e6-8eb5-bad0f626dfb1)
+    * orders/context_processors.py: ![Image](https://github.com/user-attachments/assets/0460f1c7-afd5-4561-90b3-45bbdf1679a7)
+    * orders/apps.py: ![Image](https://github.com/user-attachments/assets/e921fbe5-b172-4708-89f0-70093e55f592)
+    * orders/admin.py: ![Image](https://github.com/user-attachments/assets/546d0079-e8b1-48a4-b07a-4d7daaa4caa6)
+    * profiles/views.py: ![Image](https://github.com/user-attachments/assets/3cb08fd1-ac0c-456b-9c3f-46fdc94a82c3)
+    * profiles/urls.py: ![Image](https://github.com/user-attachments/assets/9e564886-8d80-405f-8995-8a20ed24310c)
+    * profiles/models.py: ![Image](https://github.com/user-attachments/assets/6a9a843a-100b-4aee-b604-53e30384ef74)
+    * profiles/forms.py: ![Image](https://github.com/user-attachments/assets/c626dbba-dcce-4d8b-a093-930caf6d3fc9)
+    * profiles/apps.py: ![Image](https://github.com/user-attachments/assets/b62c8144-04e4-4e16-bb9f-1b973dcd79d0)
+    * profiles/admin.py: ![Image](https://github.com/user-attachments/assets/578594b7-7fd5-4461-96a5-5c674f4a27de)
+    * dashboard/views.py: ![Image](https://github.com/user-attachments/assets/a108bc19-9c87-4ff4-9322-d65322c2c6a1)
+    * dashboard/urls.py: ![Image](https://github.com/user-attachments/assets/69a724ff-2c67-4438-8677-32fa7886a32d)
+    * dashboard/forms.py: ![Image](https://github.com/user-attachments/assets/78f65613-aa26-4f7a-ba3c-0c6d30cdf1df)
+    * dashboard/apps.py: ![Image](https://github.com/user-attachments/assets/61010f81-0c7e-4d7f-bc6f-2362f87884c5)
+    * urls.py: ![Image](https://github.com/user-attachments/assets/9e92e374-ed82-4d3b-b590-e8859cb23add)
+ 
+
+* **JavaScript:** All custom JavaScript files (`script.js`, `checkout.js`, `stripe_elements.js`, etc.) were checked using a linter like JSHint or ESLint to ensure code quality and identify potential issues.
+    * statistics_chart.js: ![Image](https://github.com/user-attachments/assets/49194b8d-1ea4-4368-871d-3b5335a3d9f6)
+    * script.js: ![Image](https://github.com/user-attachments/assets/5d82ebf7-7742-4ea7-8669-15670535b67d)
+    * product)spec_formset.js: ![Image](https://github.com/user-attachments/assets/65e47a41-db20-4dff-897d-f6b182bdaa03)
+    * product_rating.js: ![Image](https://github.com/user-attachments/assets/6e1b3f13-7a77-4580-ac91-e7e8420ba270)
+    * payment.js: ![Image](https://github.com/user-attachments/assets/8fb2a21a-c503-41ed-8cac-2792ff1feda2)
+    * mailchimp_ajax.js: ![Image](https://github.com/user-attachments/assets/764a9393-3f31-47f9-a630-f4f284d69784)
+    * dashboard_overview.js: ![Image](https://github.com/user-attachments/assets/d9639c83-c952-4424-aa48-fce366f1ffc1)
+    * checkout.js: ![Image](https://github.com/user-attachments/assets/67da5c60-9005-4511-bcc8-d2f2068acf8b)
+
+### Manual & Browser Testing
+
+Manual testing was performed throughout the development process to ensure core user flows work as expected:
+
+*   Browsing products, searching, sorting, and filtering.
+*   Adding/removing items from the cart (guest and logged-in).
+*   Completing the checkout process.
+*   Submitting product reviews.
+*   Using the staff dashboard features (CRUD operations, status updates).
+*   User registration, login, and logout.
+
+The application was tested on the following browsers to ensure cross-browser compatibility:
+
+*   Google Chrome (Latest Version)
+*   Mozilla Firefox (Latest Version)
+
+Responsiveness was checked using browser developer tools across various common screen sizes (mobile, tablet, desktop).
 
 ---
 
