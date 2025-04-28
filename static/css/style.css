@@ -6,7 +6,7 @@
 
 :root {
     --primary-background: #198754;
-    --secondary-background: #3F9950;
+    --secondary-background: #3f9950;
     --tertiary-background: #c5e1d4;
     --primary-text: #303030;
     --secondary-text: #d4d4d4;
@@ -21,7 +21,6 @@
     --sidebar-width: 300px;
 }
 
-
 body {
     display: flex;
     flex-direction: column;
@@ -35,7 +34,6 @@ body {
     height: 100vh;
 }
 
-
 #logo-text {
     font-size: 1.3rem;
 }
@@ -48,7 +46,6 @@ body {
     width: 200vw;
     transition: transform 0.3s ease;
 }
-
 
 #pageContainer {
     display: flex;
@@ -70,8 +67,6 @@ body {
         transition: transform 0.3s ease !important;
     }
 }
-
-
 
 .hero-section {
     position: relative;
@@ -96,16 +91,14 @@ body {
 .hero-content {
     position: relative;
     padding: 2rem 1rem;
-    text-align: center; 
+    text-align: center;
 }
-
 
 #chatContainer,
 #cartSidebarContainer,
 #profileSidebarContainer {
     scrollbar-color: transparent transparent;
 }
-
 
 .sidebar-open {
     width: var(--sidebar-width) !important;
@@ -119,7 +112,7 @@ body {
     margin-right: var(--sidebar-width) !important;
 }
 
-.sidebar-width{
+.sidebar-width {
     width: var(--sidebar-width);
 }
 
@@ -169,11 +162,9 @@ a > i {
     transform: rotate(180deg);
 }
 
-
 #id_password1_helptext {
     display: none;
 }
-
 
 .btn.btn-primary {
     background-color: var(--primary-background);
@@ -235,15 +226,14 @@ a > i {
     }
 }
 
-
-
 .form-control,
 .form-select {
     line-height: 1.8;
     border-radius: 0;
     border: 1px solid transparent !important;
     border-bottom: 1px solid var(--accent) !important;
-    transition-property: transform, background-color, border, box-shadow, border-radius;
+    transition-property: transform, background-color, border, box-shadow,
+        border-radius;
     transition-delay: 0s;
     transition-duration: 0.3s;
     transition-timing-function: ease-in-out;
@@ -270,7 +260,6 @@ a > i {
     }
 }
 
-
 .form-check-input {
     border-color: var(--accent);
 
@@ -296,8 +285,6 @@ a > i {
 .tertiary-bg {
     background-color: var(--tertiary-background);
 }
-
-
 
 .shadow-normal {
     box-shadow: var(--box-shadow-normal);
@@ -356,7 +343,8 @@ a > i {
     gap: 6px;
     padding: 3px;
 
-    & a, span {
+    & a,
+    span {
         display: inline-block;
         padding: 8px 12px;
         margin: 0;
@@ -394,7 +382,6 @@ a > i {
     cursor: default;
 }
 
-
 .featured-products-container {
     display: flex;
     gap: 16px;
@@ -409,13 +396,11 @@ a > i {
     }
 }
 
-
 .hide-card-footer {
     & .card-footer {
         display: none;
     }
 }
-
 
 .primary-dropdown {
     border: none;
@@ -433,7 +418,6 @@ a > i {
         color: white;
     }
 }
-
 
 .dropdown-item {
     color: var(--primary-text);
@@ -486,7 +470,6 @@ a > i {
     opacity: 1;
 }
 
-
 #dashboardButtonGroup a {
     background-color: var(--tertiary-background);
     border: none;
@@ -510,7 +493,6 @@ a > i {
 .form-control.d-flex.h-auto {
     border: none;
 }
-
 
 .chart-container {
     position: relative;
@@ -548,7 +530,6 @@ a > i {
     display: none;
 }
 
-
 .four-o-three {
     background: url(../images/four_o_three.webp) no-repeat center center / cover;
 }
@@ -570,27 +551,23 @@ a > i {
     backdrop-filter: blur(20px);
 }
 
-
-
 @media screen and (min-width: 768px) {
     .nav-item {
         border-radius: unset;
         background-color: unset;
 
-        & .nav-link  {
+        & .nav-link {
             color: white;
         }
-    
+
         & .nav-link.active {
             border-radius: unset;
             color: white;
             /* font-weight: 900; */
             box-shadow: unset;
-            transform: scale(1.08) translate(0, 1px);
+            transform: scale(1.08);
         }
     }
-
-
 
     .hero-section {
         min-height: 50vh;
@@ -612,12 +589,7 @@ a > i {
         z-index: 3;
         margin-left: 16px;
         text-align: left;
-
     }
-
-
-
-
 
     #slideContainer {
         width: 100vw;
@@ -645,13 +617,12 @@ a > i {
 
     .featured-products-container {
         max-width: 400px;
-    
+
         & .card {
             max-width: 160px;
         }
     }
 }
-
 
 @media screen and (min-width: 992px) {
     .featured-products-container .card {
@@ -661,7 +632,6 @@ a > i {
     .hero-section p {
         font-size: 1.6rem;
     }
-
 }
 
 @media screen and (min-width: 1200px) {

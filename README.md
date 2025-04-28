@@ -120,7 +120,20 @@ To reach the target demographic, RaspiMobile would employ strategies focusing on
 
 ## Features
 
-<!-- Add detailed descriptions and screenshots/gifs for each feature below -->
+### Landing Page & Product Discovery
+The main landing page welcomes users and typically showcases a selection of **Featured Products** and **Top Rated** items, providing immediate visibility into popular and highly-regarded RaspiMobile devices and accessories. This encourages exploration right from the start.
+
+### Product Browsing, Search & Filtering
+Users can easily explore the full range of products through the dedicated Shop page. Key discovery features include:
+
+*   **Clear Grid Layout:** Products are presented in a clean, responsive grid, displaying essential information at a glance.
+*   **Product Search:** A prominent search bar in the header allows users to quickly find products by keywords (name, description, SKU, etc.). Search results are clearly indicated.
+*   **Category Filtering:** A dropdown menu enables users to filter the product list by specific categories (e.g., Tablets, Accessories).
+*   **Sorting Options:** Users can sort the displayed products by various criteria, including rating, price (low-high, high-low), and newest arrivals, using a dedicated sort dropdown.
+*   **Product Card Information:** Each product card displays the image, name, price (in Euros), average user rating (visual stars and numerical value), and a direct "Add to Cart" button.
+*   **Stock Availability:** Visual cues, like a "Low Stock" badge, inform customers about limited inventory for specific items.
+
+![Image](https://github.com/user-attachments/assets/cfc72923-5400-48e9-8f70-8c9f10e178f7)
 
 ### Site Navigation & Sidebar
 <!-- Describe the main navbar and the interactive sidebar (User, Cart) -->
