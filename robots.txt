@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /accounts/*
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /profiles/
+Disallow: /webhooks/
+Disallow: /webhooks/*
+Disallow: /webhooks/*/
+Sitemap: https://raspimobile-5d0ba24a84d8.herokuapp.com/sitemap.xml
