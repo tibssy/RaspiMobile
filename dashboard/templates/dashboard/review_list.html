@@ -88,29 +88,59 @@
         </div>
 
         {% if is_paginated %}
-        <div class="pagination justify-content-center mb-2">
+        <nav class="pagination justify-content-center mb-2" aria-label="Review list pagination">
             <span class="step-links">
-                 <a href="?page=1&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}">
-                    <i class="fa-solid fa-angles-left primary-fg"></i>
+                <a href="?page=1&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                   class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_previous %}disabled{% endif %}"
+                   aria-label="Go to first page">
+                    <i class="fa-solid fa-angles-left primary-fg" aria-hidden="true"></i>
                 </a>
-                 {% for page_number in page_obj.paginator.page_range %}
+
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                       class="arrow-button px-0 py-1 fs-5 me-2"
+                       aria-label="Go to previous page">
+                        <i class="fa-solid fa-angle-left primary-fg" aria-hidden="true"></i>
+                    </a>
+                {% else %}
+                     <span class="arrow-button px-0 py-1 fs-5 me-2 disabled" aria-hidden="true">
+                          <i class="fa-solid fa-angle-left primary-fg"></i>
+                     </span>
+                {% endif %}
+
+                {% for page_number in page_obj.paginator.page_range %}
                     {% if page_number == page_obj.number %}
-                        <span class="current-page-button">{{ page_number }}</span>
-                     {% elif page_number >= page_obj.number|add:-2 and page_number <= page_obj.number|add:2 %}
-                         <a href="?page={{ page_number }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="page-button">
+                        <span class="current-page-button" aria-current="page" aria-label="Current Page, Page {{ page_number }}">{{ page_number }}</span>
+                    {% elif page_number >= page_obj.number|add:"-2" and page_number <= page_obj.number|add:"2" %}
+                         <a href="?page={{ page_number }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                            class="page-button"
+                            aria-label="Go to page {{ page_number }}">
                             {{ page_number }}
                         </a>
-                    {% elif page_number == page_obj.paginator.num_pages|add:-4 and page_obj.number < page_obj.paginator.num_pages|add:-2 %}
-                         <span class="px-2">...</span>
-                    {% elif page_number == 4 and page_obj.number > 3 %}
-                          <span class="px-2">...</span>
-                     {% endif %}
+                    {% elif page_number == page_obj.number|add:"-3" or page_number == page_obj.number|add:"3" %}
+                         <span class="px-2 page-button-disabled" aria-hidden="true">...</span>
+                    {% endif %}
                 {% endfor %}
-                 <a href="?page={{ page_obj.paginator.num_pages }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}" class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}">
-                    <i class="fa-solid fa-angles-right primary-fg"></i>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                       class="arrow-button px-0 py-1 fs-5 ms-2"
+                       aria-label="Go to next page">
+                        <i class="fa-solid fa-angle-right primary-fg" aria-hidden="true"></i>
+                    </a>
+                 {% else %}
+                      <span class="arrow-button px-0 py-1 fs-5 ms-2 disabled" aria-hidden="true">
+                           <i class="fa-solid fa-angle-right primary-fg"></i>
+                      </span>
+                 {% endif %}
+
+                <a href="?page={{ page_obj.paginator.num_pages }}&status={{ current_status_filter|default:'pending' }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                   class="arrow-button px-0 py-1 fs-5 {% if not page_obj.has_next %}disabled{% endif %}"
+                   aria-label="Go to last page">
+                    <i class="fa-solid fa-angles-right primary-fg" aria-hidden="true"></i>
                 </a>
             </span>
-        </div>
+        </nav>
         {% endif %}
 
     {% else %}
