@@ -195,22 +195,22 @@ Registered users benefit from personalized features accessible via the sidebar:
 ![Image](https://github.com/user-attachments/assets/2fea4254-25af-4e36-bb7d-716cc2f2f389)
 
 
-### Staff Dashboard (Admin/Staff Only)
+### Staff Dashboard & Management Tools (Admin/Staff Only)
 A dedicated dashboard provides administrators and staff members with tools to manage the e-commerce site:
 
 *   **Centralized Management:** Offers quick navigation between different management sections (Overview, Products, Orders, Comments/Reviews, Statistics).
-*   **At-a-Glance Overview:** The main dashboard page displays key performance indicators ("Quick Stats") such as Total Products, Pending Orders, Pending Reviews, and Recent Sales figures.
-*   **Visual Analytics:** Includes charts powered by Chart.js for visualizing recent Sales Trends (line chart) and Order Status Distribution (doughnut chart).
-*   **Actionable Links:** Quick Stats cards provide direct links to relevant management pages (e.g., "Manage Products", "View Orders", "Moderate Reviews").
-*   *(Specific Management sections like Product CRUD, Order Status Updates, Review Approval, and detailed Statistics are available via the dashboard navigation.)*
+*   **At-a-Glance Overview:** The main dashboard page displays key performance indicators ("Quick Stats") such as Total Products, Pending Orders, Pending Reviews, and Recent Sales figures, along with visual charts for Sales Trends and Order Status Distribution.
+*   **Product Management (CRUD):**
+    *   **Product List View:** Displays a paginated list of all products with key details (image, name, SKU, price, stock, status, date added). Includes sorting options and a button to add new products.
+    *   **Edit Product Form:** Allows staff to modify all product details, including name, price, description, SKU, stock quantity, categories (checkbox selection), image upload (with preview and clear option), and status flags (Active/Featured). *(Product Specifications can also be managed here via an inline formset - implied by code but not fully visible in screenshot)*.
+    *   **Add/Delete:** Functionality exists to add new products and delete existing ones (*Delete action likely on edit page or list, Add button visible on list*).
+*   *(Order Management, Review Management, and Statistics sections provide further administrative capabilities.)*
 
 ![Image](https://github.com/user-attachments/assets/589a733b-33ba-43b7-aec0-e0ecec3a765c)
 
+![Image](https://github.com/user-attachments/assets/8bbb4f8f-59f1-41b6-b632-eb0f324a7ee2)
 
-
-
-
-
+![Image](https://github.com/user-attachments/assets/2ddba2cb-187d-48b9-83fb-7c4250f844c2)
 
 
 
