@@ -6,24 +6,30 @@
             <img src="{% static 'images/logo.webp' %}" alt="Site Logo" height="30" class="d-inline-block align-top">
             <span id="logo-text" class="text-white fw-bold ms-2">RaspiMobile</span>
         </a>
+
         <div class="d-flex d-md-none gap-2 ms-auto">
             {% if user.is_authenticated %}
-            <a class="icon-button rounded user-button sidebar-control">
-                <i class="fa-solid fa-user"></i>
-            </a>
+            <button class="icon-button rounded user-button sidebar-control" aria-label="Open user profile menu"
+                type="button">
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
+            </button>
             {% else %}
-            <a class="icon-button rounded" aria-current="page" href="{% url 'account_login' %}">
-                <i class="fa-solid fa-right-to-bracket"></i>
+            <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}">
+                <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
             </a>
             {% endif %}
-            <a class="icon-button rounded assistant-button sidebar-control d-none">
-                <!-- placeholder for chatbot -->
-                <i class="fa-solid fa-robot"></i>
-            </a>
-            <a class="icon-button rounded cart-button sidebar-control">
-                <i class="fa-solid fa-cart-shopping"></i>
-            </a>
+
+            <button class="icon-button rounded assistant-button sidebar-control d-none"
+                aria-label="Open AI assistant (feature coming soon)" type="button">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+            </button>
+
+            <button class="icon-button rounded cart-button sidebar-control" aria-label="Open shopping cart"
+                type="button">
+                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+            </button>
         </div>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa-solid fa-caret-down navbar-toggler-icon-rotate"></i>
@@ -50,32 +56,38 @@
                 </li>
                 {% endif %}
             </ul>
+
             <form class="d-flex flex-fill ps-md-2 ps-lg-4 ps-xl-5 mt-3 mb-2 my-md-0 position-relative"
                 action="{% url 'product_list' %}" method="get" role="search">
                 <input class="form-control rounded lh-base pe-5" type="search" placeholder="Search" name="q"
                     value="{{ search_term }}" aria-label="Search">
-                <button class="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 fs-5" type="submit">
-                    <i class="fa-solid fa-magnifying-glass primary-fg"></i>
+                <button class="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 fs-5" type="submit"
+                    aria-label="Submit search">
+                    <i class="fa-solid fa-magnifying-glass primary-fg" aria-hidden="true"></i>
                 </button>
             </form>
+
             <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
                 {% if user.is_authenticated %}
-                <a class="icon-button rounded user-button sidebar-control" data-carousel-index="0"
-                    data-control-group="user">
-                    <i class="fa-solid fa-user"></i>
-                </a>
+                <button class="icon-button rounded user-button sidebar-control" data-carousel-index="0"
+                    data-control-group="user" aria-label="Open user profile menu" type="button">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+                </button>
                 {% else %}
-                <a class="icon-button rounded" aria-current="page" href="{% url 'account_login' %}">
-                    <i class="fa-solid fa-right-to-bracket"></i>
+                <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}">
+                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
                 </a>
                 {% endif %}
-                <a class="icon-button rounded assistant-button sidebar-control d-none">
-                    <!-- placeholder for chatbot -->
-                    <i class="fa-solid fa-robot"></i>
-                </a>
-                <a class="icon-button rounded cart-button sidebar-control">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </a>
+
+                <button class="icon-button rounded assistant-button sidebar-control d-none"
+                    aria-label="Open AI assistant" type="button">
+                    <i class="fa-solid fa-robot" aria-hidden="true"></i>
+                </button>
+
+                <button class="icon-button rounded cart-button sidebar-control" aria-label="Open shopping cart"
+                    type="button">
+                    <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
     </div>
