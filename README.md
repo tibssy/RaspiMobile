@@ -195,22 +195,35 @@ Registered users benefit from personalized features accessible via the sidebar:
 ![Image](https://github.com/user-attachments/assets/2fea4254-25af-4e36-bb7d-716cc2f2f389)
 
 
+### Product Reviews & Sentiment Analysis
+Users can share their experiences by submitting product reviews:
+*   **Review Submission:** Logged-in users can leave a star rating (1-5) and a text comment on product detail pages.
+*   **Sentiment Analysis:** Submitted reviews undergo basic sentiment analysis (using VADER). Reviews detected as positive are automatically approved and published.
+*   **Moderation Queue:** Reviews detected as neutral or negative are held for manual moderation by staff.
+
 ### Staff Dashboard & Management Tools (Admin/Staff Only)
 A dedicated dashboard provides administrators and staff members with tools to manage the e-commerce site:
 
 *   **Centralized Management:** Offers quick navigation between different management sections (Overview, Products, Orders, Comments/Reviews, Statistics).
-*   **At-a-Glance Overview:** The main dashboard page displays key performance indicators ("Quick Stats") such as Total Products, Pending Orders, Pending Reviews, and Recent Sales figures, along with visual charts for Sales Trends and Order Status Distribution.
-*   **Product Management (CRUD):**
-    *   **Product List View:** Displays a paginated list of all products with key details (image, name, SKU, price, stock, status, date added). Includes sorting options and a button to add new products.
-    *   **Edit Product Form:** Allows staff to modify all product details, including name, price, description, SKU, stock quantity, categories (checkbox selection), image upload (with preview and clear option), and status flags (Active/Featured). *(Product Specifications can also be managed here via an inline formset - implied by code but not fully visible in screenshot)*.
-    *   **Add/Delete:** Functionality exists to add new products and delete existing ones (*Delete action likely on edit page or list, Add button visible on list*).
-*   *(Order Management, Review Management, and Statistics sections provide further administrative capabilities.)*
+*   **At-a-Glance Overview:** The main dashboard page displays key performance indicators ("Quick Stats") and visual charts for Sales Trends and Order Status Distribution.
+*   **Product Management (CRUD):** Provides tools to list, create, edit (including details, stock, status, categories, image, specifications), and delete products.
+*   **Review Management:** Allows filtering, sorting, and manual approval/unapproval of user-submitted product reviews, complementing the automatic sentiment analysis approval.
+*   **Detailed Statistics View:** A dedicated statistics page presents key business metrics visually using Chart.js:
+    *   **Sales Trend:** Line chart showing daily sales revenue over a selectable period.
+    *   **Order Volume:** Line chart showing the number of orders placed daily over a selectable period.
+    *   **Top Selling Products:** Horizontal bar chart displaying the top 10 products by total revenue generated over a selectable period.
+    *   **Dynamic Date Range:** Each chart includes controls (e.g., dropdown) allowing staff to view data for different timeframes (Last 10 Days, Last 30 Days, All Time). Data is updated dynamically via AJAX.
+*   *(Order Management features include viewing orders and updating their status.)*
 
 ![Image](https://github.com/user-attachments/assets/589a733b-33ba-43b7-aec0-e0ecec3a765c)
 
+![Image](https://github.com/user-attachments/assets/2ddba2cb-187d-48b9-83fb-7c4250f844c2)
+
 ![Image](https://github.com/user-attachments/assets/8bbb4f8f-59f1-41b6-b632-eb0f324a7ee2)
 
-![Image](https://github.com/user-attachments/assets/2ddba2cb-187d-48b9-83fb-7c4250f844c2)
+![Image](https://github.com/user-attachments/assets/b82da4df-082d-4200-834f-31b8112acbff)
+
+![Image](https://github.com/user-attachments/assets/75406c67-cf6b-4370-a566-f15669b57030)
 
 
 
