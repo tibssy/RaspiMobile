@@ -10,22 +10,24 @@
         <div class="d-flex d-md-none gap-2 ms-auto">
             {% if user.is_authenticated %}
             <button class="icon-button rounded user-button sidebar-control" aria-label="Open user profile menu"
-                type="button">
+                type="button" data-bs-toggle="tooltip" title="Profile">
                 <i class="fa-solid fa-user" aria-hidden="true"></i>
             </button>
             {% else %}
-            <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}">
+            <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}" data-bs-toggle="tooltip"
+                title="Login">
                 <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
             </a>
             {% endif %}
 
             <button class="icon-button rounded assistant-button sidebar-control d-none"
-                aria-label="Open AI assistant (feature coming soon)" type="button">
+                aria-label="Open AI assistant (coming soon)" type="button" data-bs-toggle="tooltip"
+                title="AI Assistant (coming soon)">
                 <i class="fa-solid fa-robot" aria-hidden="true"></i>
             </button>
 
             <button class="icon-button rounded cart-button sidebar-control" aria-label="Open shopping cart"
-                type="button">
+                type="button" data-bs-toggle="tooltip" title="Cart">
                 <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
             </button>
         </div>
@@ -62,7 +64,7 @@
                 <input class="form-control rounded lh-base pe-5" type="search" placeholder="Search" name="q"
                     value="{{ search_term }}" aria-label="Search">
                 <button class="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0 fs-5" type="submit"
-                    aria-label="Submit search">
+                    aria-label="Submit search" data-bs-toggle="tooltip" title="Search">
                     <i class="fa-solid fa-magnifying-glass primary-fg" aria-hidden="true"></i>
                 </button>
             </form>
@@ -70,22 +72,24 @@
             <div class="d-none d-md-flex gap-2 justify-content-end sidebar-width">
                 {% if user.is_authenticated %}
                 <button class="icon-button rounded user-button sidebar-control" data-carousel-index="0"
-                    data-control-group="user" aria-label="Open user profile menu" type="button">
+                    data-control-group="user" aria-label="Open user profile menu" type="button" data-bs-toggle="tooltip"
+                    title="Profile">
                     <i class="fa-solid fa-user" aria-hidden="true"></i>
                 </button>
                 {% else %}
-                <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}">
+                <a class="icon-button rounded" aria-label="Login" href="{% url 'account_login' %}"
+                    data-bs-toggle="tooltip" title="Login">
                     <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
                 </a>
                 {% endif %}
 
                 <button class="icon-button rounded assistant-button sidebar-control d-none"
-                    aria-label="Open AI assistant" type="button">
+                    aria-label="Open AI assistant" type="button" data-bs-toggle="tooltip" title="AI Assistant">
                     <i class="fa-solid fa-robot" aria-hidden="true"></i>
                 </button>
 
                 <button class="icon-button rounded cart-button sidebar-control" aria-label="Open shopping cart"
-                    type="button">
+                    type="button" data-bs-toggle="tooltip" title="Cart">
                     <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
                 </button>
             </div>
