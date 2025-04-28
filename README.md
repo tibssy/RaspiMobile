@@ -496,7 +496,6 @@ Before deploying to Heroku, the following configurations were essential:
 
 This configured deployment ensures the Django application, its dependencies, database, static files, and sensitive settings are correctly handled in the Heroku production environment.
 
-
 ---
 
 ## Credits
@@ -523,6 +522,11 @@ This configured deployment ensures the Django application, its dependencies, dat
     - GIMP (for image editing)
     - GitHub (for version control)
     - Pycharm Community Edition (for write code)
+    - Bootstrap (for responsive design)
+    - Google Fonts (for fonts)
+    - StackOverflow (for coding help)
+    - W3Schools (for coding help)
+    - ChatGPT (for text content generation)
 
 ---
 
