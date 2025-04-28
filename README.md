@@ -433,7 +433,8 @@ Responsiveness was checked using browser developer tools across various common s
 
 This project is deployed on **Heroku**. The live application can be accessed here:
 
-#### [Visit RaspiMobile Deployed Site](link-to-your-deployed-site) <!-- Update this link -->
+#### [Visit RaspiMobile Deployed Site](https://raspimobile-5d0ba24a84d8.herokuapp.com/)
+
 
 ### Platform Choice
 
@@ -495,7 +496,6 @@ Before deploying to Heroku, the following configurations were essential:
 
 This configured deployment ensures the Django application, its dependencies, database, static files, and sensitive settings are correctly handled in the Heroku production environment.
 
-#### [Visit RaspiMobile Deployed Site](https://raspimobile-5d0ba24a84d8.herokuapp.com/)
 
 ---
 
