@@ -156,9 +156,32 @@ The site features an interactive sidebar providing quick access to key functions
 *   **Clear Next Steps:** Buttons like "View Cart & Checkout" guide the user forward in the purchase process.
 *   *(Other Sidebar Sections: The sidebar also contains sections for User Profile/Orders and potentially an AI Assistant, accessible via header icons.)*
 
-
-
 ![Image](https://github.com/user-attachments/assets/b2fa4722-d4db-48a9-8aa5-70f0cbe2cc5f)
+
+
+### Streamlined Checkout Process
+The checkout page provides a clear, two-column layout for finalizing orders:
+
+*   **Shipping Information Form:** Collects necessary delivery details, including full name, email, phone (optional), address lines, city, state/province, zipcode, and country. Required fields are clearly marked.
+*   **Order Summary:** Displays a breakdown of the items in the cart, including quantities and individual prices.
+*   **Cost Calculation:** Clearly shows the Subtotal, Delivery cost, and the final Total amount.
+*   **Delivery Options:** Allows users to select their preferred delivery method (e.g., DHL shown) from available options using radio buttons. Costs are dynamically updated (*based on JS code*).
+*   **Client-Side Validation:** Input fields include basic validation (like required fields indicated by red outline and icon) to catch errors before submission.
+
+![Image](https://github.com/user-attachments/assets/aadd5afd-8262-49bd-8a74-1f4575c4d761)
+
+
+### Secure Payment Integration (Stripe)
+Payment processing is handled securely and efficiently using Stripe Elements:
+
+*   **Multiple Payment Methods:** Offers various payment options via Stripe (Card, EPS, Klarna, Bancontact shown as examples) presented in convenient tabs.
+*   **Embedded Payment Form:** Stripe Elements provides a secure, PCI-compliant embedded form directly on the page for collecting card details (number, expiry, CVC) and other payment method information.
+*   **Order Summary Review:** A final order summary (items, quantities, costs, total) and the shipping address are clearly displayed alongside the payment form for final review.
+*   **Clear Payment Button:** A "Pay Now" button prominently displays the final amount to be charged.
+*   **Navigation:** A link allows users to return to the previous checkout details step if needed.
+
+![Image](https://github.com/user-attachments/assets/dc49c0fe-1511-418b-8f1a-d3ba14fd297a)
+
 
 ### Site Navigation & Sidebar
 <!-- Describe the main navbar and the interactive sidebar (User, Cart) -->
