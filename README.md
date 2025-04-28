@@ -27,6 +27,7 @@ Our vision is to foster a mobile technology landscape that prioritizes user free
 ## Table of Contents
 
 - [User Experience](#user-experience)
+- [E-commerce Business Model](#e-commerce-business-model)
 - [Features](#features)
 - [Design](#design)
 - [Technical Details / Solutions](#technical-details--solutions)
@@ -40,16 +41,82 @@ Our vision is to foster a mobile technology landscape that prioritizes user free
 ## User Experience
 
 ### Ideal User Demographic
-<!-- Describe who the target users are (e.g., tech enthusiasts, privacy-focused individuals, tinkerers) -->
+
+RaspiMobile is designed for individuals who value control, longevity, and customization in their technology. Our ideal users include:
+
+-   **Tech Enthusiasts & Hobbyists:** Users interested in the underlying technology (Raspberry Pi), tinkering, and exploring different software possibilities.
+-   **Privacy-Conscious Individuals:** People seeking alternatives to mainstream mobile devices with more control over their data and software.
+-   **Developers & IT Professionals:** Those who appreciate open platforms and might want to develop for or customize their devices extensively.
+-   **Advocates for Sustainability:** Users looking for durable, repairable, and upgradable devices to combat e-waste and planned obsolescence.
+-   **Linux Users:** Individuals who prefer running Linux distributions on their mobile devices.
+-   **Educators & Students:** Those using Raspberry Pi platforms for learning and projects who desire a mobile extension.
 
 ### User Goals
-<!-- List what users want to achieve by using the site (e.g., purchase unique hardware, find accessories, manage orders, leave reviews) -->
+
+When visiting the RaspiMobile site, users typically aim to:
+
+-   **As a potential customer, I want to:**
+    -   Understand the unique benefits of RaspiMobile devices (modularity, OS choice, longevity).
+    *   Browse the available tablets, phones, and accessories.
+    *   View detailed product specifications, images, and descriptions.
+    *   Read reviews from other users to gauge product quality and experience.
+    *   Compare different product models or configurations.
+    *   Easily add desired products to my shopping cart.
+    *   Navigate a clear and secure checkout process.
+    *   Understand the available delivery options and costs.
+-   **As a registered customer, I want to:**
+    *   Log in securely to my account.
+    *   View my past order history and check the status of current orders.
+    *   Manage my saved shipping address(es).
+    *   Submit reviews for products I have purchased.
+    *   Update my profile information (if applicable beyond address).
+    *   Easily access customer support or contact information.
+-   **As a site visitor, I want to:**
+    *   Learn more about the RaspiMobile mission and philosophy (About page).
+    *   Find answers to common questions (potentially via FAQ or support section - *feature not explicitly shown but implied goal*).
+    *   Subscribe to a newsletter for updates and offers.
 
 ### User Stories:
-<!-- Link to or list key user stories if available -->
-<!-- [View User Stories Here](link-to-user-stories) -->
+Detailed User Stories outlining specific user journeys and feature requirements were considered during development to ensure the platform meets the needs of its target audience effectively.
+
+[View User Stories Here](https://github.com/users/tibssy/projects/6/views/1)
 
 ---
+
+## E-commerce Business Model
+
+### Necessity and Focus
+
+RaspiMobile operates primarily under a **Business-to-Consumer (B2C)** e-commerce model. The core necessity for this online platform is to serve as the **direct sales channel** for our unique Raspberry Pi-based tablets, phones, and accessories. By selling directly to end-users, we can:
+
+1.  **Control the Narrative:** Effectively communicate the value proposition of modularity, longevity, user control, and open-source software options directly to the target audience.
+2.  **Manage Inventory & Pricing:** Efficiently manage stock levels (potentially enhanced by the mentioned "AI inventory" concept, though not detailed in the provided code) and maintain control over pricing strategy.
+3.  **Build Customer Relationships:** Foster a direct relationship with customers for support, feedback, and community building around the products.
+4.  **Reach a Niche Market:** Directly target the specific demographic interested in Raspberry Pi, Linux, open hardware, and sustainable technology, which might be harder to reach effectively through traditional retail channels.
+
+While future B2B possibilities could exist (e.g., bulk educational sales), the current application structure and user flow are focused on individual consumer purchases.
+
+### Core Business Intents
+
+The primary business intents for the RaspiMobile e-commerce platform are:
+
+1.  **Generate Revenue:** Directly sell RaspiMobile hardware (tablets, phones) and accessories.
+2.  **Promote Brand Philosophy:** Showcase the commitment to "True Device Freedom," modularity, sustainability, and user control as key differentiators.
+3.  **Educate Consumers:** Inform potential buyers about the benefits and capabilities of Raspberry Pi Compute Module-based devices and the choice of operating systems.
+4.  **Build Community (Implied):** Create a space where users can potentially share experiences (through reviews initially) and feel part of a movement against planned obsolescence.
+5.  **Gather Feedback:** Use reviews and potentially other interaction channels to improve products and services.
+
+### Marketing Strategies
+
+To reach the target demographic, RaspiMobile would employ strategies focusing on its unique selling points:
+
+1.  **Content Marketing:** Creating blog posts, tutorials, and videos showcasing the capabilities, customization options, and repairability of RaspiMobile devices (targeting Raspberry Pi, Linux, and DIY communities).
+2.  **Community Engagement:** Participating in relevant online forums, subreddits (like r/raspberry_pi, r/linux), and potentially sponsoring related open-source projects or events.
+3.  **Search Engine Optimization (SEO):** Optimizing product pages and content for keywords related to "Raspberry Pi tablet," "modular phone," "Linux phone," "repairable tablet," etc.
+4.  **Social Media Marketing:** Targeting platforms frequented by tech enthusiasts (e.g., Facebook, specific tech groups on other platforms, potentially YouTube) with content highlighting the devices' features and philosophy.
+5.  **Influencer Collaboration:** Partnering with tech reviewers and influencers within the Raspberry Pi and open-source communities.
+6.  **Email Marketing:** Building a newsletter list (via the Mailchimp integration) to announce new products, software updates, and special offers.
+
 
 ## Features
 
