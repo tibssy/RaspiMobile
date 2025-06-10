@@ -256,7 +256,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Home Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/247aa8a8-531b-4e31-b9f2-89e1d3a3c2d3">
+<img src="https://github.com/user-attachments/assets/247aa8a8-531b-4e31-b9f2-89e1d3a3c2d3" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -265,7 +265,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>About Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/4b9195b9-4827-4d10-920f-3c0533cbb4bd">
+<img src="https://github.com/user-attachments/assets/4b9195b9-4827-4d10-920f-3c0533cbb4bd" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -274,11 +274,11 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Shop Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/10ca7e2b-a490-43f5-b303-920cd6abe355">
+<img src="https://github.com/user-attachments/assets/10ca7e2b-a490-43f5-b303-920cd6abe355" width="360" style="max-width: 100%;">
 </details>
 <details>
 <summary>Navbar - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/eede6957-9644-459e-9381-a8d3fce2a10c">
+<img src="https://github.com/user-attachments/assets/eede6957-9644-459e-9381-a8d3fce2a10c" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -287,7 +287,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Product Details - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/9b475644-9622-453d-b42b-4aa9596e977a">
+<img src="https://github.com/user-attachments/assets/9b475644-9622-453d-b42b-4aa9596e977a" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -296,7 +296,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Shopping Cart - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/179dd0b2-b621-4e86-8a87-4cd890f200ef">
+<img src="https://github.com/user-attachments/assets/179dd0b2-b621-4e86-8a87-4cd890f200ef" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -305,7 +305,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Checkout Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/e5866272-37f2-4ec8-9a6e-9c94090e6154">
+<img src="https://github.com/user-attachments/assets/e5866272-37f2-4ec8-9a6e-9c94090e6154" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -314,7 +314,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Payment Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/22cfaff5-44bb-4463-86f6-1ca98cc288fe">
+<img src="https://github.com/user-attachments/assets/22cfaff5-44bb-4463-86f6-1ca98cc288fe" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -323,11 +323,11 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Order Confirmation Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/2c3d1989-28b3-47eb-b192-6cc2ac047ae0">
+<img src="https://github.com/user-attachments/assets/2c3d1989-28b3-47eb-b192-6cc2ac047ae0" width="360" style="max-width: 100%;">
 </details>
 <details>
 <summary>Order History - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/f63ca75d-e35b-45be-8d20-8a0cbdea62d0">
+<img src="https://github.com/user-attachments/assets/f63ca75d-e35b-45be-8d20-8a0cbdea62d0" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -336,7 +336,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Manage Profile Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/fe58f29d-f2bc-485c-9337-b189bc51fb2f">
+<img src="https://github.com/user-attachments/assets/fe58f29d-f2bc-485c-9337-b189bc51fb2f" width="360" style="max-width: 100%;">
 </details>
 
 #### Dashboard for Admin/Staff:
@@ -347,7 +347,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Overview Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/a9db4a0d-7a24-49ef-a4f7-c7d04f92b165">
+<img src="https://github.com/user-attachments/assets/a9db4a0d-7a24-49ef-a4f7-c7d04f92b165" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -356,7 +356,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Products Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/0e4f082e-406a-44a2-9b82-958bef455594">
+<img src="https://github.com/user-attachments/assets/0e4f082e-406a-44a2-9b82-958bef455594" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -365,7 +365,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Add/Edit Products Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/e19062be-7b77-4c2c-8627-4d9986c3d7a4">
+<img src="https://github.com/user-attachments/assets/e19062be-7b77-4c2c-8627-4d9986c3d7a4" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -374,7 +374,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Orders Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/12462f2d-c96d-4052-bd29-13a15dff6aa2">
+<img src="https://github.com/user-attachments/assets/12462f2d-c96d-4052-bd29-13a15dff6aa2" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -383,7 +383,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Comments Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/8d600754-262b-4f77-a06e-77e3647120b7">
+<img src="https://github.com/user-attachments/assets/8d600754-262b-4f77-a06e-77e3647120b7" width="360" style="max-width: 100%;">
 </details>
 
 <details>
@@ -392,7 +392,7 @@ The wireframes were created using [Draw.io](https://www.draw.io/), a free and ve
 </details>
 <details>
 <summary>Dashboard Statistics Page - Mobile</summary>
-<img src="https://github.com/user-attachments/assets/149c1ca5-0dbe-4e00-99c9-3872ed63b73b">
+<img src="https://github.com/user-attachments/assets/149c1ca5-0dbe-4e00-99c9-3872ed63b73b" width="360" style="max-width: 100%;">
 </details>
 
 
