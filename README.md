@@ -238,6 +238,164 @@ A dedicated dashboard provides administrators and staff members with tools to ma
 
 The visual design of RaspiMobile aims for a clean, modern, and functional aesthetic that reflects its tech-focused product offering while ensuring a user-friendly experience.
 
+### Wireframes
+
+Prior to visual design and development, detailed wireframes were created to define the layout, content hierarchy, and user flow for key pages within the RaspiMobile e-commerce platform. These wireframes served as blueprints for the user interface, ensuring a consistent and intuitive experience across the site.
+
+The wireframes were created using [Draw.io](https://www.draw.io/), a free and versatile online diagramming tool. Draw.io allowed for rapid prototyping and easy collaboration during the design phase.  The wireframes focus on:
+
+*   Defining the structure and placement of key elements (navigation, product listings, forms, etc.).
+*   Illustrating user flows through the application (e.g., browsing to checkout).
+*   Ensuring a clear and logical information architecture.
+
+#### Pages for all users:
+
+<details>
+<summary>Home Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/6cd8bf8a-ceb8-41fd-a9a9-4d28fdfb62e3">
+</details>
+<details>
+<summary>Home Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/247aa8a8-531b-4e31-b9f2-89e1d3a3c2d3">
+</details>
+
+<details>
+<summary>About Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/29d9459f-06c8-4da3-930f-10cf880548eb">
+</details>
+<details>
+<summary>About Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/4b9195b9-4827-4d10-920f-3c0533cbb4bd">
+</details>
+
+<details>
+<summary>Shop Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/fd9a5b78-70fd-49db-93fd-62f0192de386">
+</details>
+<details>
+<summary>Shop Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/10ca7e2b-a490-43f5-b303-920cd6abe355">
+</details>
+<details>
+<summary>Navbar - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/eede6957-9644-459e-9381-a8d3fce2a10c">
+</details>
+
+<details>
+<summary>Product Details Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/2cc03f41-1b9b-4965-b84f-7c45ab29007a">
+</details>
+<details>
+<summary>Product Details - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/9b475644-9622-453d-b42b-4aa9596e977a">
+</details>
+
+<details>
+<summary>Shopping Cart - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/a18c2000-6fa9-4ea0-948f-00cd7234484e">
+</details>
+<details>
+<summary>Shopping Cart - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/179dd0b2-b621-4e86-8a87-4cd890f200ef">
+</details>
+
+<details>
+<summary>Checkout Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/a1db90c4-9947-46a2-9be4-15cd23fcd7bd">
+</details>
+<details>
+<summary>Checkout Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/e5866272-37f2-4ec8-9a6e-9c94090e6154">
+</details>
+
+<details>
+<summary>Payment Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/e7cb7896-ac91-4b78-9878-7d91e63ed34f">
+</details>
+<details>
+<summary>Payment Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/22cfaff5-44bb-4463-86f6-1ca98cc288fe">
+</details>
+
+<details>
+<summary>Order Confirmation Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/875162ab-9938-412d-8cf3-00beb578b57d">
+</details>
+<details>
+<summary>Order Confirmation Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/2c3d1989-28b3-47eb-b192-6cc2ac047ae0">
+</details>
+<details>
+<summary>Order History - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/f63ca75d-e35b-45be-8d20-8a0cbdea62d0">
+</details>
+
+<details>
+<summary>Manage Profile Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/f0cd084b-bb77-4657-a2f9-286c15e5bae0">
+</details>
+<details>
+<summary>Manage Profile Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/fe58f29d-f2bc-485c-9337-b189bc51fb2f">
+</details>
+
+#### Dashboard for Admin/Staff:
+
+<details>
+<summary>Dashboard Overview Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/b6a6cd79-ba4b-4322-8599-44a2165a7873">
+</details>
+<details>
+<summary>Dashboard Overview Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/a9db4a0d-7a24-49ef-a4f7-c7d04f92b165">
+</details>
+
+<details>
+<summary>Dashboard Products Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/5ca8399d-bdc1-4015-a5e3-97ebd4a4d6c4">
+</details>
+<details>
+<summary>Dashboard Products Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/0e4f082e-406a-44a2-9b82-958bef455594">
+</details>
+
+<details>
+<summary>Dashboard Add/Edit Product Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/14b83220-a808-497a-8f50-65826be04d08">
+</details>
+<details>
+<summary>Dashboard Add/Edit Products Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/e19062be-7b77-4c2c-8627-4d9986c3d7a4">
+</details>
+
+<details>
+<summary>Dashboard Orders Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/749ef2bf-b1d7-40ae-b3de-cff58e120e72">
+</details>
+<details>
+<summary>Dashboard Orders Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/12462f2d-c96d-4052-bd29-13a15dff6aa2">
+</details>
+
+<details>
+<summary>Dashboard Comments Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/a7ad240b-0a87-4c1c-9a8e-1d345d2dc79b">
+</details>
+<details>
+<summary>Dashboard Comments Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/8d600754-262b-4f77-a06e-77e3647120b7">
+</details>
+
+<details>
+<summary>Dashboard Statistics Page - Desktop</summary>
+<img src="https://github.com/user-attachments/assets/c7c4d62c-1db0-4502-b45d-bbba46d4f9c4">
+</details>
+<details>
+<summary>Dashboard Statistics Page - Mobile</summary>
+<img src="https://github.com/user-attachments/assets/149c1ca5-0dbe-4e00-99c9-3872ed63b73b">
+</details>
+
+
 ### Color Palette
 
 *   **Primary Color:** A distinct green (`#45c95d`, `#198754`) is used consistently across headers, footers, buttons, active states, and highlights, establishing a strong brand identity.
@@ -359,7 +517,6 @@ Google Lighthouse was used extensively to audit key pages (including Home, Produ
 ### Code Validation (Linters)
 
 *   **Python:** The Python code across all Django apps (home, products, cart, orders, profiles, dashboard) was checked for adherence to PEP8 standards and potential errors using a linter (e.g., Flake8, Pylint, or an online tool like PEP8CI).
-    *   `[Add Notes or Sample Linter Results/Screenshots Here - No need for every file like before, maybe just a summary or link]`
     * home/views.py: ![Image](https://github.com/user-attachments/assets/c725dc4f-28a2-489d-bad4-6bd1c927947c)
     * home/urls.py: ![Image](https://github.com/user-attachments/assets/64bae44e-f5f2-4f97-af06-ba28c2ee1547)
     * home/tests.py: ![Image](https://github.com/user-attachments/assets/8eed00a3-68e9-4e86-90b7-f81bd8168605)
@@ -503,7 +660,7 @@ This configured deployment ensures the Django application, its dependencies, dat
 - **Frameworks & Libraries:**
     - Django
     - Bootstrap
-    - jQuery (if used significantly)
+    - jQuery
     - Chart.js
     - django-allauth
     - crispy-forms
