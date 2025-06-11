@@ -584,6 +584,23 @@ The application was tested on the following browsers to ensure cross-browser com
 
 Responsiveness was checked using browser developer tools across various common screen sizes (mobile, tablet, desktop).
 
+### Automated Test Results
+
+To ensure the reliability of RaspiMobile, unit tests were implemented using Django's testing framework. These tests cover key functionalities in the `home`, `products`, and `profiles` apps.  Below are screenshots showing the successful execution of these tests, confirming the core logic and views are functioning as expected.
+
+*   **Home App Tests:**
+    ![Image](https://github.com/user-attachments/assets/82a8b60b-b784-4c61-a984-bc42ac614d61)
+    *These tests verify the functionality of the home page and about page views, ensuring they load correctly and display the expected content.*
+
+*   **Products App Tests:**
+    ![Image](https://github.com/user-attachments/assets/5a6ec763-a6c8-484b-abcd-a39cea26cc12)
+    *These tests cover product listing, detail views, model creation, and category filtering to ensure the correct products are displayed and product information is accurately presented.*
+
+*   **Profiles App Tests:**
+    ![Image](https://github.com/user-attachments/assets/e3c0162a-6b96-4eb6-aff2-02d83e144f7b)
+    *These tests validate the profile management features, including shipping address handling and account deletion.*
+
+
 ---
 
 ## Deployment
