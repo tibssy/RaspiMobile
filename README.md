@@ -464,7 +464,9 @@ The database schema is designed to logically connect different aspects of the e-
 *   **Orders & Items:** An `Order` contains multiple `OrderItem` instances (via a ForeignKey from `OrderItem` to `Order` with `related_name='items'`). Each `OrderItem` links to one `Product` (ForeignKey) and stores the quantity and price *at the time of the order*.
 *   **Orders & Delivery:** An `Order` is associated with one `DeliveryMethod` (ForeignKey, SET_NULL).
 
-![Image](https://github.com/user-attachments/assets/29da0728-2b69-4bdc-894d-f15e938da321)
+The Entity Relationship Diagram (ERD) was meticulously crafted using Draw.io, a versatile and user-friendly online diagramming tool. Draw.io allowed for clear and concise visual representation of the database schema, showcasing the entities, attributes, and their relationships within the RaspiMobile e-commerce platform.
+
+![Image](https://github.com/user-attachments/assets/ee7908bb-3c14-4de2-b3a4-9895836b2eeb)
 
 ---
 
@@ -565,24 +567,6 @@ Google Lighthouse was used extensively to audit key pages (including Home, Produ
     * mailchimp_ajax.js: ![Image](https://github.com/user-attachments/assets/764a9393-3f31-47f9-a630-f4f284d69784)
     * dashboard_overview.js: ![Image](https://github.com/user-attachments/assets/d9639c83-c952-4424-aa48-fce366f1ffc1)
     * checkout.js: ![Image](https://github.com/user-attachments/assets/67da5c60-9005-4511-bcc8-d2f2068acf8b)
-
-### Manual & Browser Testing
-
-Manual testing was performed throughout the development process to ensure core user flows work as expected:
-
-*   Browsing products, searching, sorting, and filtering.
-*   Adding/removing items from the cart (guest and logged-in).
-*   Completing the checkout process.
-*   Submitting product reviews.
-*   Using the staff dashboard features (CRUD operations, status updates).
-*   User registration, login, and logout.
-
-The application was tested on the following browsers to ensure cross-browser compatibility:
-
-*   Google Chrome (Latest Version)
-*   Mozilla Firefox (Latest Version)
-
-Responsiveness was checked using browser developer tools across various common screen sizes (mobile, tablet, desktop).
 
 ### Automated Test Results
 
@@ -889,6 +873,23 @@ To ensure the reliability of RaspiMobile, unit tests were implemented using Djan
 |  Select from Product top - and display selected range| check If selected any product chart the system update with the value or the data.                 | A chart can be used show value for top selected value      | PASS                     |
 |Chart : simulate to perform | Not enough check is displayed       |  the default  text (in case then not enough data) is displayed   in each chart.     | PASS                    |
 
+### Manual & Browser Testing
+
+Manual testing was performed throughout the development process to ensure core user flows work as expected:
+
+*   Browsing products, searching, sorting, and filtering.
+*   Adding/removing items from the cart (guest and logged-in).
+*   Completing the checkout process.
+*   Submitting product reviews.
+*   Using the staff dashboard features (CRUD operations, status updates).
+*   User registration, login, and logout.
+
+The application was tested on the following browsers to ensure cross-browser compatibility:
+
+*   Google Chrome (Latest Version)
+*   Mozilla Firefox (Latest Version)
+
+Responsiveness was checked using browser developer tools across various common screen sizes (mobile, tablet, desktop).
 
 ---
 
